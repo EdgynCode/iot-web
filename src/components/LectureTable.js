@@ -38,8 +38,8 @@ const columns = [
   },
   {
     title: "Bài",
-    dataIndex: "lessons",
-    key: "lessons",
+    dataIndex: "lesson",
+    key: "lesson",
   },
   {
     title: "Tựa đề",
