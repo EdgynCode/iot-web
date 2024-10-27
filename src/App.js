@@ -5,7 +5,14 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { Home, Lessons, LessonDetail, Students, Login } from "./pages";
+import {
+  Home,
+  Lessons,
+  LessonDetail,
+  Students,
+  StudentDetail,
+  Login,
+} from "./pages";
 
 function App() {
   return (
@@ -17,6 +24,7 @@ function App() {
         <Route path="/lessons" element={<Lessons />} />
         <Route path="/lesson-detail" element={<LessonDetail />} />
         <Route path="/students" element={<Students />} />
+        <Route path="/student-detail" element={<StudentDetail />} />
       </Routes>
     </Router>
   );
