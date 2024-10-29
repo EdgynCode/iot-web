@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const Login = () => {
+const Login = ({ setUsername }) => {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -20,8 +22,11 @@ const Login = () => {
       // Show success message and navigate after login
       message.success("Login successful!");
       console.log("Login successful");
+      const { userName } = response.data;
+      setUsername(userName);
+      navigate("/home");
     } catch (error) {
-      message.error("Invalid email or password");
+      message.error("Sai tên đăng nhập hoặc mật khẩu");
       console.error("Login failed:", error);
     } finally {
       setLoading(false);
@@ -34,9 +39,9 @@ const Login = () => {
         <div className="flex justify-center mb-6">
           <img src="logo.png" alt="Logo" className="w-16" />
         </div>
-        <h1 className="text-2xl font-semibold text-center mb-2">Welcome!</h1>
+        <h1 className="text-2xl font-semibold text-center mb-2">Chào mừng!</h1>
         <p className="text-center text-gray-500 mb-6">
-          Please login to your account
+          Đăng nhập vào tài khoản của bạn
         </p>
 
         <Form
@@ -47,22 +52,22 @@ const Login = () => {
         >
           <Form.Item
             name="email"
-            rules={[{ required: true, message: "Please input your Email!" }]}
+            rules={[{ required: true, message: "Tên đăng nhập là bắt buộc!" }]}
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Email"
+              placeholder="Tên đăng nhập"
               className="rounded-lg"
             />
           </Form.Item>
 
           <Form.Item
             name="password"
-            rules={[{ required: true, message: "Please input your Password!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập mặt khẩu!" }]}
           >
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
-              placeholder="Password"
+              placeholder="Mật khẩu"
               className="rounded-lg"
             />
           </Form.Item>
@@ -74,10 +79,17 @@ const Login = () => {
               className="w-full bg-black text-white hover:bg-gray-800 rounded-lg"
               loading={loading}
             >
-              Login
+              Đăng nhập
             </Button>
           </Form.Item>
         </Form>
+
+        <div className="text-center text-gray-500 mt-4">
+          Chưa có tài khoản?{" "}
+          <a href="#" className="font-semibold text-black">
+            Đăng kí
+          </a>
+        </div>
       </div>
     </div>
   );

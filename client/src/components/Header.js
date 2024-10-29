@@ -1,15 +1,13 @@
-import React from 'react';
+import React from "react";
 import { Button, Col, Row } from "antd";
 
-const Header = () => {
+const Header = ({ username }) => {
   return (
     <Row className="flex items-center justify-between mb-5">
       <Col>
         <Row>
           <Col>
-            <div className="text-5xl font-medium">
-              Chào
-            </div>
+            <div className="text-5xl font-medium">Chào {username}</div>
           </Col>
         </Row>
 
