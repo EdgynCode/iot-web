@@ -20,8 +20,8 @@ const Login = ({ setUsername }) => {
       localStorage.setItem("token", response.data.token);
 
       // Show success message and navigate after login
-      message.success("Login successful!");
-      console.log("Login successful");
+      message.success("Đăng nhập thành công!");
+      console.log("Đăng nhập thành công");
       const { userName } = response.data;
       setUsername(userName);
       navigate("/home");
@@ -84,12 +84,12 @@ const Login = ({ setUsername }) => {
           </Form.Item>
         </Form>
 
-        <div className="text-center text-gray-500 mt-4">
+        {/* <div className="text-center text-gray-500 mt-4">
           Chưa có tài khoản?{" "}
           <a href="#" className="font-semibold text-black">
             Đăng kí
           </a>
-        </div>
+        </div> */}
       </div>
     </div>
   );

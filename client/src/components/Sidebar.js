@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   BookOutlined,
   ClockCircleOutlined,
@@ -9,13 +9,21 @@ import {
   ThunderboltOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, message } from "antd";
 import { SidebarButton } from "./SidebarButton";
 
 const { Sider } = Layout;
 
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    message.success("Đăng xuất thành công");
+    navigate("/login");
+  };
 
   const menuItems = [
     {
@@ -99,12 +107,13 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
     {
       key: "/logout",
       label: (
-        <SidebarButton
-          to="/logout"
-          label="Đăng xuất"
-          isActive={location.pathname === "/logout"}
-          isExpanded={isExpanded}
-        />
+        <div onClick={handleLogout}>
+          <SidebarButton
+            label="Đăng xuất"
+            isActive={false}
+            isExpanded={isExpanded}
+          />
+        </div>
       ),
       icon: <LogoutOutlined />,
       className: "hover:bg-gray-800",
