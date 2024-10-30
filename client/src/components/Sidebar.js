@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   BookOutlined,
@@ -9,7 +9,7 @@ import {
   ThunderboltOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, message } from "antd";
+import { Layout, Menu, Modal, message } from "antd";
 import { SidebarButton } from "./SidebarButton";
 
 const { Sider } = Layout;
@@ -17,20 +17,25 @@ const { Sider } = Layout;
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const handleLogout = (e) => {
-    e.preventDefault();
+  const showLogoutModal = () => {
+    setIsModalVisible(true);
+  };
 
-    const confirmLogout = window.confirm("Bạn có chắc chắn muốn đăng xuất?");
-    if (!confirmLogout) return;
-
+  const handleConfirmLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+
     message.success("Đăng xuất thành công");
 
     navigate("/login");
+    setIsModalVisible(false);
   };
 
+  const handleCancelLogout = () => {
+    setIsModalVisible(false);
+  };
   const menuItems = [
     {
       key: "/",
@@ -113,7 +118,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
     {
       key: "/logout",
       label: (
-        <div onClick={handleLogout}>
+        <div onClick={showLogoutModal}>
           <SidebarButton
             label="Đăng xuất"
             isActive={false}
@@ -131,27 +136,41 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
   };
 
   return (
-    <Sider
-      collapsible
-      collapsed={!isExpanded}
-      onCollapse={toggleSidebar}
-      width={220}
-      className="bg-black text-white fixed top-0 left-0 h-screen z-50"
-    >
-      {/* Logo section */}
-      <div className="h-16 bg-gray-900 flex items-center justify-center mb-4">
-        <div className="w-10 h-10 bg-gray-700 rounded-full"></div>
-      </div>
+    <>
+      <Sider
+        collapsible
+        collapsed={!isExpanded}
+        onCollapse={toggleSidebar}
+        width={220}
+        className="bg-black text-white fixed top-0 left-0 h-screen z-50"
+      >
+        {/* Logo section */}
+        <div className="h-16 bg-gray-900 flex items-center justify-center mb-4">
+          <div className="w-10 h-10 bg-gray-700 rounded-full"></div>
+        </div>
 
-      {/* Menu items */}
-      <Menu
-        items={menuItems}
-        theme="dark"
-        mode="inline"
-        defaultSelectedKeys={[location.pathname]}
-        className="bg-black text-white"
-      ></Menu>
-    </Sider>
+        {/* Menu items */}
+        <Menu
+          items={menuItems}
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={[location.pathname]}
+          className="bg-black text-white"
+        />
+      </Sider>
+
+      {/* Logout confirmation modal */}
+      <Modal
+        title="Confirm Logout"
+        open={isModalVisible}
+        onOk={handleConfirmLogout}
+        onCancel={handleCancelLogout}
+        okText="Đăng xuất"
+        cancelText="Hủy"
+      >
+        <p>Bạn có chắc chắn muốn đăng xuất?</p>
+      </Modal>
+    </>
   );
 };
 
