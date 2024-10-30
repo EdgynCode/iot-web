@@ -84,12 +84,12 @@ const Login = ({ setUsername }) => {
           </Form.Item>
         </Form>
 
-        {/* <div className="text-center text-gray-500 mt-4">
+        <div className="text-center text-gray-500 mt-4">
           Chưa có tài khoản?{" "}
-          <a href="#" className="font-semibold text-black">
+          <a href="/register" className="font-semibold text-black">
             Đăng kí
           </a>
-        </div> */}
+        </div>
       </div>
     </div>
   );
