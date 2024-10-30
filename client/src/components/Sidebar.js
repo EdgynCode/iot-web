@@ -18,10 +18,16 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = (e) => {
+    e.preventDefault();
+
+    const confirmLogout = window.confirm("Bạn có chắc chắn muốn đăng xuất?");
+    if (!confirmLogout) return;
+
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     message.success("Đăng xuất thành công");
+
     navigate("/login");
   };
 
