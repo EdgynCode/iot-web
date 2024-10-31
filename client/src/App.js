@@ -13,6 +13,7 @@ import {
   StudentDetail,
   Login,
   Register,
+  Devices,
 } from "./pages";
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/lesson-detail" element={<LessonDetail />} />
         <Route path="/students" element={<Students />} />
         <Route path="/student-detail" element={<StudentDetail />} />
+        <Route path="/devices" element={<Devices />} />
       </Routes>
     </Router>
   );

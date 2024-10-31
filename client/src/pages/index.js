@@ -5,3 +5,4 @@ export { default as Students } from "./students";
 export { default as StudentDetail } from "./student-detail";
 export { default as Login } from "./login";
 export { default as Register } from "./register";
+export { default as Devices } from "./devices";
