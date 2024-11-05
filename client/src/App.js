@@ -14,6 +14,7 @@ import {
   Login,
   Register,
   Devices,
+  ExamDetail,
 } from "./pages";
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         <Route path="/students" element={<Students />} />
         <Route path="/student-detail" element={<StudentDetail />} />
         <Route path="/devices" element={<Devices />} />
+        <Route path="/exam-detail" element={<ExamDetail />} />
       </Routes>
     </Router>
   );
