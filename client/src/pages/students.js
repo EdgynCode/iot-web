@@ -1,15 +1,14 @@
-import React from 'react';
-import StudentSelect from '../components/StudentSelect';
-import StudentTable from '../components/StudentTable';
-import Layout from '../components/Layout';
+import React from "react";
+import StudentSelect from "../components/StudentSelect";
+import StudentTable from "../components/StudentTable";
 
 const Students = () => {
   return (
-    <Layout>
-      <StudentSelect/>
-      <StudentTable/>
-    </Layout>
+    <>
+      <StudentSelect />
+      <StudentTable />
+    </>
   );
-}
+};
 
 export default Students;

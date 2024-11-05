@@ -10,8 +10,8 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Modal, message } from "antd";
-import { SidebarButton } from "./SidebarButton";
-
+import { SidebarButton } from "../SidebarButton";
+import * as styles from "./index.css";
 const { Sider } = Layout;
 
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
@@ -43,12 +43,12 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
         <SidebarButton
           to="/"
           label="Trang chủ"
-          isActive={location.pathname === "/"}
+          isActive={location.pathname === "/home"}
           isExpanded={isExpanded}
         />
       ),
+      title: "Trang chủ",
       icon: <HomeOutlined />,
-      className: "hover:bg-gray-800",
     },
     {
       key: "/lessons",
@@ -60,47 +60,47 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
           isExpanded={isExpanded}
         />
       ),
+      title: "Bài học",
       icon: <BookOutlined />,
-      className: "hover:bg-gray-800",
     },
     {
       key: "/edit",
       label: (
         <SidebarButton
           to="/edit"
-          label="Chỉnh sửa"
+          label="Bài thi"
           isActive={location.pathname === "/edit"}
           isExpanded={isExpanded}
         />
       ),
+      title: "Bài thi",
       icon: <EditOutlined />,
-      className: "hover:bg-gray-800",
     },
     {
       key: "/students",
       label: (
         <SidebarButton
           to="/students"
-          label="Quản lý học sinh"
+          label="Học sinh"
           isActive={location.pathname === "/students"}
           isExpanded={isExpanded}
         />
       ),
+      title: "Học sinh",
       icon: <UserOutlined />,
-      className: "hover:bg-gray-800",
     },
     {
       key: "/timer",
       label: (
         <SidebarButton
           to="/timer"
-          label="Thời gian biểu"
+          label="Bài thực hành"
           isActive={location.pathname === "/timer"}
           isExpanded={isExpanded}
         />
       ),
+      title: "Bài thực hành",
       icon: <ClockCircleOutlined />,
-      className: "hover:bg-gray-800",
     },
     {
       key: "/devices",
@@ -112,8 +112,8 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
           isExpanded={isExpanded}
         />
       ),
+      title: "Thiết bị",
       icon: <ThunderboltOutlined />,
-      className: "hover:bg-gray-800",
     },
     {
       key: "/logout",
@@ -126,8 +126,8 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
           />
         </div>
       ),
+      title: "Đăng xuất",
       icon: <LogoutOutlined />,
-      className: "hover:bg-gray-800",
     },
   ];
 
@@ -141,22 +141,23 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
         collapsible
         collapsed={!isExpanded}
         onCollapse={toggleSidebar}
-        width={220}
-        className="bg-black text-white fixed top-0 left-0 h-screen z-50"
+        className="bg-transparent fixed"
       >
-        {/* Logo section */}
-        <div className="h-16 bg-gray-900 flex items-center justify-center mb-4">
-          <div className="w-10 h-10 bg-gray-700 rounded-full"></div>
+        {/* Logo section  */}
+        <div
+          className={`${
+            isExpanded ? "justify-start gap-3 mx-3 " : "justify-center"
+          } my-7 flex items-center transition-all duration-300 ease-in-out`}
+        >
+          <div className="w-10 h-10 bg-gray-700 rounded-full transition-all ease-in-out duration-300"></div>
+          {isExpanded && (
+            <p className="transition-opacity transform ease-in-out duration-500 opacity-100">
+              LOGO
+            </p>
+          )}
         </div>
-
         {/* Menu items */}
-        <Menu
-          items={menuItems}
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={[location.pathname]}
-          className="bg-black text-white"
-        />
+        <Menu items={menuItems} className="bg-transparent" />
       </Sider>
 
       {/* Logout confirmation modal */}

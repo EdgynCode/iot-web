@@ -62,7 +62,7 @@ const columns = [
 
 const LectureTable = () => {
   return (
-    <div className="w-[1230px] p-5 mt-6 bg-[#EDEDEF] rounded-2xl">
+    <div className=" p-5 mt-6 bg-[#EDEDEF] rounded-2xl">
       <Row justify="space-between" align="middle" className="mb-5">
         <Col>
           <div>

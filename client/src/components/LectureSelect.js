@@ -4,7 +4,7 @@ import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 
 const LectureSelect = () => {
   return (
-    <div className="w-[1230px] p-[20px_0] mt-6 bg-[#EDEDEF] rounded-2xl overflow-hidden">
+    <div className=" p-[20px_0] mt-6 bg-[#EDEDEF] rounded-2xl overflow-hidden">
       <Row
         justify="space-between"
         align="middle"

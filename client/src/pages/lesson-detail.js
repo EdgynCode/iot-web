@@ -1,12 +1,11 @@
 import React from "react";
-import Layout from "../components/Layout";
 import { Breadcrumb, Button, Col, Row } from "antd";
 import { ArrowLeftOutlined, RightOutlined } from "@ant-design/icons";
 import LectureDetail from "../components/LectureDetail";
 
 const LessonDetail = () => {
   return (
-    <Layout>
+    <>
       <div className="w-[1230px] p-5 mt-6 bg-[#EDEDEF] rounded-3xl overflow-hidden">
         <Row
           justify="space-between"
@@ -39,7 +38,7 @@ const LessonDetail = () => {
         </Col>
       </Row>
       <LectureDetail />
-    </Layout>
+    </>
   );
 };
 

@@ -1,19 +1,17 @@
+import { Button } from "antd";
 import React from "react";
-import { FaRegUserCircle } from "react-icons/fa";
 
 const Logo = () => {
   return (
-    <div className="flex w-[1280px] items-center justify-between pl-0 pr-[37px] py-0 relative">
-      <div className="relative w-fit [font-family:'Inter-Regular',Helvetica] font-normal text-black text-2xl tracking-[0] leading-[normal]">
+    <div className="flex relative w-full items-center justify-end bg-transparent z-10">
+      {/* <div className="relative w-fit [font-family:'Inter-Regular',Helvetica] font-normal text-black text-2xl tracking-[0] leading-[normal]">
         LOGO
-      </div>
+      </div> */}
 
-      <button className="relative w-[170px] h-[50px] bg-gray-500 rounded-[45px] hover:bg-gray-300">
-        <FaRegUserCircle className="relative w-[47px] h-[47px] left-3 object-cover"/>
-        <p className="absolute w-[140px] h-7 top-2.5 left-[40px] text-black text-xl text-center grid place-items-center">
-          Account
-        </p>
-      </button>
+      <button
+        className="bg-[url('https://th.bing.com/th/id/OIP._c2TmodteCDkSQPLea2nsgHaJj?w=208&h=268&c=7&r=0&o=5&dpr=1.3&pid=1.7')] 
+                w-[40px] h-[40px] bg-cover bg-center rounded-full"
+      ></button>
     </div>
   );
 };
