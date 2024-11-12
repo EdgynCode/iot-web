@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Logo from "../Logo";
 import Sidebar from "../sidebar/Sidebar";
 import { Outlet } from "react-router-dom";
+import AccountHeader from "./account-header/AccountHeader";
 
 const Layout = ({ children }) => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
@@ -19,7 +19,7 @@ const Layout = ({ children }) => {
             isSidebarExpanded ? "ml-[200px]" : "ml-20"
           }`}
         >
-          <Logo />
+          <AccountHeader />
           <Outlet />
         </div>
       </div>

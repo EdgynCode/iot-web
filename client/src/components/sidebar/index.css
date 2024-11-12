@@ -1,3 +1,6 @@
+.ant-layout-sider {
+  inset: 0px;
+}
 .ant-layout-sider-trigger {
   background-color: transparent !important;
   color: #1d1b23 !important;

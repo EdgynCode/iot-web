@@ -36,100 +36,30 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const handleCancelLogout = () => {
     setIsModalVisible(false);
   };
-  const menuItems = [
-    {
-      key: "/",
-      label: (
-        <SidebarButton
-          to="/"
-          label="Trang chủ"
-          isActive={location.pathname === "/home"}
-          isExpanded={isExpanded}
-        />
-      ),
-      title: "Trang chủ",
-      icon: <HomeOutlined />,
-    },
-    {
-      key: "/lessons",
-      label: (
-        <SidebarButton
-          to="/lessons"
-          label="Bài học"
-          isActive={location.pathname === "/lessons"}
-          isExpanded={isExpanded}
-        />
-      ),
-      title: "Bài học",
-      icon: <BookOutlined />,
-    },
-    {
-      key: "/edit",
-      label: (
-        <SidebarButton
-          to="/edit"
-          label="Bài thi"
-          isActive={location.pathname === "/edit"}
-          isExpanded={isExpanded}
-        />
-      ),
-      title: "Bài thi",
-      icon: <EditOutlined />,
-    },
-    {
-      key: "/students",
-      label: (
-        <SidebarButton
-          to="/students"
-          label="Học sinh"
-          isActive={location.pathname === "/students"}
-          isExpanded={isExpanded}
-        />
-      ),
-      title: "Học sinh",
-      icon: <UserOutlined />,
-    },
-    {
-      key: "/timer",
-      label: (
-        <SidebarButton
-          to="/timer"
-          label="Bài thực hành"
-          isActive={location.pathname === "/timer"}
-          isExpanded={isExpanded}
-        />
-      ),
-      title: "Bài thực hành",
-      icon: <ClockCircleOutlined />,
-    },
-    {
-      key: "/devices",
-      label: (
-        <SidebarButton
-          to="/devices"
-          label="Thiết bị"
-          isActive={location.pathname === "/devices"}
-          isExpanded={isExpanded}
-        />
-      ),
-      title: "Thiết bị",
-      icon: <ThunderboltOutlined />,
-    },
-    {
-      key: "/logout",
-      label: (
-        <div onClick={showLogoutModal}>
-          <SidebarButton
-            label="Đăng xuất"
-            isActive={false}
-            isExpanded={isExpanded}
-          />
-        </div>
-      ),
-      title: "Đăng xuất",
-      icon: <LogoutOutlined />,
-    },
+
+  const routeData = [
+    { key: "/", title: "Trang chủ", icon: <HomeOutlined /> },
+    { key: "/lessons", title: "Bài học", icon: <BookOutlined /> },
+    { key: "/edit", title: "Bài thi", icon: <EditOutlined /> },
+    { key: "/students", title: "Học sinh", icon: <UserOutlined /> },
+    { key: "/timer", title: "Bài thực hành", icon: <ClockCircleOutlined /> },
+    { key: "/devices", title: "Thiết bị", icon: <ThunderboltOutlined /> },
+    { key: "/logout", title: "Đăng xuất", icon: <LogoutOutlined /> },
   ];
+
+  const menuItems = routeData.map((route) => ({
+    key: route.key,
+    label: (
+      <SidebarButton
+        to={route.key}
+        label={route.title}
+        isActive={location.pathname === route.key}
+        isExpanded={isExpanded}
+      />
+    ),
+    title: route.title,
+    icon: route.icon,
+  }));
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -143,11 +73,12 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
         onCollapse={toggleSidebar}
         className="bg-transparent fixed"
       >
+        <div className="absolute inset-0 bg-black/10 backdrop-blur-md -z-10"></div>
         {/* Logo section  */}
         <div
           className={`${
             isExpanded ? "justify-start gap-3 mx-3 " : "justify-center"
-          } my-7 flex items-center transition-all duration-300 ease-in-out`}
+          } z-10 my-7 flex items-center transition-all duration-300 ease-in-out`}
         >
           <div className="w-10 h-10 bg-gray-700 rounded-full transition-all ease-in-out duration-300"></div>
           {isExpanded && (

@@ -1,0 +1,9 @@
+.ant-input-outlined:hover,
+.ant-input-outlined:focus,
+.ant-input-outlined:focus-within,
+.ant-input-outlined:active,
+.ant-input-outlined:focus-visible,
+.ant-btn-variant-outlined:not(:disabled):not(.ant-btn-disabled):hover {
+  border-color: black !important;
+  color: black !important;
+}

@@ -7,6 +7,7 @@ module.exports = {
         black: "#1D1B23",
         white: "#F9F9FC",
         grey: "#EDEDEF",
+        purple: "#C2BEE7",
       },
       backgroundImage: {
         "custom-gradient":
