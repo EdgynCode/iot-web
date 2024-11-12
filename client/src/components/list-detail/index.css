@@ -1,0 +1,22 @@
+.ant-table-wrapper .ant-table {
+  overflow: hidden;
+  border-radius: 50px !important;
+  padding-bottom: 2%;
+}
+.ant-table-body {
+  padding: 0px 20px !important;
+}
+.ant-table-content tr td:first-child,
+.ant-table-content tr th:first-child {
+  padding-left: 2% !important;
+  padding-right: 2% !important;
+  width: 5%;
+}
+.ant-table-content tr td:last-child,
+.ant-table-content tr th:last-child {
+  margin-right: 2% !important;
+}
+.ant-table-content tr td,
+.ant-table-content tr th {
+  background-color: #ffffff !important;
+}

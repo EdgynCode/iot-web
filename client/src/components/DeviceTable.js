@@ -59,7 +59,7 @@ const DeviceTable = () => {
   ];
 
   return (
-    <div className="w-[1250px] p-5 bg-[#EDEDEF] rounded-[50px]">
+    <div className="w-full p-5 bg-[#EDEDEF] rounded-[50px]">
       <Row gutter={16} align="middle">
         <Col>
           <Button icon={<FilterOutlined />} />

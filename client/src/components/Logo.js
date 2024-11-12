@@ -9,7 +9,7 @@ const Logo = () => {
       </div>
 
       <button className="relative w-[170px] h-[50px] bg-gray-500 rounded-[45px] hover:bg-gray-300">
-        <FaRegUserCircle className="relative w-[47px] h-[47px] left-3 object-cover"/>
+        <FaRegUserCircle className="relative w-[47px] h-[47px] left-3 object-cover" />
         <p className="absolute w-[140px] h-7 top-2.5 left-[40px] text-black text-xl text-center grid place-items-center">
           Account
         </p>

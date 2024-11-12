@@ -1,15 +1,28 @@
-import React from 'react';
-import StudentSelect from '../components/StudentSelect';
-import StudentTable from '../components/StudentTable';
-import Layout from '../components/Layout';
+import React from "react";
+import { ListDetail } from "../components/list-detail/ListDetail";
+import {
+  studentAction,
+  studentColumns,
+  studentData,
+  studentFilter,
+} from "../datas/student.d";
+import { useNavigate } from "react-router-dom";
 
 const Students = () => {
+  const navigate = useNavigate();
   return (
-    <Layout>
-      <StudentSelect/>
-      <StudentTable/>
-    </Layout>
+    <>
+      <ListDetail
+        title="Học sinh"
+        actions={studentAction}
+        filters={studentFilter}
+        data={studentData}
+        column={studentColumns(navigate)}
+      />
+      {/* <StudentSelect />
+      <StudentTable /> */}
+    </>
   );
-}
+};
 
 export default Students;

@@ -1,5 +1,4 @@
 import React from "react";
-import Layout from "../components/Layout";
 import { Badge, Card, Col, Row, Typography } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import QuestionCard from "../components/QuestionCard";
@@ -8,7 +7,7 @@ const { Title, Text } = Typography;
 
 const ExamDetail = () => {
   return (
-    <Layout>
+    <>
       <div className="relative w-[1230px] p-5 rounded-[40px] overflow-hidden">
         <div className="absolute w-15px h-[610px] top-[151px] left-[1215px]">
           <div className="absolute w-1 h-[194px] bg-[#BBBCC580] rounded-[10px] top-[2px] left-1" />
@@ -103,7 +102,7 @@ const ExamDetail = () => {
           </div>
         </Col>
       </Row>
-    </Layout>
+    </>
   );
 };
 

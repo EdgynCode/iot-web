@@ -3,7 +3,6 @@ import { Form, Input, Button, DatePicker, Select, message } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import dayjs from "dayjs";
 
 const { Option } = Select;
 

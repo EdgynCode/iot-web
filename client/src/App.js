@@ -11,11 +11,12 @@ import {
   LessonDetail,
   Students,
   StudentDetail,
+  ExamDetail,
   Login,
   Register,
   Devices,
-  ExamDetail,
 } from "./pages";
+import Layout from "./components/layout/Layout";
 
 function App() {
   const [username, setUsername] = useState("");
@@ -23,16 +24,18 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/home" />} />
-        <Route path="/home" element={<Home username={username} />} />
+        <Route path="/" element={<Layout />}>
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="/home" element={<Home username={username} />} />
+          <Route path="/lessons" element={<Lessons />} />
+          <Route path="/lesson-detail" element={<LessonDetail />} />
+          <Route path="/students" element={<Students />} />
+          <Route path="/student-detail" element={<StudentDetail />} />
+          <Route path="/exam-detail" element={<ExamDetail />} />
+          <Route path="/devices" element={<Devices />} />
+        </Route>
         <Route path="/login" element={<Login setUsername={setUsername} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/lessons" element={<Lessons />} />
-        <Route path="/lesson-detail" element={<LessonDetail />} />
-        <Route path="/students" element={<Students />} />
-        <Route path="/student-detail" element={<StudentDetail />} />
-        <Route path="/devices" element={<Devices />} />
-        <Route path="/exam-detail" element={<ExamDetail />} />
       </Routes>
     </Router>
   );
