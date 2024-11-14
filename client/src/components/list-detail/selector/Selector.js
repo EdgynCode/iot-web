@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Col, Dropdown, Row, Input } from "antd";
+import { Button, Col, Dropdown, Row } from "antd";
 import {
   DownOutlined,
   FilterOutlined,
@@ -13,8 +13,8 @@ const Selector = ({ title, actions, filters }) => {
         <Col className="mx-[2%] font-semibold text-[20px]">{title}</Col>
         <Col>
           <Button.Group>
-            {actions.map((action) => (
-              <Button key={action.title} onClick={action.onClick} shape="round">
+            {actions.map((action, index) => (
+              <Button key={index} onClick={action.onClick} shape="round">
                 {action.title}
               </Button>
             ))}
