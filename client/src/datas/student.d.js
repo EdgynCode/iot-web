@@ -20,16 +20,8 @@ export const studentAction = [
 ];
 export const studentData = [
   {
-    id: "47011041089",
-    fullname: "Võ Thị Thu Hòa",
-    class: "10C13",
-    email: "thuhoa08102003@gmail.com",
-    phonenumber: "0928147832",
-    gender: "Nữ",
-    role: "Lớp trưởng",
-  },
-  {
-    id: "47011041187",
+    key: "1",
+    id: "4701104087",
     fullname: "Nguyễn Hữu Tân",
     class: "10C13",
     email: "nguyenhuutan080603@gmail.com",
@@ -38,13 +30,24 @@ export const studentData = [
     role: "",
   },
   {
-    id: "47011041187",
+    key: "2",
+    id: "470110408́8",
     fullname: "Tran Ha",
     class: "10C13",
     email: "nguyenhuutan080603@gmail.com",
     phonenumber: "0703792808",
     gender: "Nam",
     role: "",
+  },
+  {
+    key: "3",
+    id: "4701104089",
+    fullname: "Võ Thị Thu Hòa",
+    class: "10C13",
+    email: "thuhoa08102003@gmail.com",
+    phonenumber: "0928147832",
+    gender: "Nữ",
+    role: "Lớp trưởng",
   },
 ];
 export const gradeMenu = [
@@ -70,7 +73,7 @@ export const studentColumns = (navigate) => [
     dataIndex: "id",
     key: "id",
     render: (text) => <a onClick={() => navigate(`/student-detail`)}>{text}</a>,
-    sorter: (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10),
+    //sorter: (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10),
   },
   {
     title: "Họ tên",

@@ -10,7 +10,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Modal, message } from "antd";
-import { SidebarButton } from "../SidebarButton";
+import { SidebarButton } from "./sidebar-button/SidebarButton";
 import * as styles from "./index.css";
 const { Sider } = Layout;
 

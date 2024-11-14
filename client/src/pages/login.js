@@ -11,10 +11,14 @@ const Login = ({ setUsername }) => {
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3050/api/login", {
-        email: values.email,
-        password: values.password,
-      });
+      const response = await axios.post(
+        "https://localhost:44362/api/Account/Login",
+        {
+          email: values.email,
+          password: values.password,
+          isPersistent: true,
+        }
+      );
 
       // Store the token in localStorage
       localStorage.setItem("token", response.data.token);

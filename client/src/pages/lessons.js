@@ -12,9 +12,6 @@ const Lessons = () => {
   const navigate = useNavigate();
   return (
     <>
-      {/* <LectureSelect />
-      <LectureTable /> */}
-
       <ListDetail
         title="Bài giảng"
         actions={lectureAction}
