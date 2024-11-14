@@ -1,40 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Form, Input, Button, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Navigate, useNavigate } from "react-router-dom";
+import { login } from ".././redux/slices/auth";
+import { clearMessage } from ".././redux/slices/message";
 
 const Login = ({ setUsername }) => {
+  let navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
-  const onFinish = async (values) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
+
+  const onFinish = async (formValue) => {
+    const { userName, password } = formValue;
     setLoading(true);
-    try {
-      const response = await axios.post(
-        "https://localhost:44362/api/Account/Login",
-        {
-          email: values.email,
-          password: values.password,
-          isPersistent: true,
-        }
-      );
 
-      // Store the token in localStorage
-      localStorage.setItem("token", response.data.token);
-
-      // Show success message and navigate after login
-      message.success("Đăng nhập thành công!");
-      console.log("Đăng nhập thành công");
-      const { userName } = response.data;
-      setUsername(userName);
-      navigate("/home");
-    } catch (error) {
-      message.error("Sai tên đăng nhập hoặc mật khẩu");
-      console.error("Login failed:", error);
-    } finally {
-      setLoading(false);
-    }
+    dispatch(login({ userName, password }))
+      .unwrap()
+      .then(() => {
+        setUsername(formValue.userName); // userName fetch from the database
+        navigate("/home");
+        window.location.reload();
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -55,7 +51,7 @@ const Login = ({ setUsername }) => {
           className="space-y-4"
         >
           <Form.Item
-            name="email"
+            name="userName"
             rules={[{ required: true, message: "Tên đăng nhập là bắt buộc!" }]}
           >
             <Input
