@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import {
   BookOutlined,
   ClockCircleOutlined,
@@ -12,25 +13,38 @@ import {
 import { Layout, Menu, Modal, message } from "antd";
 import { SidebarButton } from "./sidebar-button/SidebarButton";
 import * as styles from "./index.css";
+import { logout } from "../../redux/slices/auth";
+
 const { Sider } = Layout;
 
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
-  const location = useLocation();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const showLogoutModal = () => {
     setIsModalVisible(true);
   };
 
-  const handleConfirmLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
+  const handleConfirmLogout = async () => {
+    setLoading(true);
 
-    message.success("Đăng xuất thành công");
-
-    navigate("/login");
-    setIsModalVisible(false);
+    dispatch(logout())
+      .unwrap()
+      .then(() => {
+        message.success("Đăng xuất thành công");
+        navigate("/login");
+        window.location.reload();
+      })
+      .catch((error) => {
+        message.error("Đăng xuất thất bại. Vui lòng thử lại.");
+      })
+      .finally(() => {
+        setLoading(false);
+        setIsModalVisible(false);
+      });
   };
 
   const handleCancelLogout = () => {
@@ -95,6 +109,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
       <Modal
         title="Confirm Logout"
         open={isModalVisible}
+        confirmLoading={loading}
         onOk={handleConfirmLogout}
         onCancel={handleCancelLogout}
         okText="Đăng xuất"
