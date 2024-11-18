@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from ".././redux/slices/auth";
 import { clearMessage } from ".././redux/slices/message";
 
-const Login = ({ setUsername }) => {
+const Login = () => {
   let navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -24,8 +24,7 @@ const Login = ({ setUsername }) => {
     dispatch(login({ userName, password }))
       .unwrap()
       .then(() => {
-        setUsername(formValue.userName); // userName fetch from the database
-        navigate("/home");
+        navigate("/account-detail");
         window.location.reload();
       })
       .catch(() => {

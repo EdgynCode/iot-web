@@ -31,6 +31,22 @@ export const logout = createAsyncThunk("Account/Logout", async () => {
   await AuthService.logout();
 });
 
+export const getCurrentUser = createAsyncThunk(
+  "User/GetUserDetails",
+  async (_, thunkAPI) => {
+    try {
+      const user = await AuthService.getCurrentUser();
+      return user; // Pass the user data to the fulfilled case
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch user data";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "Account",
   initialState,
@@ -46,6 +62,12 @@ const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state) => {
         state.isLoggedIn = false;
+        state.user = null;
+      })
+      .addCase(getCurrentUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
+      .addCase(getCurrentUser.rejected, (state) => {
         state.user = null;
       });
   },
