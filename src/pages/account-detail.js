@@ -1,7 +1,9 @@
-import React from "react";
-import StudentInfo from "../components/StudentInfo";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import AccountInfo from "../components/AccountInfo";
 import { LeftOutlined } from "@ant-design/icons";
 import { Button, Col, Row } from "antd";
+import { getCurrentUser } from "../redux/slices/auth";
 
 const AccountDetail = () => {
   return (
@@ -42,7 +44,7 @@ const AccountDetail = () => {
           </Col>
         </Row>
       </div>
-      <StudentInfo />
+      <AccountInfo />
     </>
   );
 };

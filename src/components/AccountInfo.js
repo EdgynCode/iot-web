@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Col, Row, Typography, Image } from "antd";
+import { getCurrentUser } from "../redux/slices/auth";
 
 const { Title, Text } = Typography;
 
 const AccountInfo = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]);
+
+  if (!user) {
+    return <div>Loading...</div>; // Display a loading state until user data is fetched
+  }
+
   return (
     <Row
       justify="center"
@@ -24,19 +37,19 @@ const AccountInfo = () => {
             <Text strong>Họ và tên</Text>
           </Col>
           <Col span={24}>
-            <Text>Nguyễn Hữu Tân</Text>
+            <Text>{user.fullName || "N/A"}</Text>
           </Col>
           <Col span={24}>
             <Text strong>Lớp</Text>
           </Col>
           <Col span={24}>
-            <Text>10C13</Text>
+            <Text>{user.moTa || "N/A"}</Text>
           </Col>
           <Col span={24}>
             <Text strong>Email</Text>
           </Col>
           <Col span={24}>
-            <Text>nguyenhuutan080603@gmail.com</Text>
+            <Text>{user.email || "N/A"}</Text>
           </Col>
         </Row>
       </Col>
@@ -47,19 +60,22 @@ const AccountInfo = () => {
             <Text strong>Ngày sinh</Text>
           </Col>
           <Col span={24}>
-            <Text>08/06/2003</Text>
+            <Text>{user.doB || "N/A"}</Text>
           </Col>
           <Col span={24}>
             <Text strong>Số điện thoại</Text>
           </Col>
           <Col span={24}>
-            <Text>0703792808</Text>
+            <Text>
+              {user.phoneNumber || "N/A"}{" "}
+              {user.phoneNumberConfirmed ? "(Đã xác thực)" : "(Chưa xác thực)"}
+            </Text>
           </Col>
           <Col span={24}>
             <Text strong>Username</Text>
           </Col>
           <Col span={24}>
-            <Text>tannh10c13</Text>
+            <Text>{user.userName || "N/A"}</Text>
           </Col>
         </Row>
       </Col>
