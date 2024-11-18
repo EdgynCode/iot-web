@@ -11,6 +11,7 @@ import {
   LessonDetail,
   Students,
   StudentDetail,
+  AccountDetail,
   Login,
   Register,
   Devices,
@@ -30,6 +31,7 @@ function App() {
           <Route path="/lesson-detail/:key" element={<LessonDetail />} />
           <Route path="/students" element={<Students />} />
           <Route path="/student-detail" element={<StudentDetail />} />
+          <Route path="/account-detail" element={<AccountDetail />} />
           <Route path="/devices" element={<Devices />} />
         </Route>
         <Route path="/login" element={<Login setUsername={setUsername} />} />

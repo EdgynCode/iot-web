@@ -3,6 +3,7 @@ export { default as Lessons } from "./lessons";
 export { default as LessonDetail } from "./lesson-detail";
 export { default as Students } from "./students";
 export { default as StudentDetail } from "./student-detail";
+export { default as AccountDetail } from "./account-detail";
 export { default as Login } from "./login";
 export { default as Register } from "./register";
 export { default as Devices } from "./devices";
