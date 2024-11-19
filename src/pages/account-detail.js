@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 import AccountInfo from "../components/AccountInfo";
 import { LeftOutlined } from "@ant-design/icons";
 import { Button, Col, Row } from "antd";
-import { getCurrentUser } from "../redux/slices/auth";
 
 const AccountDetail = () => {
   return (
