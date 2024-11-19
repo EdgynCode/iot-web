@@ -1,11 +1,9 @@
 import React from "react";
-import AccountInfo from "../components/AccountInfo";
+import EditAccountInfo from "../components/EditAccountInfo";
 import { LeftOutlined } from "@ant-design/icons";
 import { Button, Col, Row } from "antd";
-import { useNavigate } from "react-router-dom";
 
-const AccountDetail = () => {
-  let navigate = useNavigate();
+const EditAccountDetail = () => {
   return (
     <>
       <div className="relative w-full p-5 rounded-[40px] overflow-hidden">
@@ -33,25 +31,18 @@ const AccountDetail = () => {
               <Col>
                 <Button
                   shape="round"
-                  className="border-black text-white bg-black"
-                  onClick={() => {
-                    try {
-                      navigate("/edit-account-detail");
-                    } catch (error) {
-                      console.error("Navigation error:", error);
-                    }
-                  }}
+                  className="border-black text-white bg-green-500"
                 >
-                  Chỉnh sửa thông tin
+                  Lưu
                 </Button>
               </Col>
             </Row>
           </Col>
         </Row>
       </div>
-      <AccountInfo />
+      <EditAccountInfo />
     </>
   );
 };
 
-export default AccountDetail;
+export default EditAccountDetail;

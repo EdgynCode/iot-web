@@ -26,7 +26,6 @@ const getCurrentUser = async () => {
     const response = await axios.get(
       API_URL + `User/GetUserDetails?userid=${user.userId}`
     );
-    console.log(response.data);
     return response.data;
   }
   return null;

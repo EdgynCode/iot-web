@@ -21,7 +21,7 @@ const AccountInfo = () => {
     <Row
       justify="center"
       align="middle"
-      className="w-[1230px] bg-[#EDEDEF] rounded-[50px] p-[46px_7px] overflow-hidden"
+      className="w-full bg-[#EDEDEF] rounded-[50px] p-[46px_7px] overflow-hidden"
     >
       <Col span={24}>
         <Title level={4} className="text-center">
@@ -29,7 +29,11 @@ const AccountInfo = () => {
         </Title>
       </Col>
       <Col span={6}>
-        <Image src="" alt="" className="rounded-[50%]"></Image>
+        <Image
+          src="/public/images/default.png"
+          alt="Profile Picture"
+          className="rounded-[50%]"
+        />
       </Col>
       <Col span={9}>
         <Row gutter={[0, 10]}>

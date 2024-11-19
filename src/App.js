@@ -12,6 +12,7 @@ import {
   Students,
   StudentDetail,
   AccountDetail,
+  EditAccountDetail,
   Login,
   Register,
   ResetPassword,
@@ -33,6 +34,7 @@ function App() {
           <Route path="/students" element={<Students />} />
           <Route path="/student-detail" element={<StudentDetail />} />
           <Route path="/account-detail" element={<AccountDetail />} />
+          <Route path="/edit-account-detail" element={<EditAccountDetail />} />
           <Route path="/devices" element={<Devices />} />
         </Route>
         <Route path="/login" element={<Login setUsername={setUsername} />} />
