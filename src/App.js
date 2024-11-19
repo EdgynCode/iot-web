@@ -14,6 +14,7 @@ import {
   AccountDetail,
   Login,
   Register,
+  ResetPassword,
   Devices,
 } from "./pages";
 import Layout from "./components/layout/Layout";
@@ -36,6 +37,7 @@ function App() {
         </Route>
         <Route path="/login" element={<Login setUsername={setUsername} />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </Router>
   );

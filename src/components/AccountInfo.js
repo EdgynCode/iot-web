@@ -14,7 +14,7 @@ const AccountInfo = () => {
   }, [dispatch]);
 
   if (!user) {
-    return <div>Loading...</div>; // Display a loading state until user data is fetched
+    return <div>Loading...</div>;
   }
 
   return (
@@ -40,27 +40,13 @@ const AccountInfo = () => {
             <Text>{user.fullName || "N/A"}</Text>
           </Col>
           <Col span={24}>
-            <Text strong>Lớp</Text>
-          </Col>
-          <Col span={24}>
-            <Text>{user.moTa || "N/A"}</Text>
-          </Col>
-          <Col span={24}>
             <Text strong>Email</Text>
           </Col>
           <Col span={24}>
-            <Text>{user.email || "N/A"}</Text>
-          </Col>
-        </Row>
-      </Col>
-
-      <Col span={9}>
-        <Row gutter={[0, 10]}>
-          <Col span={24}>
-            <Text strong>Ngày sinh</Text>
-          </Col>
-          <Col span={24}>
-            <Text>{user.doB || "N/A"}</Text>
+            <Text>
+              {user.email || "N/A"}{" "}
+              {user.emailConfirmed ? "(Đã xác thực)" : "(Chưa xác thực)"}
+            </Text>
           </Col>
           <Col span={24}>
             <Text strong>Số điện thoại</Text>
@@ -71,11 +57,38 @@ const AccountInfo = () => {
               {user.phoneNumberConfirmed ? "(Đã xác thực)" : "(Chưa xác thực)"}
             </Text>
           </Col>
+        </Row>
+      </Col>
+
+      <Col span={9}>
+        <Row gutter={[0, 10]}>
+          <Col span={24}>
+            <Text strong>Ngày sinh</Text>
+          </Col>
+          <Col span={24}>
+            <Text>
+              {user.doB
+                ? new Date(user.doB).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })
+                : "N/A"}
+            </Text>
+          </Col>
           <Col span={24}>
             <Text strong>Username</Text>
           </Col>
           <Col span={24}>
             <Text>{user.userName || "N/A"}</Text>
+          </Col>
+          <Col span={24}>
+            <Text strong>Xác thực 2 yếu tố</Text>
+          </Col>
+          <Col span={24}>
+            <Text>
+              {user.twoFactorEnabled ? "Đã xác thực" : "Chưa xác thực"}
+            </Text>
           </Col>
         </Row>
       </Col>
