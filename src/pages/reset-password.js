@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from ".././redux/slices/auth";
 import { clearMessage } from ".././redux/slices/message";
 
-const Login = () => {
+const ResetPassword = () => {
   let navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -38,10 +38,9 @@ const Login = () => {
         <div className="flex justify-center mb-6">
           <img src="logo.png" alt="Logo" className="w-16" />
         </div>
-        <h1 className="text-2xl font-semibold text-center mb-2">Chào mừng!</h1>
-        <p className="text-center text-gray-500 mb-6">
-          Đăng nhập vào tài khoản của bạn
-        </p>
+        <h1 className="text-2xl font-semibold text-center mb-5">
+          Đặt lại mật khẩu
+        </h1>
 
         <Form
           name="login"
@@ -90,11 +89,11 @@ const Login = () => {
           </a>
         </div>
         <div className="text-center text-gray-500 mt-4">
-          <a href="/reset-password">Quên mật khẩu</a>
+          <a href="/">Quên mật khẩu</a>
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default ResetPassword;

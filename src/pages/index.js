@@ -6,4 +6,5 @@ export { default as StudentDetail } from "./student-detail";
 export { default as AccountDetail } from "./account-detail";
 export { default as Login } from "./login";
 export { default as Register } from "./register";
+export { default as ResetPassword } from "./reset-password";
 export { default as Devices } from "./devices";
