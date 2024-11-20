@@ -40,7 +40,6 @@ const Register = () => {
       })
       .catch(() => {
         message.error("Đăng ký thất bại. Vui lòng thử lại.");
-        console.log("🚀 ~ onFinish ~ data:", data);
         setLoading(false);
       });
   };
