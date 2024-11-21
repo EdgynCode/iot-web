@@ -1,37 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Button, DatePicker, Select, message } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { register } from "../redux/actions/authAction";
+import { clearMessage } from "../redux/slices/message";
+import { v4 as uuidv4 } from "uuid";
 
 const { Option } = Select;
 
 const Register = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
 
   const onFinish = async (values) => {
     setLoading(true);
-    try {
-      const response = await axios.post("http://localhost:3050/api/register", {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        gender: values.gender,
-        doB: values.doB.format("YYYY-MM-DD"),
-        userName: values.userName,
-        email: values.email,
-        password: values.password,
-        phoneNumber: values.phoneNumber,
+    const data = {
+      id: uuidv4(),
+      firstName: values.firstName,
+      lastName: values.lastName,
+      gender: values.gender,
+      doB: values.doB.format("YYYY-MM-DD"),
+      userName: values.userName,
+      email: values.email,
+      password: values.password,
+      phoneNumber: values.phoneNumber,
+    };
+    dispatch(register(data))
+      .unwrap()
+      .then(() => {
+        message.success("Đăng ký thành công!");
+        navigate("/login");
+        window.location.reload();
+      })
+      .catch(() => {
+        message.error("Đăng ký thất bại. Vui lòng thử lại.");
+        setLoading(false);
       });
-
-      message.success("Đăng ký thành công!");
-      navigate("/login");
-    } catch (error) {
-      message.error("Đăng ký thất bại. Vui lòng thử lại.");
-      console.error("Registration failed:", error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -47,7 +57,12 @@ const Register = () => {
           Điền thông tin đăng ký tài khoản
         </p>
 
-        <Form name="register" onFinish={onFinish} className="space-y-4">
+        <Form
+          name="register"
+          onFinish={onFinish}
+          disabled={loading}
+          className="space-y-4"
+        >
           <Form.Item
             name="firstName"
             rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
@@ -125,6 +140,11 @@ const Register = () => {
             name="phoneNumber"
             rules={[
               { required: true, message: "Vui lòng nhập số điện thoại!" },
+              {
+                pattern: /^0\d{9}$/,
+                message:
+                  "Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0!",
+              },
             ]}
           >
             <Input placeholder="Số điện thoại" className="rounded-lg" />
