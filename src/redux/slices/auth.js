@@ -47,6 +47,24 @@ export const getCurrentUser = createAsyncThunk(
   }
 );
 
+export const updateUserInfo = createAsyncThunk(
+  "User/UpdateUserInfo",
+  async (userData, thunkAPI) => {
+    try {
+      const updatedUser = await AuthService.updateUserInfo(userData);
+      thunkAPI.dispatch(setMessage("User updated successfully!"));
+      return updatedUser;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update user information";
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "Account",
   initialState,
@@ -68,6 +86,12 @@ const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(getCurrentUser.rejected, (state) => {
+        state.user = null;
+      })
+      .addCase(updateUserInfo.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
+      .addCase(updateUserInfo.rejected, (state) => {
         state.user = null;
       });
   },

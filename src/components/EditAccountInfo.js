@@ -1,7 +1,16 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Typography, Image, Form, Input } from "antd";
-import { getCurrentUser } from "../redux/slices/auth";
+import {
+  Row,
+  Col,
+  Typography,
+  Image,
+  Form,
+  Input,
+  Button,
+  message,
+} from "antd";
+import { getCurrentUser, updateUserInfo } from "../redux/slices/auth";
 import dayjs from "dayjs";
 
 const { Title } = Typography;
@@ -21,6 +30,7 @@ const EditAccountInfo = () => {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
+        // fullName not updating with changes
         gender: user.gender,
         doB: user.doB
           ? new Date(user.doB).toLocaleDateString("en-GB", {
@@ -30,6 +40,7 @@ const EditAccountInfo = () => {
             })
           : null,
         userName: user.userName,
+        password: user.password, // can't get password because hashing
         email: user.email,
         phoneNumber: user.phoneNumber,
       });
@@ -37,12 +48,19 @@ const EditAccountInfo = () => {
   }, [user, form]);
 
   const handleFinish = async (values) => {
-    // try {
-    //   await dispatch(updateUser(values)).unwrap(); // Assuming updateUser is a thunk
-    //   message.success("User information updated successfully!");
-    // } catch (error) {
-    //   message.error("Failed to update user information!");
-    // }
+    dispatch(
+      updateUserInfo({
+        ...values,
+        id: user.id,
+      })
+    )
+      .unwrap()
+      .then(() => {
+        message.success("Cập nhật thông tin thành công!");
+      })
+      .catch((error) => {
+        message.error("Cập nhật thông tin thất bại: " + error);
+      });
   };
 
   if (!user) {
@@ -67,18 +85,18 @@ const EditAccountInfo = () => {
           className="rounded-[50%]"
         />
       </Col>
-      <Col span={9}>
+      <Col span={18}>
         <Form
           form={form}
           layout="vertical"
           onFinish={handleFinish}
           initialValues={user}
-          className="w-80"
+          className="w-full"
         >
-          <Row gutter={[0, 10]}>
-            <Col span={24}>
+          <Row gutter={[16, 16]}>
+            <Col span={9}>
               <Form.Item
-                label="First Name"
+                label="Họ"
                 name="firstName"
                 rules={[
                   { required: true, message: "Please enter your first name" },
@@ -86,10 +104,8 @@ const EditAccountInfo = () => {
               >
                 <Input />
               </Form.Item>
-            </Col>
-            <Col span={24}>
               <Form.Item
-                label="Last Name"
+                label="Tên"
                 name="lastName"
                 rules={[
                   { required: true, message: "Please enter your last name" },
@@ -97,10 +113,8 @@ const EditAccountInfo = () => {
               >
                 <Input />
               </Form.Item>
-            </Col>
-            <Col span={24}>
               <Form.Item
-                label="Gender"
+                label="Giới tính"
                 name="gender"
                 rules={[
                   { required: true, message: "Please specify your gender" },
@@ -108,23 +122,13 @@ const EditAccountInfo = () => {
               >
                 <Input />
               </Form.Item>
+              <Form.Item label="Tên đăng nhập" name="userName">
+                <Input disabled />
+              </Form.Item>
             </Col>
-          </Row>
-        </Form>
-      </Col>
-
-      <Col span={9}>
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleFinish}
-          initialValues={user}
-          className="w-80"
-        >
-          <Row gutter={[0, 10]}>
-            <Col span={24}>
+            <Col span={9}>
               <Form.Item
-                label="Date of Birth"
+                label="Ngày sinh (dd/mm/yyyy)"
                 name="doB"
                 rules={[
                   {
@@ -148,8 +152,6 @@ const EditAccountInfo = () => {
               >
                 <Input placeholder="DD/MM/YYYY" />
               </Form.Item>
-            </Col>
-            <Col span={24}>
               <Form.Item
                 label="Email"
                 name="email"
@@ -163,19 +165,33 @@ const EditAccountInfo = () => {
               >
                 <Input />
               </Form.Item>
-            </Col>
-            <Col span={24}>
               <Form.Item
-                label="Phone Number"
+                label="Số điện thoại"
                 name="phoneNumber"
                 rules={[
-                  { required: true, message: "Please enter your phone number" },
+                  {
+                    required: true,
+                    message: "Please enter your phone number",
+                  },
                 ]}
               >
                 <Input />
               </Form.Item>
+              <Form.Item label="Mật khẩu" name="password">
+                <Input disabled />
+              </Form.Item>
             </Col>
           </Row>
+          <Col span={18} className="items-center text-center mt-6">
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="mr-4 bg-blue-500 text-white"
+            >
+              Lưu
+            </Button>
+            <Button className="bg-blue-500 text-white">Đặt lại mật khẩu</Button>
+          </Col>
         </Form>
       </Col>
     </Row>

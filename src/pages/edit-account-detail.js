@@ -1,7 +1,7 @@
 import React from "react";
 import EditAccountInfo from "../components/EditAccountInfo";
 import { LeftOutlined } from "@ant-design/icons";
-import { Button, Col, Row } from "antd";
+import { Col, Row } from "antd";
 
 const EditAccountDetail = () => {
   return (
@@ -22,19 +22,6 @@ const EditAccountDetail = () => {
               </Col>
               <Col>
                 <p className="m-0">Quay về danh sách chung</p>
-              </Col>
-            </Row>
-          </Col>
-
-          <Col>
-            <Row gutter={19}>
-              <Col>
-                <Button
-                  shape="round"
-                  className="border-black text-white bg-green-500"
-                >
-                  Lưu
-                </Button>
               </Col>
             </Row>
           </Col>

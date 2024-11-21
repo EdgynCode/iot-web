@@ -31,10 +31,16 @@ const getCurrentUser = async () => {
   return null;
 };
 
+const updateUserInfo = async (userData) => {
+  const response = await axios.put(API_URL + "User/UpdateUserInfo", userData);
+  return response.data;
+};
+
 const AuthService = {
   login,
   logout,
   getCurrentUser,
+  updateUserInfo,
 };
 
 export default AuthService;
