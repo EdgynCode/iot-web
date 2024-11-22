@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { Form, Input, Button } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { clearMessage } from ".././redux/slices/message";
+import { clearMessage } from "../redux/slices/message";
 import { login } from "../redux/actions/authAction";
 
 const Login = ({ setUsername }) => {

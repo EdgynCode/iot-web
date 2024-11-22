@@ -5,7 +5,7 @@ import {
   lectureData,
   lectureFilter,
 } from "../datas/lecture.d.js";
-import { ListDetail } from "../components/list-detail/ListDetail";
+import { ListDetail } from "../components/list-detail/ListDetail.js";
 import { useNavigate } from "react-router-dom";
 
 const Lessons = () => {
