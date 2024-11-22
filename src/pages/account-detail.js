@@ -23,7 +23,7 @@ const AccountDetail = () => {
                 <LeftOutlined className="text-2xl" />
               </Col>
               <Col>
-                <p className="m-0">Quay về danh sách chung</p>
+                <p className="m-0">Quay về trang chử</p>
               </Col>
             </Row>
           </Col>
