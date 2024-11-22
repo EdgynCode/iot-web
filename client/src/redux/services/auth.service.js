@@ -35,7 +35,7 @@ const login = async (userName, password) => {
     userName,
     password,
   });
-  if (response.data.userName) {
+  if (response.data) {
     localStorage.setItem("user", JSON.stringify(response.data));
   }
   return response.data;

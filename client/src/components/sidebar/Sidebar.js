@@ -28,12 +28,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const handleConfirmLogout = () => {
     dispatch(logout())
       .then(() => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-
-        // message.success("Đăng xuất thành công");
         message.success("Đăng xuất thành công" + localStorage.getItem("user"));
-
         navigate("/login");
       })
       .catch((error) => {
