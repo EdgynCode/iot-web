@@ -18,8 +18,8 @@ export const ListDetail = ({ title, actions, filters, data, column }) => {
   return (
     <>
       <Selector title={title} actions={actions} filters={filters} />
-      <div className="p-[20px_13.5px] mt-6 bg-grey rounded-[50px] overflow-hidden">
-        <div className="gap-[10%] m-[1%_2%_2%_2%] flex items-center justify-between">
+      <div className="bg-grey tab-rounded">
+        <div className="tab-header">
           <p className="text-xs font-inter text-[#ABACBE]">
             Hiện <span className="text-black">10 </span>
             trong <span className="text-black">200</span> kết quả

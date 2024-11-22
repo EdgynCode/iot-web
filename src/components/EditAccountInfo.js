@@ -10,8 +10,8 @@ import {
   Button,
   message,
 } from "antd";
-import { getCurrentUser, updateUserInfo } from "../redux/slices/auth";
 import dayjs from "dayjs";
+import { getCurrentUser, updateUserInfo } from "../redux/actions/authAction";
 
 const { Title } = Typography;
 

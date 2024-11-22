@@ -13,8 +13,7 @@ import {
 import { Layout, Menu, Modal, message } from "antd";
 import { SidebarButton } from "./sidebar-button/SidebarButton";
 import * as styles from "./index.css";
-import { logout } from "../../redux/slices/auth";
-
+import { logout } from "../../redux/actions/authAction";
 const { Sider } = Layout;
 
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
@@ -63,14 +62,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
 
   const menuItems = routeData.map((route) => ({
     key: route.key,
-    label: (
-      <SidebarButton
-        to={route.key}
-        label={route.title}
-        isActive={location.pathname === route.key}
-        isExpanded={isExpanded}
-      />
-    ),
+    label: <SidebarButton label={route.title} isExpanded={isExpanded} />,
     title: route.title,
     icon: route.icon,
   }));
@@ -102,7 +94,17 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
           )}
         </div>
         {/* Menu items */}
-        <Menu items={menuItems} className="bg-transparent" />
+        <Menu
+          items={menuItems}
+          className="bg-transparent"
+          onClick={({ key }) => {
+            if (key === "/logout") {
+              showLogoutModal();
+            } else {
+              navigate(key);
+            }
+          }}
+        />
       </Sider>
 
       {/* Logout confirmation modal */}

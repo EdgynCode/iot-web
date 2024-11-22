@@ -3,9 +3,9 @@ import { Form, Input, Button, DatePicker, Select, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import { register } from "../redux/slices/auth";
 import { clearMessage } from "../redux/slices/message";
 import { v4 as uuidv4 } from "uuid";
+import { register } from "../redux/actions/authAction";
 
 const { Option } = Select;
 

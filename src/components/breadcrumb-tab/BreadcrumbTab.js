@@ -2,6 +2,7 @@ import { LeftCircleOutlined, RightOutlined } from "@ant-design/icons";
 import { Col, Row, Breadcrumb } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Back } from "../back/Back";
 
 export const BreadcrumbTab = ({ items }) => {
   const navigate = useNavigate();
@@ -17,10 +18,7 @@ export const BreadcrumbTab = ({ items }) => {
         </Col>
       </Row>
       <Row className="my-5 mx-8">
-        <Col className="hover-effect" onClick={() => navigate(-1)}>
-          <LeftCircleOutlined className="mr-2" />
-          Quay về
-        </Col>
+        <Back />
       </Row>
     </>
   );

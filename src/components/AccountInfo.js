@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Col, Row, Typography, Image } from "antd";
-import { getCurrentUser } from "../redux/slices/auth";
+import { getCurrentUser } from "../redux/actions/authAction";
 
 const { Title, Text } = Typography;
 

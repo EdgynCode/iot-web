@@ -1,6 +1,4 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:5064/api/";
+import axiosInstance from "./axiosInstance";
 
 const register = async (
   id,
@@ -14,7 +12,7 @@ const register = async (
   phoneNumber
 ) => {
   try {
-    const response = await axios.post(API_URL + "Account/Register", {
+    const response = await axiosInstance.post("Account/Register", {
       id,
       firstName,
       lastName,
@@ -33,7 +31,7 @@ const register = async (
 };
 
 const login = async (userName, password) => {
-  const response = await axios.post(API_URL + "Account/Login", {
+  const response = await axiosInstance.post("Account/Login", {
     userName,
     password,
   });
@@ -44,17 +42,33 @@ const login = async (userName, password) => {
 };
 
 const logout = async () => {
-  localStorage.removeItem("user");
-  const response = await axios.post(API_URL + "Account/Logout");
-  return response.data;
+  try {
+    const storedUser = JSON.parse(localStorage.getItem("user")); // Lấy token từ localStorage
+    if (!storedUser?.jwtAccessToken) {
+      throw new Error("No access token found for logout.");
+    }
+
+    // Gửi request logout với token
+    const response = await axiosInstance.delete("Account/Logout", {
+      headers: {
+        Authorization: `Bearer ${storedUser.jwtAccessToken}`, // Gắn token vào header
+      },
+    });
+
+    localStorage.removeItem("user"); // Xóa thông tin user
+    return response.data;
+  } catch (error) {
+    console.error("Logout error:", error.response?.data || error.message);
+    throw error.response?.data || error.message;
+  }
 };
 
 const getCurrentUser = async () => {
   const user = JSON.parse(localStorage.getItem("user"));
 
   if (user && user.userId) {
-    const response = await axios.get(
-      API_URL + `User/GetUserDetails?userid=${user.userId}`
+    const response = await axiosInstance.get(
+      `User/GetUserDetails?userid=${user.userId}`
     );
     return response.data;
   }
@@ -62,10 +76,9 @@ const getCurrentUser = async () => {
 };
 
 const updateUserInfo = async (userData) => {
-  const response = await axios.put(API_URL + "User/UpdateUserInfo", userData);
+  const response = await axiosInstance.put("User/UpdateUserInfo", userData);
   return response.data;
 };
-
 const AuthService = {
   register,
   login,
