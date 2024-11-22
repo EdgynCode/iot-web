@@ -8,8 +8,8 @@ import {
 import styles from "./index.css";
 const Selector = ({ title, actions, filters }) => {
   return (
-    <div className="p-[20px_0] mt-6 bg-white rounded-[40px] overflow-hidden">
-      <Row justify="space-between" align="middle" className="p-[5px_24px]">
+    <div className="!p-[20px_0] mt-6 bg-white tab-rounded">
+      <Row className="row">
         <Col className="mx-[2%] font-semibold text-[20px]">{title}</Col>
         <Col>
           <Button.Group>

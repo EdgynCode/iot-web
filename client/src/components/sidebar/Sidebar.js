@@ -11,25 +11,36 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu, Modal, message } from "antd";
 import { SidebarButton } from "./sidebar-button/SidebarButton";
+import { useDispatch } from "react-redux";
 import * as styles from "./index.css";
+import { logout } from "../../redux/actions/authAction";
 const { Sider } = Layout;
 
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const dispatch = useDispatch();
   const showLogoutModal = () => {
     setIsModalVisible(true);
   };
 
   const handleConfirmLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
+    dispatch(logout())
+      .then(() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
 
-    message.success("Đăng xuất thành công");
+        // message.success("Đăng xuất thành công");
+        message.success("Đăng xuất thành công" + localStorage.getItem("user"));
 
-    navigate("/login");
+        navigate("/login");
+      })
+      .catch((error) => {
+        message.error("Có lỗi xảy ra khi đăng xuất");
+        console.error(error);
+      });
+
     setIsModalVisible(false);
   };
 
@@ -49,14 +60,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
 
   const menuItems = routeData.map((route) => ({
     key: route.key,
-    label: (
-      <SidebarButton
-        to={route.key}
-        label={route.title}
-        isActive={location.pathname === route.key}
-        isExpanded={isExpanded}
-      />
-    ),
+    label: <SidebarButton label={route.title} isExpanded={isExpanded} />,
     title: route.title,
     icon: route.icon,
   }));
@@ -88,7 +92,17 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
           )}
         </div>
         {/* Menu items */}
-        <Menu items={menuItems} className="bg-transparent" />
+        <Menu
+          items={menuItems}
+          className="bg-transparent"
+          onClick={({ key }) => {
+            if (key === "/logout") {
+              showLogoutModal();
+            } else {
+              navigate(key);
+            }
+          }}
+        />
       </Sider>
 
       {/* Logout confirmation modal */}

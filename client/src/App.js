@@ -29,7 +29,7 @@ function App() {
           <Route path="/lessons" element={<Lessons />} />
           <Route path="/lesson-detail/:key" element={<LessonDetail />} />
           <Route path="/students" element={<Students />} />
-          <Route path="/student-detail" element={<StudentDetail />} />
+          <Route path="/student-detail/:id" element={<StudentDetail />} />
           <Route path="/devices" element={<Devices />} />
         </Route>
         <Route path="/login" element={<Login setUsername={setUsername} />} />

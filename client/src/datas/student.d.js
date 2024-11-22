@@ -72,14 +72,18 @@ export const studentColumns = (navigate) => [
     title: "Mã số",
     dataIndex: "id",
     key: "id",
-    render: (text) => <a onClick={() => navigate(`/student-detail`)}>{text}</a>,
+    render: (text, record) => (
+      <a onClick={() => navigate(`/student-detail/${record.id}`)}>{text}</a>
+    ),
     //sorter: (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10),
   },
   {
     title: "Họ tên",
     dataIndex: "fullname",
     key: "fullname",
-    render: (text) => <a onClick={() => navigate(`/student-detail`)}>{text}</a>,
+    render: (text, record) => (
+      <a onClick={() => navigate(`/student-detail/${record.id}`)}>{text}</a>
+    ),
   },
   {
     title: "Giới tính",
@@ -134,5 +138,69 @@ export const studentColumns = (navigate) => [
     title: "Số điện thoại",
     dataIndex: "phonenumber",
     key: "phonenumber",
+  },
+];
+export const studentDetailAction = [
+  {
+    title: "Chỉnh sửa thông tin",
+    onclick: () => {
+      console.log("Edit");
+    },
+  },
+  {
+    title: "Gửi tin nhắn",
+    onclick: () => {
+      console.log("Delete");
+    },
+  },
+];
+
+export const assignments = [
+  {
+    id: "1",
+    studentId: "4701104087",
+    assignment: "Bài tập 1",
+    status: "Chưa nộp",
+  },
+  {
+    id: "2",
+    studentId: "4701104087",
+    assignment: "Bài tập 2",
+    status: "Chưa nộp",
+  },
+  {
+    id: "3",
+    studentId: "4701104087",
+    assignment: "Bài tập 3",
+    status: "Chưa nộp",
+  },
+  {
+    id: "4",
+    studentId: "4701104087",
+    assignment: "Bài tập 4",
+    status: "Đã nộp",
+  },
+  {
+    id: "5",
+    studentId: "4701104087",
+    assignment: "Bài tập 5",
+    status: "Đã nộp",
+  },
+];
+export const assignmentColumns = [
+  {
+    title: "Mã số",
+    dataIndex: "id",
+    key: "id",
+  },
+  {
+    title: "Bài tập",
+    dataIndex: "assignment",
+    key: "assignment",
+  },
+  {
+    title: "Trạng thái",
+    dataIndex: "status",
+    key: "status",
   },
 ];

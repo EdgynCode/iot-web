@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button, DatePicker, Select, message } from "antd";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";

@@ -19,8 +19,6 @@ const Students = () => {
         data={studentData}
         column={studentColumns(navigate)}
       />
-      {/* <StudentSelect />
-      <StudentTable /> */}
     </>
   );
 };

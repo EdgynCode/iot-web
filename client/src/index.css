@@ -24,3 +24,21 @@ code {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
 }
+.tab-rounded {
+  padding: 20px 13.5px;
+  margin-top: 1.5rem;
+  border-radius: 50px;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 24px;
+}
+.tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10%;
+  margin: 1% 2% 2% 2%;
+}
