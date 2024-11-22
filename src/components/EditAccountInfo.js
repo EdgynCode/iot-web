@@ -122,9 +122,6 @@ const EditAccountInfo = () => {
               >
                 <Input />
               </Form.Item>
-              <Form.Item label="Tên đăng nhập" name="userName">
-                <Input disabled />
-              </Form.Item>
             </Col>
             <Col span={9}>
               <Form.Item
@@ -176,9 +173,6 @@ const EditAccountInfo = () => {
                 ]}
               >
                 <Input />
-              </Form.Item>
-              <Form.Item label="Mật khẩu" name="password">
-                <Input disabled />
               </Form.Item>
             </Col>
           </Row>
