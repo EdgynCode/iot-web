@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button, DatePicker, Select, message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
+import queryString from "query-string";
 import { clearMessage } from "../redux/slices/message";
 import { v4 as uuidv4 } from "uuid";
 import { register } from "../redux/actions/authAction";
@@ -13,12 +14,18 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+
   useEffect(() => {
     dispatch(clearMessage());
   }, [dispatch]);
 
   const onFinish = async (values) => {
     setLoading(true);
+
+    const params = queryString.parse(location.search);
+    const userType = params.usertype;
+
     const data = {
       id: uuidv4(),
       firstName: values.firstName,
@@ -30,7 +37,7 @@ const Register = () => {
       password: values.password,
       phoneNumber: values.phoneNumber,
     };
-    dispatch(register(data))
+    dispatch(register({ ...data, userType }))
       .unwrap()
       .then(() => {
         message.success("Đăng ký thành công!");
@@ -63,6 +70,18 @@ const Register = () => {
           className="space-y-4"
         >
           <Form.Item
+            name="userType"
+            rules={[
+              { required: true, message: "Vui lòng chọn loại người dùng!" },
+            ]}
+          >
+            <Select placeholder="Loại người dùng" className="rounded-lg">
+              <Option value="NguoiDay">Người dạy</Option>
+              <Option value="NguoiHoc">Người học</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
             name="firstName"
             rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
           >
@@ -81,9 +100,9 @@ const Register = () => {
             rules={[{ required: true, message: "Vui lòng chọn giới tính!" }]}
           >
             <Select placeholder="Giới tính" className="rounded-lg">
-              <Option value="male">Nam</Option>
-              <Option value="female">Nữ</Option>
-              <Option value="other">Khác</Option>
+              <Option value="Male">Nam</Option>
+              <Option value="Female">Nữ</Option>
+              <Option value="Other">Khác</Option>
             </Select>
           </Form.Item>
 
