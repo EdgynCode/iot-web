@@ -15,6 +15,7 @@ export const register = createAsyncThunk(
       email,
       password,
       phoneNumber,
+      userType,
     },
     thunkAPI
   ) => {
@@ -28,7 +29,8 @@ export const register = createAsyncThunk(
         userName,
         email,
         password,
-        phoneNumber
+        phoneNumber,
+        userType
       );
       return { user: data };
     } catch (error) {

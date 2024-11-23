@@ -9,20 +9,24 @@ const register = async (
   userName,
   email,
   password,
-  phoneNumber
+  phoneNumber,
+  userType
 ) => {
   try {
-    const response = await axiosInstance.post("Account/Register", {
-      id,
-      firstName,
-      lastName,
-      gender,
-      doB,
-      userName,
-      email,
-      password,
-      phoneNumber,
-    });
+    const response = await axiosInstance.post(
+      `Account/Register?userType=${userType}`,
+      {
+        id,
+        firstName,
+        lastName,
+        gender,
+        doB,
+        userName,
+        email,
+        password,
+        phoneNumber,
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Lỗi đăng ký:", error.response?.data || error.message);

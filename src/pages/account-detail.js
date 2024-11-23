@@ -1,7 +1,7 @@
 import React from "react";
 import AccountInfo from "../components/AccountInfo";
-import { LeftOutlined } from "@ant-design/icons";
 import { Button, Col, Row } from "antd";
+import { Back } from "../components/back/Back";
 import { useNavigate } from "react-router-dom";
 
 const AccountDetail = () => {
@@ -20,10 +20,7 @@ const AccountDetail = () => {
           <Col>
             <Row align="middle" gutter={10}>
               <Col>
-                <LeftOutlined className="text-2xl" />
-              </Col>
-              <Col>
-                <p className="m-0">Quay về trang chử</p>
+                <Back />
               </Col>
             </Row>
           </Col>

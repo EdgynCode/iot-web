@@ -1,6 +1,6 @@
 import React from "react";
 import EditAccountInfo from "../components/EditAccountInfo";
-import { LeftOutlined } from "@ant-design/icons";
+import { Back } from "../components/back/Back";
 import { Col, Row } from "antd";
 
 const EditAccountDetail = () => {
@@ -18,10 +18,7 @@ const EditAccountDetail = () => {
           <Col>
             <Row align="middle" gutter={10}>
               <Col>
-                <LeftOutlined className="text-2xl" />
-              </Col>
-              <Col>
-                <p className="m-0">Quay về danh sách chung</p>
+                <Back />
               </Col>
             </Row>
           </Col>
