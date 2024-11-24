@@ -102,3 +102,44 @@ export const updateUserInfo = createAsyncThunk(
     }
   }
 );
+
+export const sendLinkResetPassword = createAsyncThunk(
+  "Account/SendEmailResetPassword",
+  async ({ email, clientUri }, thunkAPI) => {
+    try {
+      const request = await AuthService.sendLinkResetPassword(email, clientUri);
+      thunkAPI.dispatch(setMessage("Reset password email sent successfully!"));
+      return request;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to send reset password email.";
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  "Account/ResetPassword",
+  async ({ password, confirmPassword, token, email }, thunkAPI) => {
+    try {
+      const data = await AuthService.resetPassword(
+        password,
+        confirmPassword,
+        token,
+        email
+      );
+      thunkAPI.dispatch(setMessage("Password reset successfully!"));
+      return data;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to reset password.";
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);

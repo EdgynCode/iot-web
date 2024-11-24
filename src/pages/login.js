@@ -90,7 +90,7 @@ const Login = () => {
           </a>
         </div>
         <div className="text-center text-gray-500 mt-4">
-          <a href="/reset-password">Quên mật khẩu</a>
+          <a href="/forgot-password">Quên mật khẩu</a>
         </div>
       </div>
     </div>

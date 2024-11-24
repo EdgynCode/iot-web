@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Form, Input, Button } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { LockOutlined } from "@ant-design/icons";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { clearMessage } from ".././redux/slices/message";
-import { login } from "../redux/actions/authAction";
+import { resetPassword } from "../redux/actions/authAction";
 
 const ResetPassword = () => {
   let navigate = useNavigate();
-
+  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -18,14 +17,23 @@ const ResetPassword = () => {
   }, [dispatch]);
 
   const onFinish = async (formValue) => {
-    const { userName, password } = formValue;
+    const { password, confirmPassword } = formValue;
+
+    const token = searchParams.get("token");
+    const email = searchParams.get("email");
+
+    if (!token || !email) {
+      alert("Invalid reset link!");
+      return;
+    }
+
     setLoading(true);
 
-    dispatch(login({ userName, password }))
+    dispatch(resetPassword({ password, confirmPassword, token, email }))
       .unwrap()
       .then(() => {
-        navigate("/account-detail");
-        window.location.reload();
+        alert("Đặt lại mật khẩu thành công! Trở về trang đăng nhập...");
+        navigate("/login");
       })
       .catch(() => {
         setLoading(false);
@@ -43,29 +51,45 @@ const ResetPassword = () => {
         </h1>
 
         <Form
-          name="login"
+          name="reset-password"
           initialValues={{ remember: true }}
           onFinish={onFinish}
           className="space-y-4"
         >
           <Form.Item
-            name="userName"
-            rules={[{ required: true, message: "Tên đăng nhập là bắt buộc!" }]}
+            name="password"
+            rules={[
+              { required: true, message: "Vui lòng nhập mật khẩu mới!" },
+              { min: 6, message: "Mật khẩu phải ít nhất 6 ký tự!" },
+            ]}
           >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Tên đăng nhập"
+            <Input.Password
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              placeholder="Mật khẩu mới"
               className="rounded-lg"
             />
           </Form.Item>
 
           <Form.Item
-            name="password"
-            rules={[{ required: true, message: "Vui lòng nhập mặt khẩu!" }]}
+            name="confirmPassword"
+            dependencies={["password"]}
+            rules={[
+              { required: true, message: "Vui lòng xác nhận mật khẩu!" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("Mật khẩu xác nhận không khớp!")
+                  );
+                },
+              }),
+            ]}
           >
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
-              placeholder="Mật khẩu"
+              placeholder="Xác nhận mật khẩu"
               className="rounded-lg"
             />
           </Form.Item>
@@ -77,20 +101,10 @@ const ResetPassword = () => {
               className="w-full bg-black text-white hover:bg-gray-800 rounded-lg"
               loading={loading}
             >
-              Đăng nhập
+              Đặt lại mật khẩu
             </Button>
           </Form.Item>
         </Form>
-
-        <div className="text-center text-gray-500 mt-4">
-          Chưa có tài khoản?{" "}
-          <a href="/register" className="font-semibold text-black">
-            Đăng kí
-          </a>
-        </div>
-        <div className="text-center text-gray-500 mt-4">
-          <a href="/">Quên mật khẩu</a>
-        </div>
       </div>
     </div>
   );

@@ -83,12 +83,51 @@ const updateUserInfo = async (userData) => {
   const response = await axiosInstance.put("User/UpdateUserInfo", userData);
   return response.data;
 };
+
+const sendLinkResetPassword = async (email, clientUri) => {
+  try {
+    const response = await axiosInstance.post(
+      "Account/SendEmailResetPassword",
+      {
+        email,
+        clientUri,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error sending reset password email:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
+const resetPassword = async (password, confirmPassword, token, email) => {
+  try {
+    const response = await axiosInstance.post("Account/ResetPassword", {
+      password,
+      confirmPassword,
+      token,
+      email,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error resetting password:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
 const AuthService = {
   register,
   login,
   logout,
   getCurrentUser,
   updateUserInfo,
+  sendLinkResetPassword,
+  resetPassword,
 };
 
 export default AuthService;

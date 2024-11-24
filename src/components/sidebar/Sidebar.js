@@ -6,13 +6,14 @@ import {
   ClockCircleOutlined,
   EditOutlined,
   HomeOutlined,
+  InfoCircleOutlined,
   LogoutOutlined,
   ThunderboltOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Modal, message } from "antd";
 import { SidebarButton } from "./sidebar-button/SidebarButton";
-import * as styles from "./index.css";
+import "./index.css";
 import { logout } from "../../redux/actions/authAction";
 const { Sider } = Layout;
 
@@ -57,6 +58,11 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
     { key: "/students", title: "Học sinh", icon: <UserOutlined /> },
     { key: "/timer", title: "Bài thực hành", icon: <ClockCircleOutlined /> },
     { key: "/devices", title: "Thiết bị", icon: <ThunderboltOutlined /> },
+    {
+      key: "/account-detail",
+      title: "Thông tin tài khoản",
+      icon: <InfoCircleOutlined />,
+    },
     { key: "/logout", title: "Đăng xuất", icon: <LogoutOutlined /> },
   ];
 

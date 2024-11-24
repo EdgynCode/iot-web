@@ -16,6 +16,7 @@ import {
   Login,
   Register,
   ResetPassword,
+  ForgotPassword,
   Devices,
 } from "./pages";
 import Layout from "./components/layout/Layout";
@@ -40,6 +41,7 @@ function App() {
         <Route path="/login" element={<Login setUsername={setUsername} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </Router>
   );
