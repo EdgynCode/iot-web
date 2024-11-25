@@ -1,14 +1,34 @@
-import React from "react";
-import { Form, Input, Button } from "antd";
+import React, { useState } from "react";
+import { Form, Input, Button, notification } from "antd";
 import { MailOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { sendLinkResetPassword } from "../redux/actions/authAction";
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const onFinish = (values) => {
     const clientUri = "http://localhost:5064/password/reset";
-    dispatch(sendLinkResetPassword({ email: values.email, clientUri }));
+    dispatch(sendLinkResetPassword({ email: values.email, clientUri }))
+      .unwrap()
+      .then(() => {
+        notification.success({
+          message: "Thành công",
+          description:
+            "Một liên kết đặt lại mật khẩu đã được gửi đến email của bạn.",
+        });
+      })
+      .catch((error) => {
+        notification.error({
+          message: "Thất bại",
+          description:
+            error?.message ||
+            "Đã xảy ra lỗi khi gửi liên kết đặt lại mật khẩu. Vui lòng thử lại.",
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -44,6 +64,7 @@ const ForgotPassword = () => {
               type="primary"
               htmlType="submit"
               className="w-full bg-black text-white hover:bg-gray-800 rounded-lg"
+              loading={loading}
             >
               Gửi liên kết
             </Button>
