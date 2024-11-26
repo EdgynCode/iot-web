@@ -8,10 +8,15 @@ import {
   Form,
   Input,
   Button,
+  Modal,
   message,
 } from "antd";
 import dayjs from "dayjs";
-import { getCurrentUser, updateUserInfo } from "../redux/actions/authAction";
+import {
+  getCurrentUser,
+  updateUserInfo,
+  sendLinkResetPassword,
+} from "../redux/actions/authAction";
 
 const { Title } = Typography;
 
@@ -61,6 +66,38 @@ const EditAccountInfo = () => {
       .catch((error) => {
         message.error("Cập nhật thông tin thất bại: " + error);
       });
+  };
+
+  const handleResetPassword = () => {
+    Modal.confirm({
+      title: "Xác nhận đặt lại mật khẩu",
+      content:
+        "Bạn có chắc chắn muốn đặt lại mật khẩu? Một liên kết sẽ được gửi đến email của bạn.",
+      okText: "Xác nhận",
+      cancelText: "Hủy",
+      onOk: () => {
+        if (user && user.email) {
+          const clientUri = "http://localhost:5064/password/reset";
+          dispatch(sendLinkResetPassword({ email: user.email, clientUri }))
+            .unwrap()
+            .then(() => {
+              message.success(
+                "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn."
+              );
+            })
+            .catch((error) => {
+              message.error(
+                "Đã xảy ra lỗi khi gửi liên kết đặt lại mật khẩu: " +
+                  error.message
+              );
+            });
+        } else {
+          message.error(
+            "Không thể đặt lại mật khẩu vì thông tin email không khả dụng."
+          );
+        }
+      },
+    });
   };
 
   if (!user) {
@@ -184,7 +221,12 @@ const EditAccountInfo = () => {
             >
               Lưu
             </Button>
-            <Button className="bg-blue-500 text-white">Đặt lại mật khẩu</Button>
+            <Button
+              className="bg-blue-500 text-white"
+              onClick={handleResetPassword}
+            >
+              Đặt lại mật khẩu
+            </Button>
           </Col>
         </Form>
       </Col>
