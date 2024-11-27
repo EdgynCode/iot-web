@@ -77,7 +77,7 @@ const EditAccountInfo = () => {
       cancelText: "Hủy",
       onOk: () => {
         if (user && user.email) {
-          const clientUri = "http://localhost:5064/password/reset";
+          const clientUri = "http://localhost:3000/reset-password";
           dispatch(sendLinkResetPassword({ email: user.email, clientUri }))
             .unwrap()
             .then(() => {
