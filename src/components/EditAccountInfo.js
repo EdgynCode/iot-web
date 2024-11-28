@@ -11,6 +11,7 @@ import {
   Modal,
   message,
 } from "antd";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import {
   getCurrentUser,
@@ -21,6 +22,7 @@ import {
 const { Title } = Typography;
 
 const EditAccountInfo = () => {
+  let navigate = useNavigate();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
@@ -62,6 +64,7 @@ const EditAccountInfo = () => {
       .unwrap()
       .then(() => {
         message.success("Cập nhật thông tin thành công!");
+        navigate("/account-detail");
       })
       .catch((error) => {
         message.error("Cập nhật thông tin thất bại: " + error);
