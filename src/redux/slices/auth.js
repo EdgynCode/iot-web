@@ -8,9 +8,11 @@ import {
 
 const user = JSON.parse(localStorage.getItem("user"));
 
-const initialState = user
-  ? { isLoggedIn: true, user }
-  : { isLoggedIn: false, user: null };
+const initialState = {
+  isLoggedIn: user ? true : false,
+  user: user || null,
+  roles: null,
+};
 
 const authSlice = createSlice({
   name: "Account",
@@ -20,14 +22,17 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.isLoggedIn = true;
         state.user = action.payload.user;
+        state.roles = action.payload.roles;
       })
       .addCase(login.rejected, (state) => {
         state.isLoggedIn = false;
         state.user = null;
+        state.roles = null;
       })
       .addCase(logout.fulfilled, (state) => {
         state.isLoggedIn = false;
         state.user = null;
+        state.roles = null;
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
         state.user = action.payload;

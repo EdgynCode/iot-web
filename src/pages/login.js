@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { clearMessage } from "../redux/slices/message";
@@ -24,10 +24,12 @@ const Login = () => {
     dispatch(login({ userName, password }))
       .unwrap()
       .then(() => {
+        message.success("Đăng nhập thành công!");
         navigate("/account-detail");
-        window.location.reload();
+        //window.location.reload();
       })
       .catch(() => {
+        message.error("Đăng nhập thất bại. Vui lòng thử lại.");
         setLoading(false);
       });
   };
