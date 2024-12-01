@@ -3,7 +3,7 @@ import AuthService from "../services/auth.service.js";
 import { setMessage } from "../slices/message.js";
 
 export const register = createAsyncThunk(
-  "Account/Register",
+  "Account/register",
   async (
     {
       id,
@@ -15,7 +15,7 @@ export const register = createAsyncThunk(
       email,
       password,
       phoneNumber,
-      userType,
+      discriminator,
     },
     thunkAPI
   ) => {
@@ -30,7 +30,7 @@ export const register = createAsyncThunk(
         email,
         password,
         phoneNumber,
-        userType
+        discriminator
       );
       return { user: data };
     } catch (error) {

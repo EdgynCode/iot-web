@@ -24,7 +24,7 @@ const Register = () => {
     setLoading(true);
 
     const params = queryString.parse(location.search);
-    const userType = params.usertype;
+    const discriminator = params.discriminator;
 
     const data = {
       id: uuidv4(),
@@ -37,7 +37,7 @@ const Register = () => {
       password: values.password,
       phoneNumber: values.phoneNumber,
     };
-    dispatch(register({ ...data, userType }))
+    dispatch(register({ ...data, discriminator }))
       .unwrap()
       .then(() => {
         message.success("Đăng ký thành công!");
@@ -70,7 +70,7 @@ const Register = () => {
           className="space-y-4"
         >
           <Form.Item
-            name="userType"
+            name="discriminator"
             rules={[
               { required: true, message: "Vui lòng chọn loại người dùng!" },
             ]}

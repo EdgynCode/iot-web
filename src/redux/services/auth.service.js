@@ -10,11 +10,11 @@ const register = async (
   email,
   password,
   phoneNumber,
-  userType
+  discriminator
 ) => {
   try {
     const response = await axiosInstance.post(
-      `Account/Register?userType=${userType}`,
+      `Account/register?usertype=${discriminator}`,
       {
         id,
         firstName,
