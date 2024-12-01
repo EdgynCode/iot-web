@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import AuthService from "../services/auth.service.js";
 import { setMessage } from "../slices/message.js";
-
+import { jwtDecode } from "jwt-decode";
 export const register = createAsyncThunk(
   "Account/Register",
   async (
@@ -51,7 +51,9 @@ export const login = createAsyncThunk(
   async ({ userName, password }, thunkAPI) => {
     try {
       const data = await AuthService.login(userName, password);
-      return { user: data };
+      const decodedToken = jwtDecode(data.jwtAccessToken);
+      const roles = decodedToken.roles;
+      return { user: data, roles: roles };
     } catch (error) {
       const message =
         (error.response &&
