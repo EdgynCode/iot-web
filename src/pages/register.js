@@ -42,7 +42,7 @@ const Register = () => {
       .then(() => {
         message.success("Đăng ký thành công!");
         navigate("/login");
-        window.location.reload();
+        //window.location.reload();
       })
       .catch(() => {
         message.error("Đăng ký thất bại. Vui lòng thử lại.");
