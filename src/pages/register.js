@@ -23,9 +23,6 @@ const Register = () => {
   const onFinish = async (values) => {
     setLoading(true);
 
-    const params = queryString.parse(location.search);
-    const discriminator = params.discriminator;
-
     const data = {
       id: uuidv4(),
       firstName: values.firstName,
@@ -36,8 +33,9 @@ const Register = () => {
       email: values.email,
       password: values.password,
       phoneNumber: values.phoneNumber,
+      discriminator: values.discriminator,
     };
-    dispatch(register({ ...data, discriminator }))
+    dispatch(register(data))
       .unwrap()
       .then(() => {
         message.success("Đăng ký thành công!");
