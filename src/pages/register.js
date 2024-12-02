@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button, DatePicker, Select, message } from "antd";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import queryString from "query-string";
 import { clearMessage } from "../redux/slices/message";
 import { v4 as uuidv4 } from "uuid";
 import { register } from "../redux/actions/authAction";
@@ -14,7 +13,6 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation();
 
   useEffect(() => {
     dispatch(clearMessage());
@@ -22,9 +20,6 @@ const Register = () => {
 
   const onFinish = async (values) => {
     setLoading(true);
-
-    const params = queryString.parse(location.search);
-    const userType = params.usertype;
 
     const data = {
       id: uuidv4(),
@@ -36,8 +31,9 @@ const Register = () => {
       email: values.email,
       password: values.password,
       phoneNumber: values.phoneNumber,
+      discriminator: values.discriminator,
     };
-    dispatch(register({ ...data, userType }))
+    dispatch(register(data))
       .unwrap()
       .then(() => {
         message.success("Đăng ký thành công!");
@@ -70,7 +66,7 @@ const Register = () => {
           className="space-y-4"
         >
           <Form.Item
-            name="userType"
+            name="discriminator"
             rules={[
               { required: true, message: "Vui lòng chọn loại người dùng!" },
             ]}

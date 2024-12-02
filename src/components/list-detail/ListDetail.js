@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Selector from "./selector/Selector";
 import { Button, Input, Table } from "antd";
-import styles from "./index.css";
+import "./index.css";
 import { ExportOutlined, SearchOutlined } from "@ant-design/icons";
 
 export const ListDetail = ({ title, actions, filters, data, column }) => {
