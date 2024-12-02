@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import AuthService from "../services/auth.service.js";
 import { setMessage } from "../slices/message.js";
 import { jwtDecode } from "jwt-decode";
+import moment from "moment";
 export const register = createAsyncThunk(
   "Account/register",
   async (
@@ -20,12 +21,16 @@ export const register = createAsyncThunk(
     thunkAPI
   ) => {
     try {
+      const formattedDoB = moment(doB, "YYYY-MM-DD").format(
+        "YYYY-MM-DDTHH:mm:ss"
+      );
+
       const data = await AuthService.register(
         id,
         firstName,
         lastName,
         gender,
-        doB,
+        formattedDoB,
         userName,
         email,
         password,

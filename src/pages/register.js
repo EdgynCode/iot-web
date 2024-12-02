@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button, DatePicker, Select, message } from "antd";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import queryString from "query-string";
 import { clearMessage } from "../redux/slices/message";
 import { v4 as uuidv4 } from "uuid";
 import { register } from "../redux/actions/authAction";
@@ -14,7 +13,6 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation();
 
   useEffect(() => {
     dispatch(clearMessage());

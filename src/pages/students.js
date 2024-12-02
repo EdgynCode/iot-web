@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { Modal, Upload, Button, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { register } from "../redux/actions/authAction";
+import { v4 as uuidv4 } from "uuid";
 import * as XLSX from "xlsx";
 
 const Students = () => {
@@ -36,16 +37,18 @@ const Students = () => {
         // Dispatch Redux actions
         data.forEach((row) => {
           const student = {
-            firstName: row["Tên"],
-            lastName: row["Họ"],
-            gender: row["Giới tính"],
-            doB: row["Ngày sinh"],
+            id: uuidv4(),
+            firstName: row["FirstName"],
+            lastName: row["LastName"],
+            gender: row["Gender"],
+            doB: row["DoB"],
             userName: row["Username"],
             email: row["Email"],
-            password: row["Mật khẩu"],
-            phoneNumber: row["SĐT"],
-            discriminator: row["Chức vụ"],
+            password: row["Password"],
+            phoneNumber: row["PhoneNumber"],
+            discriminator: "NguoiHoc",
           };
+          console.log(student);
 
           dispatch(register(student));
         });

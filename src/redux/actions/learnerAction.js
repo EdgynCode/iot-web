@@ -3,7 +3,7 @@ import LearnerService from "../services/learner.service.js";
 import { setMessage } from "../slices/message.js";
 
 export const createMultipleLearner = createAsyncThunk(
-  "Leaner/CreateLeaner",
+  "Leaner/CreateLearners",
   async (learners, thunkAPI) => {
     try {
       const learner = await LearnerService.createMultipleLearner(learners);
