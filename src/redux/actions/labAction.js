@@ -35,3 +35,19 @@ export const getAllLabs = createAsyncThunk(
     }
   }
 );
+
+export const deleteLabs = createAsyncThunk(
+  "Lab/DeleteLabs",
+  async (labIds, thunkAPI) => {
+    try {
+      const experiments = await LabService.deleteLabs(labIds);
+      return experiments;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to delete labs";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);

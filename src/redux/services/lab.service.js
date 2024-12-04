@@ -26,9 +26,23 @@ const getAllLabs = async () => {
   }
 };
 
+const deleteLabs = async (labIds) => {
+  try {
+    const response = await axiosInstance.delete("Lab/DeleteLabs", labIds);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error deleting labs:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const LabService = {
   createLab,
   getAllLabs,
+  deleteLabs,
 };
 
 export default LabService;

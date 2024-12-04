@@ -38,9 +38,43 @@ const getAllExperiment = async () => {
   }
 };
 
+const deleteExperiments = async (experimentIds) => {
+  try {
+    const response = await axiosInstance.delete(
+      "Experiment/DeleteExperiments",
+      experimentIds
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error deleting experiments:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
+const updateExperiment = async (experimentData) => {
+  try {
+    const response = await axiosInstance.put(
+      "Experiment/UpdateExperiment",
+      experimentData
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error updating experiments:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const ExperimentService = {
   createExperiment,
   getAllExperiment,
+  deleteExperiments,
+  updateExperiment,
 };
 
 export default ExperimentService;

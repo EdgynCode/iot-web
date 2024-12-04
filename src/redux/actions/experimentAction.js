@@ -35,3 +35,39 @@ export const getAllExperiment = createAsyncThunk(
     }
   }
 );
+
+export const deleteExperiments = createAsyncThunk(
+  "Experiment/DeleteExperiments",
+  async (experimentIds, thunkAPI) => {
+    try {
+      const experiments = await ExperimentService.deleteExperiments(
+        experimentIds
+      );
+      return experiments;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to delete experiments";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const updateExperiment = createAsyncThunk(
+  "Experiment/UpdateExperiment",
+  async (experimentData, thunkAPI) => {
+    try {
+      const experiments = await ExperimentService.updateExperiment(
+        experimentData
+      );
+      return experiments;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update experiment";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
