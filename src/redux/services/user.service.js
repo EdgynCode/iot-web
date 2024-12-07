@@ -1,6 +1,6 @@
 import axiosInstance from "./axiosInstance";
 
-const listAllUsers = async (usertype) => {
+const listAllUsersByType = async (usertype) => {
   try {
     const response = await axiosInstance.get(
       `User/ListAllUsers?usertype=${usertype}`
@@ -16,7 +16,7 @@ const listAllUsers = async (usertype) => {
 };
 
 const UserService = {
-  listAllUsers,
+  listAllUsersByType,
 };
 
 export default UserService;

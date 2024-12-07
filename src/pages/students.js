@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import {
   studentAction,
   studentColumns,
-  studentData,
   studentFilter,
 } from "../datas/student.d";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { Modal, Upload, Button, message } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { Modal, Upload, Button, Spin, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { register } from "../redux/actions/authAction";
+import { listAllUsersByType } from "../redux/actions/userAction";
 import { v4 as uuidv4 } from "uuid";
 import * as XLSX from "xlsx";
 
@@ -19,6 +19,17 @@ const Students = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState(null);
+
+  const studentsState = useSelector((state) => state.students || {});
+  const {
+    data: studentData = [],
+    loading = false,
+    error = null,
+  } = studentsState;
+
+  useEffect(() => {
+    dispatch(listAllUsersByType("NguoiHoc"));
+  }, [dispatch]);
 
   const handleModalOk = () => {
     if (!file) {
@@ -75,9 +86,11 @@ const Students = () => {
         title="Học sinh"
         actions={studentAction(setOpen)}
         filters={studentFilter}
-        data={studentData}
+        data={loading ? [] : studentData}
         column={studentColumns(navigate)}
       />
+      {loading && <Spin size="large" />}
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
       <Modal
         title="Import Excel File"
         open={open}

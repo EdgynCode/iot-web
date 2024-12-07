@@ -7,38 +7,7 @@ export const studentAction = (setOpen) => [
     },
   },
 ];
-export const studentData = [
-  {
-    key: "1",
-    id: "4701104087",
-    fullname: "Nguyễn Hữu Tân",
-    class: "10C13",
-    email: "nguyenhuutan080603@gmail.com",
-    phonenumber: "0703792808",
-    gender: "Nam",
-    role: "",
-  },
-  {
-    key: "2",
-    id: "470110408́8",
-    fullname: "Tran Ha",
-    class: "10C13",
-    email: "nguyenhuutan080603@gmail.com",
-    phonenumber: "0703792808",
-    gender: "Nam",
-    role: "",
-  },
-  {
-    key: "3",
-    id: "4701104089",
-    fullname: "Võ Thị Thu Hòa",
-    class: "10C13",
-    email: "thuhoa08102003@gmail.com",
-    phonenumber: "0928147832",
-    gender: "Nữ",
-    role: "Lớp trưởng",
-  },
-];
+export const studentData = [];
 export const gradeMenu = [
   { key: "1", label: "Khối 10" },
   { key: "2", label: "Khối 11" },
@@ -68,8 +37,8 @@ export const studentColumns = (navigate) => [
   },
   {
     title: "Họ tên",
-    dataIndex: "fullname",
-    key: "fullname",
+    dataIndex: "fullName",
+    key: "fullName",
     render: (text, record) => (
       <a onClick={() => navigate(`/student-detail/${record.id}`)}>{text}</a>
     ),
@@ -93,8 +62,8 @@ export const studentColumns = (navigate) => [
   },
   {
     title: "Lớp",
-    dataIndex: "class",
-    key: "class",
+    dataIndex: "nguoiHocLopHocs",
+    key: "nguoiHocLopHocs",
     render: (text) => <a>{text}</a>,
   },
   {
@@ -125,8 +94,8 @@ export const studentColumns = (navigate) => [
   },
   {
     title: "Số điện thoại",
-    dataIndex: "phonenumber",
-    key: "phonenumber",
+    dataIndex: "phoneNumber",
+    key: "phoneNumber",
   },
 ];
 export const studentDetailAction = [
