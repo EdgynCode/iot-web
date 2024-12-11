@@ -25,9 +25,39 @@ const createExperiment = async (
   }
 };
 
-const getAllExperiment = async () => {
+const getAllExperiments = async () => {
   try {
     const response = await axiosInstance.get("Experiment/GetAllExperiments");
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching experiment:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
+const getExperimentsByName = async (experimentName) => {
+  try {
+    const response = await axiosInstance.get(
+      `Experiment/GetExperimentsByName?experimentName=${experimentName}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching experiment:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
+const getExperimentsByLabId = async (labId) => {
+  try {
+    const response = await axiosInstance.get(
+      `Experiment/GetExperimentsByLab?labId==${labId}`
+    );
     return response.data;
   } catch (error) {
     console.error(
@@ -72,7 +102,9 @@ const updateExperiment = async (experimentData) => {
 
 const ExperimentService = {
   createExperiment,
-  getAllExperiment,
+  getAllExperiments,
+  getExperimentsByName,
+  getExperimentsByLabId,
   deleteExperiments,
   updateExperiment,
 };

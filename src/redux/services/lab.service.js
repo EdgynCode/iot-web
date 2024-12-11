@@ -26,6 +26,21 @@ const getAllLabs = async () => {
   }
 };
 
+const getLabsByName = async (labName) => {
+  try {
+    const response = await axiosInstance.get(
+      `Lab/GetLabsByName?name=${labName}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching labs:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const deleteLabs = async (labIds) => {
   try {
     const response = await axiosInstance.delete("Lab/DeleteLabs", labIds);
@@ -42,6 +57,7 @@ const deleteLabs = async (labIds) => {
 const LabService = {
   createLab,
   getAllLabs,
+  getLabsByName,
   deleteLabs,
 };
 
