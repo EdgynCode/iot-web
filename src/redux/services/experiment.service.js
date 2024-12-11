@@ -56,7 +56,7 @@ const deleteExperiments = async (experimentIds) => {
 
 const updateExperiment = async (experimentData) => {
   try {
-    const response = await axiosInstance.put(
+    const response = await axiosInstance.patch(
       "Experiment/UpdateExperiment",
       experimentData
     );

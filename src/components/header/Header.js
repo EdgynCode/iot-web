@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Col, Row } from "antd";
+import { getCurrentUser } from "../../redux/actions/authAction";
 
-const Header = ({ username }) => {
+const Header = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]);
+
   return (
     <Row className="flex items-center justify-between mb-5">
       <Col>
         <Row>
           <Col>
-            <div className="text-5xl font-medium">Chào {username}</div>
+            <div className="text-5xl font-medium">Chào {user.userName}</div>
           </Col>
         </Row>
 

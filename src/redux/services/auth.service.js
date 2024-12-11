@@ -80,7 +80,7 @@ const getCurrentUser = async () => {
 };
 
 const updateUserInfo = async (userData) => {
-  const response = await axiosInstance.put("User/UpdateUserInfo", userData);
+  const response = await axiosInstance.patch("User/UpdateUserInfo", userData);
   return response.data;
 };
 

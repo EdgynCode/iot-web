@@ -20,7 +20,7 @@ import {
 } from "../redux/actions/authAction";
 
 const { Title } = Typography;
-
+// update user api error: checking duplicate email
 const EditAccountInfo = () => {
   let navigate = useNavigate();
   const [form] = Form.useForm();
