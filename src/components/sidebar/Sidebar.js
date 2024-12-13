@@ -56,7 +56,11 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
     { key: "/lessons", title: "Bài học", icon: <BookOutlined /> },
     { key: "/edit", title: "Bài thi", icon: <EditOutlined /> },
     { key: "/students", title: "Học sinh", icon: <UserOutlined /> },
-    { key: "/timer", title: "Bài thực hành", icon: <ClockCircleOutlined /> },
+    {
+      key: "/labs",
+      title: "Bài thực hành",
+      icon: <ClockCircleOutlined />,
+    },
     { key: "/devices", title: "Thiết bị", icon: <ThunderboltOutlined /> },
     {
       key: "/account-detail",

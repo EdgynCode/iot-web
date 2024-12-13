@@ -7,7 +7,6 @@ export const studentAction = (setOpen) => [
     },
   },
 ];
-export const studentData = [];
 export const gradeMenu = [
   { key: "1", label: "Khối 10" },
   { key: "2", label: "Khối 11" },
