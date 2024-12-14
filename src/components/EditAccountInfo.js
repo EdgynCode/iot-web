@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
@@ -20,12 +20,13 @@ import {
 } from "../redux/actions/authAction";
 
 const { Title } = Typography;
-// update user api error: checking duplicate email
+
 const EditAccountInfo = () => {
   let navigate = useNavigate();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const [originalEmail, setOriginalEmail] = useState(null);
 
   useEffect(() => {
     dispatch(getCurrentUser());
@@ -46,21 +47,22 @@ const EditAccountInfo = () => {
               year: "numeric",
             })
           : null,
-        userName: user.userName,
-        password: user.password, // can't get password because hashing
         email: user.email,
         phoneNumber: user.phoneNumber,
       });
+      setOriginalEmail(user.email);
     }
   }, [user, form]);
 
   const handleFinish = async (values) => {
-    dispatch(
-      updateUserInfo({
-        ...values,
-        id: user.id,
-      })
-    )
+    const requestBody = { ...values, id: user.id };
+
+    // Include the email only if it has changed
+    if (values.email === originalEmail) {
+      delete requestBody.email;
+    }
+
+    dispatch(updateUserInfo(requestBody))
       .unwrap()
       .then(() => {
         message.success("Cập nhật thông tin thành công!");
