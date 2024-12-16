@@ -3,8 +3,8 @@ import { ListDetail } from "../components/list-detail/ListDetail";
 import { labAction, labColumns, labFilter } from "../datas/lab.d";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Spin, Modal, Input, Form, Button } from "antd";
-import { getAllLabs } from "../redux/actions/labAction";
+import { Spin, Modal, Input, Form, Button, message } from "antd";
+import { getAllLabs, createLab } from "../redux/actions/labAction";
 
 const Labs = () => {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const Labs = () => {
   const { data: labData = [], loading = false, error = null } = labState;
 
   useEffect(() => {
-    dispatch(getAllLabs);
+    dispatch(getAllLabs());
   }, [dispatch]);
 
   const openModal = () => {
@@ -39,16 +39,39 @@ const Labs = () => {
     return action;
   });
 
-  const handleFormSubmit = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        console.log("Submitted values:", values);
+  const handleFormSubmit = async (value) => {
+    // form
+    //   .validateFields()
+    //   .then((values) => {
+    //     console.log("Submitted values:", values);
+    //     dispatch(createLab(values))
+    //       .unwrap()
+    //       .then(() => {
+    //         message.success("Tạo bài thí nghiệm thành công!");
+    //         closeModal();
+    //       })
+    //       .catch(() => {
+    //         message.error("Tạo bài thí nghiệm thất bại.");
+    //       });
+    //   })
+    //   .catch((info) => {
+    //     console.log("Validation failed:", info);
+    //   });
+    form.validateFields();
+    const data = {
+      name: value.name,
+      pathImage: value.pathImage,
+    };
+    dispatch(createLab(data))
+      .unwrap()
+      .then(() => {
+        console.log("Submitted values:", value);
+        message.success("Tạo bài thí nghiệm thành công!");
         closeModal();
-        // Add logic to handle form submission (e.g., dispatch an action or update state)
+        dispatch(getAllLabs());
       })
-      .catch((info) => {
-        console.log("Validation failed:", info);
+      .catch(() => {
+        message.error("Tạo bài thí nghiệm thất bại.");
       });
   };
 
@@ -72,7 +95,7 @@ const Labs = () => {
       >
         <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
           <Form.Item
-            name="labName"
+            name="name"
             label="Tên bài thí nghiệm"
             rules={[
               { required: true, message: "Vui lòng nhập tên bài thí nghiệm!" },
