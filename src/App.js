@@ -18,6 +18,7 @@ import {
   ResetPassword,
   ForgotPassword,
   Devices,
+  Labs,
 } from "./pages";
 import Layout from "./components/layout/Layout";
 import RequireAuth from "./components/RequireAuth";
@@ -42,6 +43,7 @@ function App() {
               element={<EditAccountDetail />}
             />
             <Route path="/devices" element={<Devices />} />
+            <Route path="/labs" element={<Labs />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>
