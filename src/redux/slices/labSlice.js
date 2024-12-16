@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { listAllUsersByType } from "../actions/userAction.js";
+import { getAllLabs } from "../actions/labAction";
 
-const studentSlice = createSlice({
-  name: "students",
+const labSlice = createSlice({
+  name: "labs",
   initialState: {
     data: [],
     loading: false,
@@ -11,19 +11,19 @@ const studentSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(listAllUsersByType.pending, (state) => {
+      .addCase(getAllLabs.pending, (state) => {
         state.loading = true;
       })
-      .addCase(listAllUsersByType.fulfilled, (state, action) => {
+      .addCase(getAllLabs.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
       })
-      .addCase(listAllUsersByType.rejected, (state, action) => {
+      .addCase(getAllLabs.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
-const { reducer } = studentSlice;
+const { reducer } = labSlice;
 export default reducer;
