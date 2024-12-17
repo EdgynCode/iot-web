@@ -57,8 +57,8 @@ export const login = createAsyncThunk(
     try {
       const data = await AuthService.login(userName, password);
       const decodedToken = jwtDecode(data.jwtAccessToken);
-      const roles = decodedToken.roles;
-      return { user: data, roles: roles };
+      const role = decodedToken.role;
+      return { user: data, roles: role };
     } catch (error) {
       const message =
         (error.response &&
