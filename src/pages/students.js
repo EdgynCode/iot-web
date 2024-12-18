@@ -28,7 +28,7 @@ const Students = () => {
   } = studentsState;
 
   useEffect(() => {
-    dispatch(listAllUsersByType("NguoiHoc"));
+    dispatch(listAllUsersByType("Learner"));
   }, [dispatch]);
 
   const handleModalOk = () => {
@@ -57,7 +57,7 @@ const Students = () => {
             email: row["Email"],
             password: row["Password"],
             phoneNumber: row["PhoneNumber"],
-            discriminator: "NguoiHoc",
+            discriminator: "Learner",
           };
           console.log(student);
 
@@ -65,6 +65,7 @@ const Students = () => {
         });
 
         message.success("Students imported successfully!");
+        dispatch(listAllUsersByType("Learner"));
         setFile(null);
         setOpen(false);
       } catch (error) {
