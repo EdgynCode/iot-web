@@ -33,6 +33,7 @@ const Register = () => {
       phoneNumber: values.phoneNumber,
       discriminator: values.discriminator,
     };
+    console.log(data);
     dispatch(register(data))
       .unwrap()
       .then(() => {
