@@ -1,9 +1,16 @@
-export const studentAction = (setOpen) => [
+export const studentAction = () => [
   {
     title: "Thêm danh sách học sinh",
-    onClick: () => {
+    onClick: (setOpen) => {
       setOpen(true);
       console.log("Importing...");
+    },
+  },
+  {
+    title: "Xuất dữ liệu",
+    onClick: (setOpen) => {
+      setOpen(true);
+      console.log("Exporting...");
     },
   },
 ];
