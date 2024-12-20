@@ -9,6 +9,7 @@ import {
   masterAdminRoute,
   teacherRoute,
 } from "../../datas/route.d";
+import { jwtDecode } from "jwt-decode";
 const { Sider } = Layout;
 
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
@@ -16,11 +17,14 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const roles = localStorage.getItem("roles");
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const role = user ? jwtDecode(user.jwtAccessToken).role : null;
+
   const routes =
-    roles === "MasterAdmin"
+    role === "SuperAdmin"
       ? masterAdminRoute
-      : roles === "Teacher"
+      : role === "Teacher"
       ? teacherRoute
       : learnerRoute;
   const showLogoutModal = () => {
