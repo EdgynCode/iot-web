@@ -7,18 +7,24 @@ import {
 } from "../datas/student.d";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal, Upload, Button, Spin, message } from "antd";
+import { Modal, Upload, Button, Spin, Radio, Input, Form, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { register } from "../redux/actions/authAction";
 import { listAllUsersByType } from "../redux/actions/userAction";
 import { v4 as uuidv4 } from "uuid";
 import * as XLSX from "xlsx";
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 
 const Students = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState(null);
+
+  const [exportType, setExportType] = useState("pdf");
+  const [directory, setDirectory] = useState("");
+  const [fileName, setFileName] = useState("student_data");
 
   const studentsState = useSelector((state) => state.students || {});
   const {
@@ -30,6 +36,46 @@ const Students = () => {
   useEffect(() => {
     dispatch(listAllUsersByType("Learner"));
   }, [dispatch]);
+
+  const handleExport = async () => {
+    const formattedFileName = `${fileName}`;
+    switch (exportType) {
+      case "pdf":
+        const doc = new jsPDF();
+        doc.autoTable({
+          head: [
+            [
+              "First Name",
+              "Last Name",
+              "Gender",
+              "Date of Birth",
+              "Username",
+              "Email",
+              "Phone Number",
+            ],
+          ],
+          body: studentData.map((student) => [
+            student.firstName,
+            student.lastName,
+            student.gender,
+            student.doB,
+            student.userName,
+            student.email,
+            student.phoneNumber,
+          ]),
+        });
+        doc.save(`${directory}/${formattedFileName}.pdf`);
+        break;
+      case "excel":
+        const worksheet = XLSX.utils.json_to_sheet(studentData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
+        XLSX.writeFile(workbook, `${directory}/${formattedFileName}.xlsx`);
+        break;
+      default:
+        console.log("Invalid selection");
+    }
+  };
 
   const handleModalOk = () => {
     if (!file) {
@@ -81,11 +127,22 @@ const Students = () => {
     setOpen(false);
   };
 
+  const handleActionClick = (action) => {
+    if (action.title === "Xuất dữ liệu") {
+      setOpen(true);
+    } else {
+      action.onClick(setOpen);
+    }
+  };
+
   return (
     <>
       <ListDetail
         title="Học sinh"
-        actions={studentAction(setOpen)}
+        actions={studentAction().map((action) => ({
+          ...action,
+          onClick: () => handleActionClick(action),
+        }))}
         filters={studentFilter}
         data={loading ? [] : studentData}
         column={studentColumns(navigate)}
@@ -110,6 +167,30 @@ const Students = () => {
         >
           <Button icon={<UploadOutlined />}>Select File</Button>
         </Upload>
+      </Modal>
+
+      <Modal
+        title="Xuất dữ liệu học sinh"
+        open={open}
+        onOk={handleExport}
+        onCancel={handleModalCancel}
+        okText="Xuất dữ liệu"
+        cancelText="Hủy"
+      >
+        <Radio.Group
+          onChange={(e) => setExportType(e.target.value)}
+          value={exportType}
+        >
+          <Radio value="pdf">File PDF</Radio>
+          <Radio value="excel">File Excel</Radio>
+        </Radio.Group>
+        <Form.Item label="Nhập tên file">
+          <Input
+            placeholder="Nhập tên file"
+            value={fileName}
+            onChange={(e) => setFileName(e.target.value)}
+          />
+        </Form.Item>
       </Modal>
     </>
   );
