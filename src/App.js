@@ -1,28 +1,11 @@
 import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import {
-  Home,
-  Lessons,
-  LessonDetail,
-  Students,
-  StudentDetail,
-  AccountDetail,
-  EditAccountDetail,
-  Login,
-  Register,
-  ResetPassword,
-  ForgotPassword,
-  Devices,
-  Labs,
-} from "./pages";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Login, Register } from "./pages";
 import Layout from "./components/layout/Layout";
 import RequireAuth from "./components/RequireAuth";
 import { NotFound } from "./components/not-found/NotFound";
+import { masterAdminRoute, teacherRoute, learnerRoute } from "./datas/route.d";
+
 function App() {
   const [username, setUsername] = useState("");
 
@@ -31,26 +14,27 @@ function App() {
       <Routes>
         <Route element={<RequireAuth allowedRoles="SuperAdmin" />}>
           <Route path="/" element={<Layout />}>
-            <Route path="/" element={<Navigate to="/home" />} />
-            <Route path="/home" element={<Home username={username} />} />
-            <Route path="/lessons" element={<Lessons />} />
-            <Route path="/lesson-detail/:key" element={<LessonDetail />} />
-            <Route path="/students" element={<Students />} />
-            <Route path="/student-detail/:id" element={<StudentDetail />} />
-            <Route path="/account-detail" element={<AccountDetail />} />
-            <Route
-              path="/edit-account-detail"
-              element={<EditAccountDetail />}
-            />
-            <Route path="/devices" element={<Devices />} />
-            <Route path="/labs" element={<Labs />} />
-            <Route path="*" element={<NotFound />} />
+            {masterAdminRoute.map((route) => (
+              <Route key={route.key} path={route.key} element={route.element} />
+            ))}
+          </Route>
+        </Route>
+        <Route element={<RequireAuth allowedRoles="Teacher" />}>
+          <Route path="/" element={<Layout />}>
+            {teacherRoute.map((route) => (
+              <Route key={route.key} path={route.key} element={route.element} />
+            ))}
+          </Route>
+        </Route>
+        <Route element={<RequireAuth allowedRoles="Learner" />}>
+          <Route path="/" element={<Layout />}>
+            {learnerRoute.map((route) => (
+              <Route key={route.key} path={route.key} element={route.element} />
+            ))}
           </Route>
         </Route>
         <Route path="/login" element={<Login setUsername={setUsername} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

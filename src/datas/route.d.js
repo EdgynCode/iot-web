@@ -8,24 +8,59 @@ import {
   ThunderboltOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import {
+  Home,
+  Lessons,
+  Students,
+  AccountDetail,
+  Devices,
+  Labs,
+} from "../pages";
 
 export const masterAdminRoute = [
-  { key: "/admin/students", title: "Học sinh", icon: <UserOutlined /> },
-  { key: "/admin/devices", title: "Thiết bị", icon: <ThunderboltOutlined /> },
+  { key: "/", title: "Trang chủ", icon: <HomeOutlined />, element: <Home /> },
   {
-    key: "/admin/account-detail",
+    key: "/students",
+    title: "Học sinh",
+    icon: <UserOutlined />,
+    element: <Students />,
+  },
+  {
+    key: "/devices",
+    title: "Thiết bị",
+    icon: <ThunderboltOutlined />,
+    element: <Devices />,
+  },
+  {
+    key: "/account-detail",
     title: "Thông tin tài khoản",
     icon: <InfoCircleOutlined />,
+    element: <AccountDetail />,
   },
-  { key: "/admin/logout", title: "Đăng xuất", icon: <LogoutOutlined /> },
+  { key: "/logout", title: "Đăng xuất", icon: <LogoutOutlined /> },
 ];
 export const teacherRoute = [
-  { key: "/", title: "Trang chủ", icon: <HomeOutlined /> },
-  { key: "/lessons", title: "Bài học", icon: <BookOutlined /> },
+  { key: "/", title: "Trang chủ", icon: <HomeOutlined />, element: <Home /> },
+  {
+    key: "/lessons",
+    title: "Bài học",
+    icon: <BookOutlined />,
+    element: <Lessons />,
+  },
   { key: "/edit", title: "Bài thi", icon: <EditOutlined /> },
-  { key: "/students", title: "Học sinh", icon: <UserOutlined /> },
-  { key: "/timer", title: "Bài thực hành", icon: <ClockCircleOutlined /> },
-  { key: "/devices", title: "Thiết bị", icon: <ThunderboltOutlined /> },
+  {
+    key: "/students",
+    title: "Học sinh",
+    icon: <UserOutlined />,
+    element: <Students />,
+  },
+  { key: "/labs", title: "Bài thực hành", icon: <ClockCircleOutlined /> },
+  {
+    key: "/devices",
+    title: "Thiết bị",
+    icon: <ThunderboltOutlined />,
+    element: <Labs />,
+  },
   {
     key: "/account-detail",
     title: "Thông tin tài khoản",
@@ -34,5 +69,11 @@ export const teacherRoute = [
   { key: "/logout", title: "Đăng xuất", icon: <LogoutOutlined /> },
 ];
 export const learnerRoute = [
-  { key: "/", title: "Trang chủ", icon: <HomeOutlined /> },
+  { key: "/", title: "Trang chủ", icon: <HomeOutlined />, element: <Home /> },
+  {
+    key: "/lessons",
+    title: "Bài học",
+    icon: <BookOutlined />,
+    element: <Lessons />,
+  },
 ];

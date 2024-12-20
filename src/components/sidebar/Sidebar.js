@@ -18,7 +18,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const [loading, setLoading] = useState(false);
   const roles = localStorage.getItem("roles");
   const routes =
-    roles === "MasterAdmin"
+    roles === "SuperAdmin"
       ? masterAdminRoute
       : roles === "Teacher"
       ? teacherRoute

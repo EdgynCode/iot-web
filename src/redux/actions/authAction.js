@@ -54,6 +54,7 @@ export const login = createAsyncThunk(
       const data = await AuthService.login(userName, password);
       const decodedToken = jwtDecode(data.jwtAccessToken);
       const role = decodedToken.role;
+      localStorage.setItem("roles", role);
       return { user: data, roles: role };
     } catch (error) {
       const message =
