@@ -1,10 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Selector from "./selector/Selector";
-import { Button, Input, Table } from "antd";
+import { Button, Input, Pagination, Table } from "antd";
 import "./index.css";
 import { ExportOutlined, SearchOutlined } from "@ant-design/icons";
+import ExcelExport from "../excelExport/ExcelExport";
 
 export const ListDetail = ({ title, actions, filters, data, column }) => {
+  // pagination
+  const itemsPerPage = 10;
+  const totalPage = data?.length;
+  const [currentPage, setCurrentPage] = useState(1);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const [showItems, setShowItems] = useState(data.slice(startIndex, endIndex));
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    setShowItems(data.slice(startIndex, endIndex));
+  }, [currentPage, data]);
+
+  // ------------------------------------------------------
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
@@ -30,15 +45,25 @@ export const ListDetail = ({ title, actions, filters, data, column }) => {
             className="max-w-[420px]"
             color="#c4c4c4"
           />
-          <Button icon={<ExportOutlined />} shape="round">
-            Export
-          </Button>
+          <ExcelExport data={data} fileName={title} />
         </div>
         <Table
           rowSelection={rowSelection}
-          dataSource={data}
+          dataSource={showItems}
           columns={column}
           pagination={false}
+        />
+        <Pagination
+          className="mt-10 w-full flex justify-end"
+          pageSize={itemsPerPage}
+          current={currentPage}
+          disabled={totalPage < 1}
+          total={data.length}
+          size="small"
+          onChange={(page) => {
+            setCurrentPage(page);
+            setShowItems(data.slice(startIndex, endIndex));
+          }}
         />
       </div>
     </>
