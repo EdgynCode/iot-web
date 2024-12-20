@@ -50,3 +50,9 @@ export const labColumns = (navigate) => [
     render: (text) => <a>{text}</a>,
   },
 ];
+export const fakeData = [...Array(23).keys()].map((index) => ({
+  key: index + 1,
+  labId: `LAB-${index + 1}`,
+  name: `Bài tập ${index + 1}`,
+  pathImage: `/images/lab${index + 1}.png`,
+}));
