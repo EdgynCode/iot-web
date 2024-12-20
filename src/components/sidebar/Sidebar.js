@@ -9,7 +9,6 @@ import {
   masterAdminRoute,
   teacherRoute,
 } from "../../datas/route.d";
-import { jwtDecode } from "jwt-decode";
 const { Sider } = Layout;
 
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
@@ -18,8 +17,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  const role = user ? jwtDecode(user.jwtAccessToken).role : null;
+  const role = localStorage.getItem("roles");
 
   const routes =
     role === "SuperAdmin"
