@@ -21,7 +21,7 @@ const Students = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState(null);
-
+  const [modalType, setModalType] = useState("");
   const [exportType, setExportType] = useState("pdf");
   const [directory, setDirectory] = useState("");
   const [fileName, setFileName] = useState("student_data");
@@ -129,8 +129,10 @@ const Students = () => {
 
   const handleActionClick = (action) => {
     if (action.title === "Xuất dữ liệu") {
+      setModalType("export");
       setOpen(true);
     } else {
+      setModalType("import");
       action.onClick(setOpen);
     }
   };
@@ -150,8 +152,8 @@ const Students = () => {
       {loading && <Spin size="large" />}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
       <Modal
-        title="Import Excel File"
-        open={open}
+        title="Nhập dữ liệu học sinh"
+        open={open && modalType === "import"}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
         okText="Upload"
@@ -171,7 +173,7 @@ const Students = () => {
 
       <Modal
         title="Xuất dữ liệu học sinh"
-        open={open}
+        open={open && modalType === "export"}
         onOk={handleExport}
         onCancel={handleModalCancel}
         okText="Xuất dữ liệu"
