@@ -1,29 +1,28 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import {
-  BookOutlined,
-  ClockCircleOutlined,
-  EditOutlined,
-  HomeOutlined,
-  InfoCircleOutlined,
-  LogoutOutlined,
-  ThunderboltOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
 import { Layout, Menu, Modal, message } from "antd";
-import { SidebarButton } from "./sidebar-button/SidebarButton";
 import "./index.css";
 import { logout } from "../../redux/actions/authAction";
+import {
+  learnerRoute,
+  masterAdminRoute,
+  teacherRoute,
+} from "../../datas/route.d";
 const { Sider } = Layout;
 
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const roles = localStorage.getItem("roles");
+  const routes =
+    roles === "MasterAdmin"
+      ? masterAdminRoute
+      : roles === "Teacher"
+      ? teacherRoute
+      : learnerRoute;
   const showLogoutModal = () => {
     setIsModalVisible(true);
   };
@@ -38,7 +37,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
         navigate("/login");
         window.location.reload();
       })
-      .catch((error) => {
+      .catch(() => {
         message.error("Đăng xuất thất bại. Vui lòng thử lại.");
       })
       .finally(() => {
@@ -51,28 +50,9 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
     setIsModalVisible(false);
   };
 
-  const routeData = [
-    { key: "/", title: "Trang chủ", icon: <HomeOutlined /> },
-    { key: "/lessons", title: "Bài học", icon: <BookOutlined /> },
-    { key: "/edit", title: "Bài thi", icon: <EditOutlined /> },
-    { key: "/students", title: "Học sinh", icon: <UserOutlined /> },
-    {
-      key: "/labs",
-      title: "Bài thực hành",
-      icon: <ClockCircleOutlined />,
-    },
-    { key: "/devices", title: "Thiết bị", icon: <ThunderboltOutlined /> },
-    {
-      key: "/account-detail",
-      title: "Thông tin tài khoản",
-      icon: <InfoCircleOutlined />,
-    },
-    { key: "/logout", title: "Đăng xuất", icon: <LogoutOutlined /> },
-  ];
-
-  const menuItems = routeData.map((route) => ({
+  const menuItems = routes.map((route) => ({
     key: route.key,
-    label: <SidebarButton label={route.title} isExpanded={isExpanded} />,
+    label: isExpanded && <span>{route.title}</span>,
     title: route.title,
     icon: route.icon,
   }));
