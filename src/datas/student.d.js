@@ -104,11 +104,11 @@ export const studentColumns = (navigate) => [
     key: "phoneNumber",
   },
 ];
-export const studentDetailAction = [
+export const studentDetailAction = (navigate, id) => [
   {
     title: "Chỉnh sửa thông tin",
     onclick: () => {
-      console.log("Edit");
+      navigate(`/edit-student-detail/${id}`);
     },
   },
   {
