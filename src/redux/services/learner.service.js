@@ -3,7 +3,7 @@ import axiosInstance from "./axiosInstance";
 const createMultipleLearner = async (learners) => {
   try {
     const response = await axiosInstance.post(
-      "Learner/CreateLeaners",
+      "Learner/CreateLearners",
       learners
     );
     return response.data;
