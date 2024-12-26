@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal, Upload, Button, Spin, Radio, Input, Form, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { register } from "../redux/actions/authAction";
+import { createMultipleLearner } from "../redux/actions/learnerAction";
 import { listAllUsersByType } from "../redux/actions/userAction";
 import { v4 as uuidv4 } from "uuid";
 import * as XLSX from "xlsx";
@@ -23,7 +23,6 @@ const Students = () => {
   const [file, setFile] = useState(null);
   const [modalType, setModalType] = useState("");
   const [exportType, setExportType] = useState("pdf");
-  const [directory, setDirectory] = useState("");
   const [fileName, setFileName] = useState("student_data");
 
   const studentsState = useSelector((state) => state.students || {});
@@ -64,13 +63,13 @@ const Students = () => {
             student.phoneNumber,
           ]),
         });
-        doc.save(`${directory}/${formattedFileName}.pdf`);
+        doc.save(`${formattedFileName}.pdf`);
         break;
       case "excel":
         const worksheet = XLSX.utils.json_to_sheet(studentData);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
-        XLSX.writeFile(workbook, `${directory}/${formattedFileName}.xlsx`);
+        XLSX.writeFile(workbook, `${formattedFileName}.xlsx`);
         break;
       default:
         console.log("Invalid selection");
@@ -85,6 +84,7 @@ const Students = () => {
 
     const reader = new FileReader();
     reader.onload = (e) => {
+      const studentList = [];
       try {
         const workbook = XLSX.read(e.target.result, { type: "array" });
         const worksheetName = workbook.SheetNames[0];
@@ -105,11 +105,10 @@ const Students = () => {
             phoneNumber: row["PhoneNumber"],
             discriminator: "Learner",
           };
-          console.log(student);
-
-          dispatch(register(student));
+          studentList.push(student);
         });
-
+        console.log(studentList);
+        dispatch(createMultipleLearner(studentList));
         message.success("Students imported successfully!");
         dispatch(listAllUsersByType("Learner"));
         setFile(null);

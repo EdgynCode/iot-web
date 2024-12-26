@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Login, Register } from "./pages";
+import {
+  Login,
+  Register,
+  StudentDetail,
+  EditAccountDetail,
+  EditStudentDetail,
+} from "./pages";
 import Layout from "./components/layout/Layout";
 import RequireAuth from "./components/RequireAuth";
 import { NotFound } from "./components/not-found/NotFound";
@@ -17,6 +23,15 @@ function App() {
             {masterAdminRoute.map((route) => (
               <Route key={route.key} path={route.key} element={route.element} />
             ))}
+            <Route path="/student-detail/:id" element={<StudentDetail />} />
+            <Route
+              path="/edit-account-detail"
+              element={<EditAccountDetail />}
+            />
+            <Route
+              path="/edit-student-detail/:id"
+              element={<EditStudentDetail />}
+            />
           </Route>
         </Route>
         <Route element={<RequireAuth allowedRoles="Teacher" />}>
