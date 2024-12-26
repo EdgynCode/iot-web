@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal, Upload, Button, Spin, Radio, Input, Form, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-// import { register } from "../redux/actions/authAction";
 import { createMultipleLearner } from "../redux/actions/learnerAction";
 import { listAllUsersByType } from "../redux/actions/userAction";
 import { v4 as uuidv4 } from "uuid";
