@@ -13,7 +13,7 @@ import {
   Lessons,
   Students,
   AccountDetail,
-  Devices,
+  DeviceTypes,
   Labs,
 } from "../pages";
 
@@ -26,10 +26,10 @@ export const masterAdminRoute = [
     element: <Students />,
   },
   {
-    key: "/devices",
+    key: "/device-types",
     title: "Thiết bị",
     icon: <ThunderboltOutlined />,
-    element: <Devices />,
+    element: <DeviceTypes />,
   },
   {
     key: "/account-detail",

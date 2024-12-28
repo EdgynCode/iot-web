@@ -11,4 +11,5 @@ export { default as Register } from "./register";
 export { default as ResetPassword } from "./reset-password";
 export { default as ForgotPassword } from "./forgot-password";
 export { default as Devices } from "./devices";
+export { default as DeviceTypes } from "./device-types";
 export { default as Labs } from "./labs";
