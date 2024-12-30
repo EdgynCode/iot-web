@@ -13,3 +13,4 @@ export { default as ForgotPassword } from "./forgot-password";
 export { default as Devices } from "./devices";
 export { default as DeviceTypes } from "./device-types";
 export { default as Labs } from "./labs";
+export { default as LabDetail } from "./lab-detail";

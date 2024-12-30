@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Selector from "./selector/Selector";
-import { Button, Input, Pagination, Table } from "antd";
+import { Input, Pagination, Table } from "antd";
 import "./index.css";
-import { ExportOutlined, SearchOutlined } from "@ant-design/icons";
-// import ExcelExport from "../excelExport/ExcelExport";
+import { SearchOutlined } from "@ant-design/icons";
 
 export const ListDetail = ({ title, actions, filters, data, column }) => {
   // pagination
@@ -45,7 +44,6 @@ export const ListDetail = ({ title, actions, filters, data, column }) => {
             className="max-w-[420px]"
             color="#c4c4c4"
           />
-          {/* <ExcelExport data={data} fileName={title} /> */}
         </div>
         <Table
           rowSelection={rowSelection}

@@ -10,6 +10,7 @@ export const NotFound = () => {
         <StopOutlined
           style={{ fontSize: "20px", color: "rgba(0, 0, 0, 0.45)" }}
         />
+        <h1 className="text-red-500 text-[40px]">404</h1>
         <Text type="secondary">Không tìm thấy dữ liệu</Text>
       </div>
     </>
