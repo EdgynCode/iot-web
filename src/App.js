@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Login, Register } from "./pages";
 import Layout from "./components/layout/Layout";
@@ -8,7 +8,6 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { jwtDecode } from "jwt-decode";
 
 function App() {
-  const [username, setUsername] = useState("");
   const isLoggedIn = localStorage.getItem("user") ? 1 : 0;
   console.log("🚀 ~ App ~ isLoggedIn:", isLoggedIn);
   const user = JSON.parse(localStorage.getItem("user")) || null;
@@ -21,7 +20,7 @@ function App() {
         {/* unauthorized route */}
         {!isLoggedIn ? (
           <>
-            <Route path="login" element={<Login setUsername={setUsername} />} />
+            <Route path="login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<Login />} />
           </>
