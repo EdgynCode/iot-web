@@ -14,6 +14,7 @@ import {
   Students,
   AccountDetail,
   Devices,
+  DeviceTypes,
   Labs,
   LessonDetail,
 } from "../pages";
@@ -63,6 +64,12 @@ const devices = {
   icon: <ThunderboltOutlined />,
   title: "Thiết bị",
 };
+const deviceTypes = {
+  key: "device-types",
+  element: <DeviceTypes />,
+  icon: <ThunderboltOutlined />,
+  title: "Thiết bị",
+};
 const logout = {
   key: "logout",
   icon: <LogoutOutlined />,
@@ -75,7 +82,7 @@ export const teacherRoute = [
   home,
   lessons,
   labs,
-  devices,
+  deviceTypes,
   exams,
   students,
   accountDetail,
@@ -97,7 +104,7 @@ export const teacherSidebar = [
   home,
   lessons,
   labs,
-  devices,
+  deviceTypes,
   exams,
   students,
   accountDetail,

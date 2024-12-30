@@ -4,6 +4,8 @@ import userReducer from "./slices/userSlice";
 import studentReducer from "./slices/studentSlice";
 import experimentSlice from "./slices/experimentSlice";
 import labSlice from "./slices/labSlice";
+import deviceTypeSlice from "./slices/deviceTypeSlice";
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -11,6 +13,7 @@ export const store = configureStore({
     students: studentReducer,
     experiments: experimentSlice,
     labs: labSlice,
+    devicetypes: deviceTypeSlice,
   },
   devTools: true,
 });
