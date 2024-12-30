@@ -40,23 +40,6 @@ const Labs = () => {
   });
 
   const handleFormSubmit = async (value) => {
-    // form
-    //   .validateFields()
-    //   .then((values) => {
-    //     console.log("Submitted values:", values);
-    //     dispatch(createLab(values))
-    //       .unwrap()
-    //       .then(() => {
-    //         message.success("Tạo bài thí nghiệm thành công!");
-    //         closeModal();
-    //       })
-    //       .catch(() => {
-    //         message.error("Tạo bài thí nghiệm thất bại.");
-    //       });
-    //   })
-    //   .catch((info) => {
-    //     console.log("Validation failed:", info);
-    //   });
     form.validateFields();
     const data = {
       name: value.name,

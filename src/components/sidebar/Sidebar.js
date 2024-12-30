@@ -6,9 +6,13 @@ import "./index.css";
 import { logout } from "../../redux/actions/authAction";
 import {
   learnerRoute,
-  masterAdminRoute,
+  learnerSidebar,
+  superAdminRoute,
+  superAdminSidebar,
   teacherRoute,
+  teacherSidebar,
 } from "../../datas/route.d";
+import { jwtDecode } from "jwt-decode";
 const { Sider } = Layout;
 
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
@@ -16,13 +20,16 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const roles = localStorage.getItem("roles");
+  const user = JSON.parse(localStorage.getItem("user")) || null;
+  const decode = user ? jwtDecode(user?.jwtAccessToken) : null;
+  const role = decode ? decode.role : null;
+
   const routes =
-    roles === "SuperAdmin"
-      ? masterAdminRoute
-      : roles === "Teacher"
-      ? teacherRoute
-      : learnerRoute;
+    role === "SuperAdmin"
+      ? superAdminSidebar
+      : role === "Teacher"
+      ? teacherSidebar
+      : learnerSidebar;
   const showLogoutModal = () => {
     setIsModalVisible(true);
   };
@@ -33,6 +40,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
     dispatch(logout())
       .unwrap()
       .then(() => {
+        localStorage.removeItem("isLoggedIn");
         message.success("Đăng xuất thành công");
         navigate("/login");
         window.location.reload();
@@ -88,7 +96,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
           items={menuItems}
           className="bg-transparent"
           onClick={({ key }) => {
-            if (key === "/logout") {
+            if (key === "logout") {
               showLogoutModal();
             } else {
               navigate(key);

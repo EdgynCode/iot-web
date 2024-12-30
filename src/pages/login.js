@@ -5,6 +5,7 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { clearMessage } from "../redux/slices/message";
 import { login } from "../redux/actions/authAction";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   let navigate = useNavigate();
@@ -25,8 +26,11 @@ const Login = () => {
       .unwrap()
       .then(() => {
         message.success("Đăng nhập thành công!");
-        navigate("/account-detail");
-        //window.location.reload();
+        const user = JSON.parse(localStorage.getItem("user")) || null;
+        const decode = user ? jwtDecode(user?.jwtAccessToken) : null;
+        const role = decode ? decode.role : null;
+        navigate(`/account-detail`);
+        window.location.reload();
       })
       .catch(() => {
         message.error("Đăng nhập thất bại. Vui lòng thử lại.");

@@ -15,65 +15,99 @@ import {
   AccountDetail,
   Devices,
   Labs,
+  LessonDetail,
 } from "../pages";
+import { elements } from "chart.js";
+import { NotFound } from "../components/not-found/NotFound";
+import LabDetail from "../pages/lab-detail";
 
-export const masterAdminRoute = [
-  { key: "/", title: "Trang chủ", icon: <HomeOutlined />, element: <Home /> },
-  {
-    key: "/students",
-    title: "Học sinh",
-    icon: <UserOutlined />,
-    element: <Students />,
-  },
-  {
-    key: "/devices",
-    title: "Thiết bị",
-    icon: <ThunderboltOutlined />,
-    element: <Devices />,
-  },
-  {
-    key: "/account-detail",
-    title: "Thông tin tài khoản",
-    icon: <InfoCircleOutlined />,
-    element: <AccountDetail />,
-  },
-  { key: "/logout", title: "Đăng xuất", icon: <LogoutOutlined /> },
-];
+const home = {
+  key: "home",
+  element: <Home />,
+  icon: <HomeOutlined />,
+  title: "Trang chủ",
+};
+const accountDetail = {
+  key: "account-detail",
+  element: <AccountDetail />,
+  icon: <InfoCircleOutlined />,
+  title: "Thông tin tài khoản",
+};
+const lessons = {
+  key: "lessons",
+  element: <Lessons />,
+  icon: <BookOutlined />,
+  title: "Bài học",
+};
+const exams = {
+  key: "exam",
+  title: "Bài thi",
+  icon: <EditOutlined />,
+  element: "Bài kiểm tra",
+};
+const students = {
+  key: "students",
+  element: <Students />,
+  icon: <UserOutlined />,
+  title: "Học sinh",
+};
+const labs = {
+  key: "labs",
+  element: <Labs />,
+  icon: <ClockCircleOutlined />,
+  title: "Bài thực hành",
+};
+const devices = {
+  key: "devices",
+  element: <Devices />,
+  icon: <ThunderboltOutlined />,
+  title: "Thiết bị",
+};
+const logout = {
+  key: "logout",
+  icon: <LogoutOutlined />,
+  title: "Đăng xuất",
+};
+const lessonDetail = { key: "lesson-detail/:id", element: <LessonDetail /> };
+const labDetail = { key: "lab-detail/:id", element: <LabDetail /> };
+export const learnerRoute = [home, accountDetail, logout];
 export const teacherRoute = [
-  { key: "/", title: "Trang chủ", icon: <HomeOutlined />, element: <Home /> },
-  {
-    key: "/lessons",
-    title: "Bài học",
-    icon: <BookOutlined />,
-    element: <Lessons />,
-  },
-  { key: "/edit", title: "Bài thi", icon: <EditOutlined /> },
-  {
-    key: "/students",
-    title: "Học sinh",
-    icon: <UserOutlined />,
-    element: <Students />,
-  },
-  { key: "/labs", title: "Bài thực hành", icon: <ClockCircleOutlined /> },
-  {
-    key: "/devices",
-    title: "Thiết bị",
-    icon: <ThunderboltOutlined />,
-    element: <Labs />,
-  },
-  {
-    key: "/account-detail",
-    title: "Thông tin tài khoản",
-    icon: <InfoCircleOutlined />,
-  },
-  { key: "/logout", title: "Đăng xuất", icon: <LogoutOutlined /> },
+  home,
+  lessons,
+  labs,
+  devices,
+  exams,
+  students,
+  accountDetail,
+  logout,
+  lessonDetail,
+  labDetail,
 ];
-export const learnerRoute = [
-  { key: "/", title: "Trang chủ", icon: <HomeOutlined />, element: <Home /> },
-  {
-    key: "/lessons",
-    title: "Bài học",
-    icon: <BookOutlined />,
-    element: <Lessons />,
-  },
+export const superAdminRoute = [
+  home,
+  lessons,
+  exams,
+  students,
+  accountDetail,
+  logout,
+  lessonDetail,
+];
+export const learnerSidebar = [home, accountDetail, logout];
+export const teacherSidebar = [
+  home,
+  lessons,
+  labs,
+  devices,
+  exams,
+  students,
+  accountDetail,
+  logout,
+];
+export const superAdminSidebar = [
+  home,
+  lessons,
+  exams,
+  students,
+  accountDetail,
+  logout,
 ];
