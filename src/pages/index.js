@@ -4,6 +4,7 @@ export { default as LessonDetail } from "./lesson-detail";
 export { default as Students } from "./students";
 export { default as StudentDetail } from "./student-detail";
 export { default as EditStudentDetail } from "./edit-student-detail";
+export { default as Accounts } from "./accounts";
 export { default as AccountDetail } from "./account-detail";
 export { default as EditAccountDetail } from "./edit-account-detail";
 export { default as Login } from "./login";

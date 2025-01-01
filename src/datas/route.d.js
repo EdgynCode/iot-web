@@ -14,6 +14,7 @@ import {
   Students,
   StudentDetail,
   EditStudentDetail,
+  Accounts,
   AccountDetail,
   EditAccountDetail,
   Devices,
@@ -30,6 +31,12 @@ const home = {
   element: <Home />,
   icon: <HomeOutlined />,
   title: "Trang chủ",
+};
+const accounts = {
+  key: "accounts",
+  element: <Accounts />,
+  icon: <UserOutlined />,
+  title: "Danh sách tài khoản",
 };
 const accountDetail = {
   key: "account-detail",
@@ -114,6 +121,7 @@ export const superAdminRoute = [
   students,
   studentDetail,
   editStudentDetail,
+  accounts,
   accountDetail,
   editAccountDetail,
   logout,
@@ -132,7 +140,7 @@ export const teacherSidebar = [
 export const superAdminSidebar = [
   home,
   lessons,
-  students,
+  accounts,
   accountDetail,
   logout,
 ];
