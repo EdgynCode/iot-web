@@ -13,8 +13,8 @@ import {
 import {
   DownOutlined,
   FilterOutlined,
-  CheckCircleOutlined,
-  ArrowDownOutlined,
+  ImportOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import { deviceData } from "../datas/device.d";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -45,6 +45,12 @@ const DeviceTable = () => {
         </Col>
         <Col flex="auto">
           <Search className="w-96" placeholder="Tìm kiếm nhanh" enterButton />
+          <Button icon={<ImportOutlined />} className="bg-[#1D1B23] text-white">
+            Thêm thiết bị
+          </Button>
+          <Button icon={<DeleteOutlined />} className="bg-[#ff5656]">
+            Xóa thiết bị
+          </Button>
         </Col>
       </Row>
 

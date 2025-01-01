@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Login, Register } from "./pages";
+import { Login, Register, ForgotPassword } from "./pages";
 import Layout from "./components/layout/Layout";
 import { NotFound } from "./components/not-found/NotFound";
 import { teacherRoute, learnerRoute, superAdminRoute } from "./datas/route.d";
@@ -22,6 +22,7 @@ function App() {
           <>
             <Route path="login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="*" element={<Login />} />
           </>
         ) : (

@@ -76,18 +76,18 @@ export const deviceListColumns = (navigate) => [
     title: "Tên loại thiết bị",
     dataIndex: "tenLoaiThietBi",
     key: "tenLoaiThietBi",
-    render: (text) => <a>{text}</a>,
+    render: (text) => <a onClick={() => navigate(`/devices`)}>{text}</a>,
   },
   {
     title: "Mô tả",
     dataIndex: "moTa",
     key: "moTa",
-    render: (text) => <a>{text}</a>,
+    render: (text) => <a onClick={() => navigate(`/devices`)}>{text}</a>,
   },
   {
     title: "Ghi chú",
     dataIndex: "ghiChu",
     key: "ghiChu",
-    render: (text) => <a>{text}</a>,
+    render: (text) => <a onClick={() => navigate(`/devices`)}>{text}</a>,
   },
 ];

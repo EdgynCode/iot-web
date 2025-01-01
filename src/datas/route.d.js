@@ -12,7 +12,10 @@ import {
   Home,
   Lessons,
   Students,
+  StudentDetail,
+  EditStudentDetail,
   AccountDetail,
+  EditAccountDetail,
   Devices,
   DeviceTypes,
   Labs,
@@ -40,6 +43,14 @@ const lessons = {
   icon: <BookOutlined />,
   title: "Bài học",
 };
+const editAccountDetail = {
+  key: "edit-account-detail",
+  element: <EditAccountDetail />,
+};
+const editStudentDetail = {
+  key: "edit-student-detail/:id",
+  element: <EditStudentDetail />,
+};
 const exams = {
   key: "exam",
   title: "Bài thi",
@@ -51,6 +62,10 @@ const students = {
   element: <Students />,
   icon: <UserOutlined />,
   title: "Học sinh",
+};
+const studentDetail = {
+  key: "student-detail/:id",
+  element: <StudentDetail />,
 };
 const labs = {
   key: "labs",
@@ -77,15 +92,18 @@ const logout = {
 };
 const lessonDetail = { key: "lesson-detail/:id", element: <LessonDetail /> };
 const labDetail = { key: "lab-detail/:id", element: <LabDetail /> };
-export const learnerRoute = [home, accountDetail, logout];
+export const learnerRoute = [home, accountDetail, editAccountDetail, logout];
 export const teacherRoute = [
   home,
   lessons,
   labs,
   deviceTypes,
-  exams,
+  devices,
   students,
+  studentDetail,
+  editStudentDetail,
   accountDetail,
+  editAccountDetail,
   logout,
   lessonDetail,
   labDetail,
@@ -93,9 +111,11 @@ export const teacherRoute = [
 export const superAdminRoute = [
   home,
   lessons,
-  exams,
   students,
+  studentDetail,
+  editStudentDetail,
   accountDetail,
+  editAccountDetail,
   logout,
   lessonDetail,
 ];
@@ -105,7 +125,6 @@ export const teacherSidebar = [
   lessons,
   labs,
   deviceTypes,
-  exams,
   students,
   accountDetail,
   logout,
@@ -113,7 +132,6 @@ export const teacherSidebar = [
 export const superAdminSidebar = [
   home,
   lessons,
-  exams,
   students,
   accountDetail,
   logout,
