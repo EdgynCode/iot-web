@@ -38,7 +38,7 @@ export const deviceData = [
   },
 ];
 
-export const deviceListAction = [
+export const deviceListAction = () => [
   {
     title: "Thêm loại thiết bị",
     onClick: (openModal) => {

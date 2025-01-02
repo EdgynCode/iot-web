@@ -237,7 +237,7 @@ const Accounts = () => {
         title="Tạo tài khoản"
         open={open && modalType === "createAccount"}
         footer={[
-          <Button key="cancel" onClick={handleModalCancel}>
+          <Button key="cancel" onClick={() => setOpen(false)}>
             Hủy
           </Button>,
         ]}
@@ -364,7 +364,7 @@ const Accounts = () => {
         title="Xuất dữ liệu"
         open={open && modalType === "export"}
         onOk={handleExport}
-        onCancel={handleModalCancel}
+        onCancel={() => setOpen(false)}
         okText="Xuất dữ liệu"
         cancelText="Hủy"
       >

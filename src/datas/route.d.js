@@ -124,6 +124,8 @@ export const superAdminRoute = [
   accounts,
   accountDetail,
   editAccountDetail,
+  deviceTypes,
+  devices,
   logout,
   lessonDetail,
 ];
@@ -141,6 +143,7 @@ export const superAdminSidebar = [
   home,
   lessons,
   accounts,
+  deviceTypes,
   accountDetail,
   logout,
 ];
