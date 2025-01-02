@@ -3,7 +3,6 @@ export const accountAction = () => [
     title: "Thêm tài khoản",
     onClick: (setOpen) => {
       setOpen(true);
-      console.log("Importing...");
     },
   },
   {

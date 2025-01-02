@@ -7,18 +7,34 @@ import {
 } from "../datas/account.d";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal, Upload, Button, Spin, Radio, Input, Form, message } from "antd";
+import {
+  Modal,
+  Upload,
+  Button,
+  Spin,
+  Radio,
+  Input,
+  Form,
+  message,
+  Select,
+  DatePicker,
+} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { createMultipleLearner } from "../redux/actions/learnerAction";
 import { listAllUsersByType } from "../redux/actions/userAction";
 import { v4 as uuidv4 } from "uuid";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { register } from "../redux/actions/authAction";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 
+const { Option } = Select;
+
 const Accounts = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [modalType, setModalType] = useState("");
@@ -27,11 +43,7 @@ const Accounts = () => {
   const [selectedAccountType, setSelectedAccountType] = useState("Learner");
 
   const studentsState = useSelector((state) => state.students || {});
-  const {
-    data: studentData = [],
-    loading = false,
-    error = null,
-  } = studentsState;
+  const { data: studentData = [], error = null } = studentsState;
 
   useEffect(() => {
     dispatch(listAllUsersByType(selectedAccountType));
@@ -41,6 +53,34 @@ const Accounts = () => {
     const accountType =
       value === "1" ? "Learner" : value === "2" ? "Teacher" : "";
     setSelectedAccountType(accountType);
+  };
+
+  const onFinish = async (values) => {
+    setLoading(true);
+
+    const data = {
+      id: uuidv4(),
+      firstName: values.firstName,
+      lastName: values.lastName,
+      gender: values.gender,
+      doB: values.doB.format("YYYY-MM-DD"),
+      userName: values.userName,
+      email: values.email,
+      password: values.password,
+      phoneNumber: values.phoneNumber,
+      discriminator: values.discriminator,
+    };
+    console.log(data);
+    dispatch(register(data))
+      .unwrap()
+      .then(() => {
+        message.success("Đăng ký thành công!");
+        setOpen(false);
+      })
+      .catch(() => {
+        message.error("Đăng ký thất bại. Vui lòng thử lại.");
+        setLoading(false);
+      });
   };
 
   const handleExport = async () => {
@@ -134,13 +174,23 @@ const Accounts = () => {
   };
 
   const handleActionClick = (action) => {
-    if (action.title === "Xuất dữ liệu") {
-      setModalType("export");
-      setOpen(true);
-    } else {
-      setModalType("import");
-      action.onClick(setOpen);
+    switch (action.title) {
+      case "Thêm tài khoản":
+        setModalType("createAccount");
+        break;
+      case "Thêm danh sách tài khoản":
+        setModalType("importAccount");
+        break;
+      case "Xóa tài khoản":
+        setModalType("deleteAccount");
+        break;
+      case "Xuất dữ liệu":
+        setModalType("export");
+        break;
+      default:
+        console.log("Invalid action");
     }
+    setOpen(true);
   };
 
   return (
@@ -164,8 +214,8 @@ const Accounts = () => {
       {loading && <Spin size="large" />}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
       <Modal
-        title="Nhập dữ liệu học sinh"
-        open={open && modalType === "import"}
+        title="Thêm danh sách tài khoản"
+        open={open && modalType === "importAccount"}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
         okText="Upload"
@@ -184,7 +234,134 @@ const Accounts = () => {
       </Modal>
 
       <Modal
-        title="Xuất dữ liệu học sinh"
+        title="Tạo tài khoản"
+        open={open && modalType === "createAccount"}
+        footer={[
+          <Button key="cancel" onClick={handleModalCancel}>
+            Hủy
+          </Button>,
+        ]}
+      >
+        <Form
+          name="register"
+          onFinish={onFinish}
+          disabled={loading}
+          className="space-y-4"
+        >
+          <Form.Item
+            name="discriminator"
+            rules={[
+              { required: true, message: "Vui lòng chọn loại người dùng!" },
+            ]}
+          >
+            <Select placeholder="Loại người dùng" className="rounded-lg">
+              <Option value="Teacher">Người dạy</Option>
+              <Option value="Learner">Người học</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="firstName"
+            rules={[{ required: true, message: "Vui lòng nhập họ!" }]}
+          >
+            <Input placeholder="Họ" className="rounded-lg" />
+          </Form.Item>
+
+          <Form.Item
+            name="lastName"
+            rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
+          >
+            <Input placeholder="Tên" className="rounded-lg" />
+          </Form.Item>
+
+          <Form.Item
+            name="gender"
+            rules={[{ required: true, message: "Vui lòng chọn giới tính!" }]}
+          >
+            <Select placeholder="Giới tính" className="rounded-lg">
+              <Option value="Nam">Nam</Option>
+              <Option value="Nữ">Nữ</Option>
+              <Option value="Khác">Khác</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="doB"
+            rules={[{ required: true, message: "Vui lòng chọn ngày sinh!" }]}
+          >
+            <DatePicker
+              placeholder="Ngày sinh"
+              format="YYYY-MM-DD"
+              className="rounded-lg w-full"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="userName"
+            rules={[
+              { required: true, message: "Vui lòng nhập tên người dùng!" },
+            ]}
+          >
+            <Input placeholder="Tên người dùng" className="rounded-lg" />
+          </Form.Item>
+
+          <Form.Item
+            name="email"
+            rules={[
+              {
+                required: true,
+                type: "email",
+                message: "Vui lòng nhập email hợp lệ!",
+              },
+            ]}
+          >
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Email"
+              className="rounded-lg"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+          >
+            <Input.Password
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              placeholder="Mật khẩu"
+              className="rounded-lg"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="phoneNumber"
+            rules={[
+              { required: true, message: "Vui lòng nhập số điện thoại!" },
+              {
+                pattern: /^0\d{9}$/,
+                message:
+                  "Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0!",
+              },
+            ]}
+          >
+            <Input placeholder="Số điện thoại" className="rounded-lg" />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="w-full bg-black text-white hover:bg-gray-800 rounded-lg"
+              loading={loading}
+            >
+              Đăng ký
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title="Xuất dữ liệu"
         open={open && modalType === "export"}
         onOk={handleExport}
         onCancel={handleModalCancel}
