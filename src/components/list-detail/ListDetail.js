@@ -5,6 +5,14 @@ import "./index.css";
 import { SearchOutlined } from "@ant-design/icons";
 
 export const ListDetail = ({ title, actions, filters, data, column }) => {
+  // search query
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredData = data.filter((item) =>
+    Object.values(item).some((value) =>
+      String(value).toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
   // pagination
   const itemsPerPage = 10;
   const totalPage = data?.length;
@@ -15,8 +23,8 @@ export const ListDetail = ({ title, actions, filters, data, column }) => {
   useEffect(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    setShowItems(data.slice(startIndex, endIndex));
-  }, [currentPage, data]);
+    setShowItems(filteredData.slice(startIndex, endIndex));
+  }, [currentPage, data, searchQuery]);
 
   // ------------------------------------------------------
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -43,6 +51,8 @@ export const ListDetail = ({ title, actions, filters, data, column }) => {
             suffix={<SearchOutlined />}
             className="max-w-[420px]"
             color="#c4c4c4"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <Table
@@ -56,7 +66,7 @@ export const ListDetail = ({ title, actions, filters, data, column }) => {
           pageSize={itemsPerPage}
           current={currentPage}
           disabled={totalPage < 1}
-          total={data.length}
+          total={filteredData.length}
           size="small"
           onChange={(page) => {
             setCurrentPage(page);
