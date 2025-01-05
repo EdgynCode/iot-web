@@ -41,6 +41,7 @@ const Accounts = () => {
   const [exportType, setExportType] = useState("pdf");
   const [fileName, setFileName] = useState("student_data");
   const [selectedAccountType, setSelectedAccountType] = useState("Learner");
+  const [selectedAccountLabel, setSelectedAccountLabel] = useState("Học sinh");
 
   const studentsState = useSelector((state) => state.students || {});
   const { data: studentData = [], error = null } = studentsState;
@@ -52,7 +53,14 @@ const Accounts = () => {
   const handleAccountTypeChange = (value) => {
     const accountType =
       value === "1" ? "Learner" : value === "2" ? "Teacher" : "";
+    const accountLabel =
+      accountType === "Learner"
+        ? "Học sinh"
+        : accountType === "Teacher"
+        ? "Giáo viên"
+        : "Loại tài khoản";
     setSelectedAccountType(accountType);
+    setSelectedAccountLabel(accountLabel);
   };
 
   const onFinish = async (values) => {
@@ -203,6 +211,8 @@ const Accounts = () => {
         }))}
         filters={accountFilter.map((filter) => ({
           ...filter,
+          label:
+            filter.key === "AccountType" ? selectedAccountLabel : filter.label,
           options: filter.options.map((option) => ({
             ...option,
             onClick: () => handleAccountTypeChange(option.key),

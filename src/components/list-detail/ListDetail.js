@@ -5,17 +5,23 @@ import "./index.css";
 import { SearchOutlined } from "@ant-design/icons";
 
 export const ListDetail = ({ title, actions, filters, data, column }) => {
+  // mapping key to data index
+  const mappedData = data.map((item) => ({
+    ...item,
+    key: item.id,
+  }));
+
   // search query
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredData = data.filter((item) =>
+  const filteredData = mappedData.filter((item) =>
     Object.values(item).some((value) =>
       String(value).toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
   // pagination
   const itemsPerPage = 10;
-  const totalPage = data?.length;
+  const totalPage = mappedData?.length;
   const [currentPage, setCurrentPage] = useState(1);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
