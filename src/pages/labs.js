@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ListDetail } from "../components/list-detail/ListDetail";
-import { fakeData, labAction, labColumns, labFilter } from "../datas/lab.d";
+import { labAction, labColumns, labFilter } from "../datas/lab.d";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Spin, Modal, Input, Form, Button, message } from "antd";
@@ -30,7 +30,7 @@ const Labs = () => {
   };
 
   const labActionWithModal = labAction.map((action) => {
-    if (action.title === "Thêm bài thí nghiệm") {
+    if (action.title === "Thêm bài Lab") {
       return {
         ...action,
         onClick: () => action.onClick(openModal),
@@ -49,12 +49,12 @@ const Labs = () => {
       .unwrap()
       .then(() => {
         console.log("Submitted values:", value);
-        message.success("Tạo bài thí nghiệm thành công!");
+        message.success("Tạo bài lab thành công!");
         closeModal();
         dispatch(getAllLabs());
       })
       .catch(() => {
-        message.error("Tạo bài thí nghiệm thất bại.");
+        message.error("Tạo bài lab thất bại.");
       });
   };
 
@@ -64,15 +64,15 @@ const Labs = () => {
         title="Bài thực hành"
         actions={labActionWithModal}
         filters={labFilter}
-        // data={loading ? [] : labData}
-        data={loading ? [] : fakeData}
+        data={loading ? [] : labData}
+        // data={loading ? [] : fakeData}
         column={labColumns(navigate)}
       />
       {loading && <Spin size="large" />}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
       <Modal
-        title="Thêm bài thí nghiệm"
+        title="Thêm bài Lab"
         open={open}
         onCancel={closeModal}
         footer={null}
@@ -80,12 +80,10 @@ const Labs = () => {
         <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
           <Form.Item
             name="name"
-            label="Tên bài thí nghiệm"
-            rules={[
-              { required: true, message: "Vui lòng nhập tên bài thí nghiệm!" },
-            ]}
+            label="Tên bài Lab"
+            rules={[{ required: true, message: "Vui lòng nhập tên bài lab!" }]}
           >
-            <Input placeholder="Nhập tên bài thí nghiệm" />
+            <Input placeholder="Nhập tên bài lab" />
           </Form.Item>
           <Form.Item
             name="pathImage"

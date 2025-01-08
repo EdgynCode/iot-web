@@ -1,5 +1,22 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
+import { BreadcrumbTab } from "../components/breadcrumb-tab/BreadcrumbTab";
+import { NotFound } from "../components/not-found/NotFound";
+import { LabTab } from "../components/lab-tab/LabTab";
 const LabDetail = () => {
-  return <div>LabDetail</div>;
+  const location = useLocation();
+  const { record } = location.state || {};
+  return (
+    <>
+      {record ? (
+        <>
+          <BreadcrumbTab items={["Bài thí nghiệm", `Bài ${record.name}`]} />
+          <LabTab lab={record} />
+        </>
+      ) : (
+        <NotFound />
+      )}
+    </>
+  );
 };
 export default LabDetail;
