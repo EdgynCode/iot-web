@@ -73,23 +73,23 @@ const Register = () => {
             ]}
           >
             <Select placeholder="Loại người dùng" className="rounded-lg">
-              <Option value="NguoiDay">Người dạy</Option>
-              <Option value="NguoiHoc">Người học</Option>
+              <Option value="Teacher">Người dạy</Option>
+              <Option value="Learner">Người học</Option>
             </Select>
           </Form.Item>
 
           <Form.Item
             name="firstName"
-            rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập họ!" }]}
           >
-            <Input placeholder="Tên" className="rounded-lg" />
+            <Input placeholder="Họ" className="rounded-lg" />
           </Form.Item>
 
           <Form.Item
             name="lastName"
-            rules={[{ required: true, message: "Vui lòng nhập họ!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
           >
-            <Input placeholder="Họ" className="rounded-lg" />
+            <Input placeholder="Tên" className="rounded-lg" />
           </Form.Item>
 
           <Form.Item

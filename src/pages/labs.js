@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ListDetail } from "../components/list-detail/ListDetail";
-import { labAction, labColumns, labFilter } from "../datas/lab.d";
+import { fakeData, labAction, labColumns, labFilter } from "../datas/lab.d";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Spin, Modal, Input, Form, Button, message } from "antd";
@@ -40,23 +40,6 @@ const Labs = () => {
   });
 
   const handleFormSubmit = async (value) => {
-    // form
-    //   .validateFields()
-    //   .then((values) => {
-    //     console.log("Submitted values:", values);
-    //     dispatch(createLab(values))
-    //       .unwrap()
-    //       .then(() => {
-    //         message.success("Tạo bài thí nghiệm thành công!");
-    //         closeModal();
-    //       })
-    //       .catch(() => {
-    //         message.error("Tạo bài thí nghiệm thất bại.");
-    //       });
-    //   })
-    //   .catch((info) => {
-    //     console.log("Validation failed:", info);
-    //   });
     form.validateFields();
     const data = {
       name: value.name,
@@ -81,7 +64,8 @@ const Labs = () => {
         title="Bài thực hành"
         actions={labActionWithModal}
         filters={labFilter}
-        data={loading ? [] : labData}
+        // data={loading ? [] : labData}
+        data={loading ? [] : fakeData}
         column={labColumns(navigate)}
       />
       {loading && <Spin size="large" />}

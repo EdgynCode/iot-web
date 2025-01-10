@@ -1,57 +1,53 @@
-import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import {
-  Home,
-  Lessons,
-  LessonDetail,
-  Students,
-  StudentDetail,
-  AccountDetail,
-  EditAccountDetail,
-  Login,
-  Register,
-  ResetPassword,
-  ForgotPassword,
-  Devices,
-  Labs,
-} from "./pages";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Login, Register, ForgotPassword } from "./pages";
 import Layout from "./components/layout/Layout";
-import RequireAuth from "./components/RequireAuth";
 import { NotFound } from "./components/not-found/NotFound";
+import { teacherRoute, learnerRoute, superAdminRoute } from "./datas/route.d";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { jwtDecode } from "jwt-decode";
+
 function App() {
-  const [username, setUsername] = useState("");
+  const isLoggedIn = localStorage.getItem("user") ? 1 : 0;
+  console.log("🚀 ~ App ~ isLoggedIn:", isLoggedIn);
+  const user = JSON.parse(localStorage.getItem("user")) || null;
+  const decode = user ? jwtDecode(user?.jwtAccessToken) : null;
+  const role = decode ? decode.role : null;
 
   return (
     <Router>
       <Routes>
-        <Route element={<RequireAuth allowedRoles="SuperAdmin" />}>
-          <Route path="/" element={<Layout />}>
-            <Route path="/" element={<Navigate to="/home" />} />
-            <Route path="/home" element={<Home username={username} />} />
-            <Route path="/lessons" element={<Lessons />} />
-            <Route path="/lesson-detail/:key" element={<LessonDetail />} />
-            <Route path="/students" element={<Students />} />
-            <Route path="/student-detail/:id" element={<StudentDetail />} />
-            <Route path="/account-detail" element={<AccountDetail />} />
-            <Route
-              path="/edit-account-detail"
-              element={<EditAccountDetail />}
-            />
-            <Route path="/devices" element={<Devices />} />
-            <Route path="/labs" element={<Labs />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Route>
-        <Route path="/login" element={<Login setUsername={setUsername} />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="*" element={<NotFound />} />
+        {/* unauthorized route */}
+        {!isLoggedIn ? (
+          <>
+            <Route path="login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="*" element={<Login />} />
+          </>
+        ) : (
+          isLoggedIn === 1 && (
+            <>
+              <Route element={<ProtectedRoute />}>
+                <Route path={``} element={<Layout />}>
+                  {(role === "SuperAdmin"
+                    ? superAdminRoute
+                    : role === "Teacher"
+                    ? teacherRoute
+                    : learnerRoute
+                  ).map((route) => (
+                    <Route
+                      key={`${role}/${route.key}`}
+                      path={route.key}
+                      element={route.element}
+                    />
+                  ))}
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Route>
+            </>
+          )
+        )}
       </Routes>
     </Router>
   );
