@@ -1,15 +1,14 @@
-export const labAction = [
+export const labAction = () => [
   {
     title: "Thêm bài thí nghiệm",
-    onClick: (openModal) => {
-      openModal();
+    onClick: (setOpen) => {
+      setOpen(true);
     },
   },
   {
     title: "Xóa bài thí nghiệm",
-    onClick: () => {
-      console.log("Deleting...");
-      // delete selected labs
+    onClick: (setOpen) => {
+      setOpen(true);
     },
   },
 ];

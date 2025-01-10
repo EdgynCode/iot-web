@@ -4,7 +4,14 @@ import { Input, Pagination, Table } from "antd";
 import "./index.css";
 import { SearchOutlined } from "@ant-design/icons";
 
-export const ListDetail = ({ title, actions, filters, data, column }) => {
+export const ListDetail = ({
+  title,
+  actions,
+  filters,
+  data,
+  column,
+  onSelectionChange,
+}) => {
   // mapping key to data index
   const mappedData = data.map((item) => ({
     ...item,
@@ -37,6 +44,9 @@ export const ListDetail = ({ title, actions, filters, data, column }) => {
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
+    if (onSelectionChange) {
+      onSelectionChange(newSelectedRowKeys);
+    }
   };
   const rowSelection = {
     selectedRowKeys,
