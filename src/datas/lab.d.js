@@ -1,12 +1,12 @@
 export const labAction = () => [
   {
-    title: "Thêm bài thí nghiệm",
+    title: "Thêm bài lab",
     onClick: (setOpen) => {
       setOpen(true);
     },
   },
   {
-    title: "Xóa bài thí nghiệm",
+    title: "Xóa bài lab",
     onClick: (setOpen) => {
       setOpen(true);
     },
@@ -32,9 +32,17 @@ export const labFilter = [
 export const labColumns = (navigate) => [
   {
     title: "Mã số",
-    dataIndex: "labId",
+    dataIndex: "id",
     key: "labId",
-    render: (text) => <a>{text}</a>,
+    render: (text, record) => (
+      <a
+        onClick={() => {
+          navigate(`/lab-detail/${record.id}`, { state: { record } });
+        }}
+      >
+        {text}
+      </a>
+    ),
   },
   {
     title: "Tên bài tập",

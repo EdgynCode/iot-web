@@ -40,19 +40,18 @@ const Labs = () => {
     dispatch(createLab(data))
       .unwrap()
       .then(() => {
-        console.log("Submitted values:", value);
-        message.success("Tạo bài thí nghiệm thành công!");
+        message.success("Tạo bài lab thành công!");
         closeModal();
         dispatch(getAllLabs());
       })
       .catch(() => {
-        message.error("Tạo bài thí nghiệm thất bại.");
+        message.error("Tạo bài lab thất bại.");
       });
   };
 
   const handleDelete = async () => {
     if (selectedRowKeys.length === 0) {
-      message.warning("Chọn ít nhất 1 thí nghiệm để xóa.");
+      message.warning("Chọn ít nhất 1 lab để xóa.");
       return;
     }
 
@@ -99,7 +98,7 @@ const Labs = () => {
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
       <Modal
-        title="Thêm bài thí nghiệm"
+        title="Thêm bài lab"
         open={open && modalType === "add"}
         onCancel={closeModal}
         footer={null}
@@ -107,10 +106,8 @@ const Labs = () => {
         <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
           <Form.Item
             name="name"
-            label="Tên bài thí nghiệm"
-            rules={[
-              { required: true, message: "Vui lòng nhập tên bài thí nghiệm!" },
-            ]}
+            label="Tên bài lab"
+            rules={[{ required: true, message: "Vui lòng nhập tên bài lab!" }]}
           >
             <Input placeholder="Nhập tên bài thí nghiệm" />
           </Form.Item>

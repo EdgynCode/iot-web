@@ -4,9 +4,18 @@ import { setMessage } from "../slices/message.js";
 
 export const createExperiment = createAsyncThunk(
   "Experiment/CreateExperiment",
-  async (experiment, thunkAPI) => {
+  async (
+    { tenThiNghiem, moTaThiNghiem, pathImage, ghiChu, labId },
+    thunkAPI
+  ) => {
     try {
-      const learner = await ExperimentService.createExperiment(experiment);
+      const learner = await ExperimentService.createExperiment({
+        tenThiNghiem,
+        moTaThiNghiem,
+        pathImage,
+        ghiChu,
+        labId,
+      });
       thunkAPI.dispatch(setMessage("Experiment created successfully!"));
       return learner;
     } catch (error) {
