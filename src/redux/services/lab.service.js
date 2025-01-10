@@ -43,7 +43,9 @@ const getLabsByName = async (labName) => {
 
 const deleteLabs = async (labIds) => {
   try {
-    const response = await axiosInstance.delete("Lab/DeleteLabs", labIds);
+    const response = await axiosInstance.delete("Lab/DeleteLabs", {
+      data: labIds,
+    });
     return response.data;
   } catch (error) {
     console.error(

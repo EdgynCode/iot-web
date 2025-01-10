@@ -21,10 +21,8 @@ import {
   DeviceTypes,
   Labs,
   LessonDetail,
+  LabDetail,
 } from "../pages";
-import { elements } from "chart.js";
-import { NotFound } from "../components/not-found/NotFound";
-import LabDetail from "../pages/lab-detail";
 
 const home = {
   key: "home",
