@@ -9,13 +9,13 @@ export const createExperiment = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const learner = await ExperimentService.createExperiment({
+      const learner = await ExperimentService.createExperiment(
         tenThiNghiem,
         moTaThiNghiem,
         pathImage,
         ghiChu,
-        labId,
-      });
+        labId
+      );
       thunkAPI.dispatch(setMessage("Experiment created successfully!"));
       return learner;
     } catch (error) {
