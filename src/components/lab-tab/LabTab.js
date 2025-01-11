@@ -79,15 +79,14 @@ export const LabTab = ({ lab }) => {
                 <EllipsisOutlined key="ellipsis" />,
               ]}
               cover={
-                <img
-                  alt="image of experiment"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                />
+                data.pathImage ? (
+                  <img alt="image of experiment" src={data.pathImage} /> : 
+                )
               }
             >
               <Meta
                 title={`Thí nghiệm: ${data.tenThiNghiem}`}
-                description={`Ngày tạo: ${convertDate(data.ngayTao)}`}
+                description={`Ngày tạo: ${formatDate(data.ngayTao)}`}
               />
             </Card>
           ))}
