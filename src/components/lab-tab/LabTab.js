@@ -1,8 +1,7 @@
 import {
   EditOutlined,
-  EllipsisOutlined,
   PlusCircleOutlined,
-  SettingOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import { Card, Form, Input, message, Modal, Button } from "antd";
 import React, { useEffect, useState } from "react";
@@ -10,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import TextArea from "antd/es/input/TextArea";
 import {
   createExperiment,
+  updateExperiment,
   getAllExperiments,
 } from "../../redux/actions/experimentAction";
 import "./index.css";
@@ -18,26 +18,32 @@ const { Meta } = Card;
 
 export const LabTab = ({ lab }) => {
   const [open, setOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentExperiment, setCurrentExperiment] = useState(null);
+
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
   const experimentState = useSelector((state) => state.experiments || {});
-  const {
-    data: experimentData = [],
-    loading = false,
-    error = null,
-  } = experimentState;
+  const { data: experimentData = [] } = experimentState;
+
   console.log("🚀 ~ LabTab ~ experimentData:", experimentData);
+
   const openModal = () => {
     setOpen(true);
   };
+
   useEffect(() => {
     dispatch(getAllExperiments());
   }, [dispatch]);
+
   const closeModal = () => {
     setOpen(false);
+    setIsEditing(false);
+    setCurrentExperiment(null);
     form.resetFields();
   };
+
   const handleFormSubmit = async (value) => {
     form.validateFields();
     const data = {
@@ -47,18 +53,43 @@ export const LabTab = ({ lab }) => {
       ghiChu: value.ghiChu,
       labId: lab.id,
     };
-    console.log("🚀 ~ handleFormSubmit ~ data:", data);
-    dispatch(createExperiment(data))
-      .unwrap()
-      .then(() => {
-        console.log("Submitted values:", value);
-        message.success("Tạo bài thí nghiệm thành công!");
-        closeModal();
-        dispatch(getAllExperiments());
-      })
-      .catch(() => {
-        message.error("Tạo bài thí nghiệm thất bại.");
-      });
+
+    if (isEditing && currentExperiment) {
+      dispatch(updateExperiment({ ...data, id: currentExperiment.id }))
+        .unwrap()
+        .then(() => {
+          message.success("Cập nhật bài thí nghiệm thành công!");
+          closeModal();
+          dispatch(getAllExperiments());
+        })
+        .catch(() => {
+          message.error("Cập nhật bài thí nghiệm thất bại.");
+        });
+    } else {
+      dispatch(createExperiment(data))
+        .unwrap()
+        .then(() => {
+          console.log("Submitted values:", value);
+          message.success("Tạo bài thí nghiệm thành công!");
+          closeModal();
+          dispatch(getAllExperiments());
+        })
+        .catch(() => {
+          message.error("Tạo bài thí nghiệm thất bại.");
+        });
+    }
+  };
+
+  const handleEdit = (experiment) => {
+    setIsEditing(true);
+    setCurrentExperiment(experiment);
+    form.setFieldsValue({
+      tenThiNghiem: experiment.tenThiNghiem,
+      moTaThiNghiem: experiment.moTaThiNghiem,
+      pathImage: experiment.pathImage,
+      ghiChu: experiment.ghiChu,
+    });
+    setOpen(true);
   };
 
   return (
@@ -74,9 +105,8 @@ export const LabTab = ({ lab }) => {
               key={index}
               style={{ width: 300, borderRadius: 40 }}
               actions={[
-                <SettingOutlined key="setting" />,
-                <EditOutlined key="edit" />,
-                <EllipsisOutlined key="ellipsis" />,
+                <EditOutlined key="edit" onClick={() => handleEdit(data)} />,
+                <DeleteOutlined key="delete" />,
               ]}
               cover={
                 <img
@@ -94,7 +124,7 @@ export const LabTab = ({ lab }) => {
         </div>
       </div>
       <Modal
-        title="Thêm bài thí nghiệm"
+        title={isEditing ? "Chỉnh sửa bài thí nghiệm" : "Thêm bài thí nghiệm"}
         open={open}
         onCancel={closeModal}
         footer={null}
@@ -120,7 +150,7 @@ export const LabTab = ({ lab }) => {
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Lưu
+              {isEditing ? "Cập nhật" : "Lưu"}
             </Button>
             <Button style={{ marginLeft: 8 }} onClick={closeModal}>
               Hủy
