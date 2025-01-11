@@ -68,10 +68,10 @@ const Labs = () => {
 
   const handleActionClick = (action) => {
     switch (action.title) {
-      case "Thêm bài thí nghiệm":
+      case "Thêm bài lab":
         setModalType("add");
         break;
-      case "Xóa bài thí nghiệm":
+      case "Xóa bài lab":
         setModalType("remove");
         break;
       default:
