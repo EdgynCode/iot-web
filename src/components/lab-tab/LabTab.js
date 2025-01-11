@@ -65,14 +65,18 @@ export const LabTab = ({ lab }) => {
     <>
       <div className="flex justify-between gap-5 align-middle ">
         <div className="bg-grey flex w-full gap-5 rounded-[40px] overflow-hidden px-[2%] py-[2%]">
-          <Card style={{ width: 300, borderRadius: 40 }} onClick={openModal}>
+          <Card
+            className="flex flex-col justify-center cursor-pointer"
+            style={{ width: 250, borderRadius: 40 }}
+            onClick={openModal}
+          >
             <PlusCircleOutlined className="text-[40px] flex mb-2 justify-center w-full" />
             <p className="flex justify-center"> Thêm thí nghiệm </p>
           </Card>
-          {experimentData.map((data, index) => (
+          {[...experimentData].reverse().map((data, index) => (
             <Card
               key={index}
-              style={{ width: 300, borderRadius: 40 }}
+              style={{ width: 250, borderRadius: 40 }}
               actions={[
                 <SettingOutlined key="setting" />,
                 <EditOutlined key="edit" />,
@@ -80,7 +84,17 @@ export const LabTab = ({ lab }) => {
               ]}
               cover={
                 data.pathImage ? (
-                  <img alt="image of experiment" src={data.pathImage} /> : 
+                  <img
+                    className="h-[200px]"
+                    alt="image of experiment"
+                    src={data.pathImage}
+                  />
+                ) : (
+                  <img
+                    alt="image of experiment"
+                    className="h-[200px] bg-cover"
+                    src="https://th.bing.com/th/id/R.3badffaab282cf30d1b86c080d041f77?rik=vb2O1yf3IC2Hrw&pid=ImgRaw&r=0"
+                  />
                 )
               }
             >
