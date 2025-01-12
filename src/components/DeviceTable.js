@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Badge,
   Card,
@@ -9,6 +9,10 @@ import {
   Input,
   Space,
   Typography,
+  Modal,
+  Form,
+  message,
+  DatePicker,
 } from "antd";
 import {
   DownOutlined,
@@ -17,12 +21,65 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { deviceData } from "../datas/device.d";
+import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addNewDevice } from "../redux/actions/deviceAction";
+import TextArea from "antd/es/input/TextArea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const { Search } = Input;
 const { Text } = Typography;
 
 const DeviceTable = () => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  const [modalType, setModalType] = useState("");
+  const [open, setOpen] = useState(false);
+  const [form] = Form.useForm();
+
+  const handleAddDevice = () => {
+    setOpen(true);
+    setModalType("add");
+    console.log("Add device");
+  };
+
+  const handleDeleteDevice = () => {
+    setModalType("delete");
+    console.log("Delete device");
+  };
+
+  const closeModal = () => {
+    setOpen(false);
+    form.resetFields();
+  };
+
+  const handleFormSubmit = async (value) => {
+    form.validateFields();
+    const data = {
+      tenThietBi: value.tenThietBi,
+      donViId: "123",
+      serialNumber: value.serialNumber,
+      maQR: value.maQR,
+      moTa: value.moTa,
+      ghiChu: value.ghiChu,
+      isTrangThai: true,
+      loaiThietBiID: id,
+      thoiGianBaoHanh: value.thoiGianBaoHanh.format("YYYY-MM-DD"),
+    };
+    console.log(data);
+    dispatch(addNewDevice(data))
+      .unwrap()
+      .then(() => {
+        message.success("Tạo thiết bị thành công!");
+        closeModal();
+        // dispatch(getAllLabs());
+      })
+      .catch(() => {
+        message.error("Tạo bài lab thất bại.");
+      });
+  };
+
   return (
     <div className="w-full p-5 bg-[#EDEDEF] rounded-[50px]">
       <Row gutter={16} align="middle">
@@ -45,10 +102,18 @@ const DeviceTable = () => {
         </Col>
         <Col flex="auto">
           <Search className="w-96" placeholder="Tìm kiếm nhanh" enterButton />
-          <Button icon={<ImportOutlined />} className="bg-[#1D1B23] text-white">
+          <Button
+            onClick={handleAddDevice}
+            icon={<ImportOutlined />}
+            className="bg-[#1D1B23] text-white"
+          >
             Thêm thiết bị
           </Button>
-          <Button icon={<DeleteOutlined />} className="bg-[#ff5656]">
+          <Button
+            onClick={handleDeleteDevice}
+            icon={<DeleteOutlined />}
+            className="bg-[#ff5656]"
+          >
             Xóa thiết bị
           </Button>
         </Col>
@@ -95,6 +160,67 @@ const DeviceTable = () => {
             )
         )}
       </Row>
+
+      <Modal
+        title="Thêm thông tin thiết bị"
+        open={open && modalType === "add"}
+        onCancel={closeModal}
+        footer={null}
+      >
+        <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
+          <Form.Item
+            name="tenThietBi"
+            label="Tên thiết bị"
+            rules={[{ required: true, message: "Vui lòng nhập tên thiết bị!" }]}
+          >
+            <Input placeholder="Tên thiết bị" />
+          </Form.Item>
+          <Form.Item
+            name="serialNumber"
+            label="Số seri"
+            rules={[{ required: true, message: "Vui lòng nhập số seri!" }]}
+          >
+            <Input placeholder="Nhập số seri" />
+          </Form.Item>
+          <Form.Item
+            name="maQR"
+            label="Mã QR"
+            rules={[{ required: true, message: "Vui lòng nhập vào mã QR!" }]}
+          >
+            <Input placeholder="Nhập mã QR" />
+          </Form.Item>
+          <Form.Item name="moTa" label="Mô tả">
+            <TextArea placeholder="Mô tả" />
+          </Form.Item>
+          <Form.Item name="ghiChu" label="Ghi chú">
+            <TextArea placeholder="Ghi chú" />
+          </Form.Item>
+          <Form.Item
+            name="thoiGianBaoHanh"
+            label="Hạn bảo hành"
+            rules={[
+              {
+                required: true,
+                message: "Thiết bị phải có hạn bảo hành!",
+              },
+            ]}
+          >
+            <DatePicker
+              placeholder="Hạn bảo hành"
+              format="YYYY-MM-DD"
+              className="rounded-lg w-full"
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Thêm thiết bị
+            </Button>
+            <Button style={{ marginLeft: 8 }} onClick={closeModal}>
+              Hủy
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };

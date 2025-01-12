@@ -57,3 +57,76 @@ export const removeDeviceType = createAsyncThunk(
     }
   }
 );
+
+export const addNewDevice = createAsyncThunk(
+  "Device/AddNewDevice",
+  async (
+    {
+      tenThietBi,
+      donViId,
+      serialNumber,
+      maQR,
+      moTa,
+      ghiChu,
+      isTrangThai,
+      loaiThietBiID,
+      thoiGianBaoHanh,
+    },
+    thunkAPI
+  ) => {
+    try {
+      const device = await DeviceService.addNewDevice(
+        tenThietBi,
+        donViId,
+        serialNumber,
+        maQR,
+        moTa,
+        ghiChu,
+        isTrangThai,
+        loaiThietBiID,
+        thoiGianBaoHanh
+      );
+      thunkAPI.dispatch(setMessage("New device added successfully!"));
+      return device;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to add new device";
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const removeDevice = createAsyncThunk(
+  "Device/RemoveDevice",
+  async (deviceId, thunkAPI) => {
+    try {
+      const device = await DeviceService.removeDevice(deviceId);
+      return device;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to delete device";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const updateDevice = createAsyncThunk(
+  "Device/UpdateDevice",
+  async ({ id, tenThietBi }, thunkAPI) => {
+    try {
+      const device = await DeviceService.updateDevice(id, tenThietBi);
+      return device;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update device";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
