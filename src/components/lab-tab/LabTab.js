@@ -10,6 +10,7 @@ import TextArea from "antd/es/input/TextArea";
 import {
   createExperiment,
   updateExperiment,
+  deleteExperiments,
   getAllExperiments,
 } from "../../redux/actions/experimentAction";
 import "./index.css";
@@ -92,6 +93,23 @@ export const LabTab = ({ lab }) => {
     setOpen(true);
   };
 
+  const handleDelete = (experimentId) => {
+    Modal.confirm({
+      title: "Bạn có chắc chắn xóa thí nghiệm này không?",
+      onOk: () => {
+        dispatch(deleteExperiments([experimentId]))
+          .then(() => {
+            message.success("Xóa thí nghiệm thành công!");
+            dispatch(getAllExperiments());
+          })
+          .catch((error) => {
+            message.error("Xóa thí nghiệm thất bại.");
+            console.error("Error deleting experiment:", error);
+          });
+      },
+    });
+  };
+
   return (
     <>
       <div className="flex justify-between gap-5 align-middle ">
@@ -106,7 +124,10 @@ export const LabTab = ({ lab }) => {
               style={{ width: 300, borderRadius: 40 }}
               actions={[
                 <EditOutlined key="edit" onClick={() => handleEdit(data)} />,
-                <DeleteOutlined key="delete" />,
+                <DeleteOutlined
+                  key="delete"
+                  onClick={() => handleDelete(data.id)}
+                />,
               ]}
               cover={
                 <img

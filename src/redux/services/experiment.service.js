@@ -72,7 +72,7 @@ const deleteExperiments = async (experimentIds) => {
   try {
     const response = await axiosInstance.delete(
       "Experiment/DeleteExperiments",
-      experimentIds
+      { data: experimentIds }
     );
     return response.data;
   } catch (error) {
