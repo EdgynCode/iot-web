@@ -53,10 +53,76 @@ const removeDeviceType = async (deviceTypeId) => {
   }
 };
 
+const addNewDevice = async (
+  tenThietBi,
+  donViId,
+  serialNumber,
+  maQR,
+  moTa,
+  ghiChu,
+  isTrangThai,
+  loaiThietBiID,
+  thoiGianBaoHanh
+) => {
+  try {
+    const response = await axiosInstance.post("Device/AddNewDevice", {
+      tenThietBi,
+      donViId,
+      serialNumber,
+      maQR,
+      moTa,
+      ghiChu,
+      isTrangThai,
+      loaiThietBiID,
+      thoiGianBaoHanh,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error adding new device:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
+const removeDevice = async (deviceId) => {
+  try {
+    const response = await axiosInstance.delete(
+      `Device/RemoveDevice?id=${deviceId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error deleting device:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
+const updateDevice = async (id, tenThietBi) => {
+  try {
+    const response = await axiosInstance.put("Device/UpdateDeviceType", {
+      id,
+      tenThietBi,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error updating device:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
 const DeviceService = {
   addNewDeviceType,
   getAllDeviceTypes,
   removeDeviceType,
+  addNewDevice,
+  removeDevice,
+  updateDevice,
 };
 
 export default DeviceService;

@@ -79,7 +79,7 @@ const labs = {
   title: "Bài thực hành",
 };
 const devices = {
-  key: "devices",
+  key: "devices/:id",
   element: <Devices />,
   icon: <ThunderboltOutlined />,
   title: "Thiết bị",
