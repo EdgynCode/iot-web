@@ -167,7 +167,7 @@ const EditAccountInfo = () => {
             </Col>
             <Col span={9}>
               <Form.Item
-                label="Ngày sinh (dd/mm/yyyy)"
+                label="Ngày sinh (yyyy-mm-dd)"
                 name="doB"
                 rules={[
                   {
@@ -178,10 +178,10 @@ const EditAccountInfo = () => {
                     validator: (_, value) => {
                       if (
                         value &&
-                        !dayjs(value, "DD/MM/YYYY", true).isValid()
+                        !dayjs(value, "YYYY-MM-DD", true).isValid()
                       ) {
                         return Promise.reject(
-                          "Invalid date format, use DD/MM/YYYY"
+                          "Invalid date format, use YYYY-MM-DD"
                         );
                       }
                       return Promise.resolve();
@@ -189,7 +189,7 @@ const EditAccountInfo = () => {
                   },
                 ]}
               >
-                <Input placeholder="DD/MM/YYYY" />
+                <Input placeholder="YYYY-MM-DD" />
               </Form.Item>
               <Form.Item
                 label="Email"

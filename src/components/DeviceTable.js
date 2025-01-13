@@ -12,7 +12,6 @@ import {
   Modal,
   Form,
   message,
-  DatePicker,
 } from "antd";
 import {
   DownOutlined,
@@ -21,12 +20,14 @@ import {
   DeleteOutlined,
   EditOutlined,
 } from "@ant-design/icons";
+import dayjs from "dayjs";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addNewDevice,
   getAllDevices,
   updateDevice,
+  removeDevice,
 } from "../redux/actions/deviceAction";
 import TextArea from "antd/es/input/TextArea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -44,16 +45,14 @@ const DeviceTable = () => {
   const [form] = Form.useForm();
 
   const deviceState = useSelector((state) => state.devices || {});
-  console.log(deviceState);
   const { data: deviceData = [] } = deviceState;
 
   useEffect(() => {
-    dispatch(getAllDevices()).then((response) => console.log(response));
+    dispatch(getAllDevices());
   }, [dispatch]);
 
   const handleAddDevice = () => {
     setOpen(true);
-    console.log("Add device");
   };
 
   const handleEditDevice = (data) => {
@@ -70,8 +69,21 @@ const DeviceTable = () => {
     setOpen(true);
   };
 
-  const handleDeleteDevice = () => {
-    console.log("Delete device");
+  const handleDeleteDevice = (deviceId) => {
+    Modal.confirm({
+      title: "Bạn có chắc chắn xóa thiết bị này không?",
+      onOk: () => {
+        dispatch(removeDevice(deviceId))
+          .then(() => {
+            message.success("Xóa thiết bị thành công!");
+            dispatch(getAllDevices());
+          })
+          .catch((error) => {
+            message.error("Xóa thiết bị thất bại.");
+            console.error("Error deleting device:", error);
+          });
+      },
+    });
   };
 
   const closeModal = () => {
@@ -86,7 +98,10 @@ const DeviceTable = () => {
         id: currentDevice.id,
         tenThietBi: value.tenThietBi,
         moTa: value.moTa,
-        maQR: value.maQR,
+        ghiChu: value.ghiChu,
+        isTrangThai: true,
+        loaiThietBiID: id,
+        thoiGianBaoHanh: value.thoiGianBaoHanh,
       };
       dispatch(updateDevice(data))
         .unwrap()
@@ -109,7 +124,7 @@ const DeviceTable = () => {
         ghiChu: value.ghiChu,
         isTrangThai: true,
         loaiThietBiID: id,
-        thoiGianBaoHanh: value.thoiGianBaoHanh.format("YYYY-MM-DD"),
+        thoiGianBaoHanh: value.thoiGianBaoHanh,
       };
       dispatch(addNewDevice(data))
         .unwrap()
@@ -179,7 +194,7 @@ const DeviceTable = () => {
                     />,
                     <DeleteOutlined
                       key="delete"
-                      // onClick={() => handleDelete(data.id)}
+                      onClick={() => handleDeleteDevice(item.id)}
                     />,
                   ]}
                 >
@@ -234,20 +249,6 @@ const DeviceTable = () => {
           >
             <Input placeholder="Tên thiết bị" />
           </Form.Item>
-          <Form.Item
-            name="serialNumber"
-            label="Số seri"
-            rules={[{ required: true, message: "Vui lòng nhập số seri!" }]}
-          >
-            <Input placeholder="Nhập số seri" disabled={isEditing} />
-          </Form.Item>
-          <Form.Item
-            name="maQR"
-            label="Mã QR"
-            rules={[{ required: true, message: "Vui lòng nhập vào mã QR!" }]}
-          >
-            <Input placeholder="Nhập mã QR" disabled={isEditing} />
-          </Form.Item>
           <Form.Item name="moTa" label="Mô tả">
             <TextArea placeholder="Mô tả" />
           </Form.Item>
@@ -255,21 +256,24 @@ const DeviceTable = () => {
             <TextArea placeholder="Ghi chú" />
           </Form.Item>
           <Form.Item
+            label="Hạn bảo hành (yyyy-mm-dd)"
             name="thoiGianBaoHanh"
-            label="Hạn bảo hành"
             rules={[
               {
                 required: true,
                 message: "Thiết bị phải có hạn bảo hành!",
               },
+              {
+                validator: (_, value) => {
+                  if (value && !dayjs(value, "YYYY-MM-DD", true).isValid()) {
+                    return Promise.reject("Định dạng phải là YYYY-MM-DD");
+                  }
+                  return Promise.resolve();
+                },
+              },
             ]}
           >
-            <DatePicker
-              placeholder="Hạn bảo hành"
-              format="YYYY-MM-DD"
-              className="rounded-lg w-full"
-              disabled={isEditing}
-            />
+            <Input placeholder="YYYY-MM-DD" disabled={isEditing} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
