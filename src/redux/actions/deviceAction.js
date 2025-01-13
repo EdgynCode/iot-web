@@ -130,3 +130,19 @@ export const updateDevice = createAsyncThunk(
     }
   }
 );
+
+export const getAllDevices = createAsyncThunk(
+  "Device/GetAllDevices",
+  async (_, thunkAPI) => {
+    try {
+      const devices = await DeviceService.getAllDevices();
+      return devices;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch device data";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
