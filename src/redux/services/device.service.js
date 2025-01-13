@@ -103,7 +103,7 @@ const removeDevice = async (deviceId) => {
 
 const updateDevice = async (id, tenThietBi, moTa, ghiChu) => {
   try {
-    const response = await axiosInstance.put("Device/UpdateDeviceType", {
+    const response = await axiosInstance.patch("Device/UpdateDeviceType", {
       id,
       tenThietBi,
       moTa,
