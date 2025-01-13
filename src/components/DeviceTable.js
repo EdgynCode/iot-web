@@ -23,7 +23,11 @@ import {
 } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewDevice, getAllDevices } from "../redux/actions/deviceAction";
+import {
+  addNewDevice,
+  getAllDevices,
+  updateDevice,
+} from "../redux/actions/deviceAction";
 import TextArea from "antd/es/input/TextArea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -34,8 +38,9 @@ const DeviceTable = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const [modalType, setModalType] = useState("");
   const [open, setOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentDevice, setCurrentDevice] = useState(null);
   const [form] = Form.useForm();
 
   const deviceState = useSelector((state) => state.devices || {});
@@ -48,17 +53,24 @@ const DeviceTable = () => {
 
   const handleAddDevice = () => {
     setOpen(true);
-    setModalType("add");
     console.log("Add device");
   };
 
-  const handleEditDevice = () => {
-    setModalType("edit");
-    console.log("Edit device");
+  const handleEditDevice = (data) => {
+    setIsEditing(true);
+    setCurrentDevice(data);
+    form.setFieldsValue({
+      tenThietBi: data.tenThietBi,
+      serialNumber: data.serialNumber,
+      maQR: data.maQR,
+      moTa: data.moTa,
+      ghiChu: data.ghiChu,
+      thoiGianBaoHanh: data.thoiGianBaoHanh,
+    });
+    setOpen(true);
   };
 
   const handleDeleteDevice = () => {
-    setModalType("delete");
     console.log("Delete device");
   };
 
@@ -69,28 +81,47 @@ const DeviceTable = () => {
 
   const handleFormSubmit = async (value) => {
     form.validateFields();
-    const data = {
-      tenThietBi: value.tenThietBi,
-      donViId: "123",
-      serialNumber: value.serialNumber,
-      maQR: value.maQR,
-      moTa: value.moTa,
-      ghiChu: value.ghiChu,
-      isTrangThai: true,
-      loaiThietBiID: id,
-      thoiGianBaoHanh: value.thoiGianBaoHanh.format("YYYY-MM-DD"),
-    };
-    console.log(data);
-    dispatch(addNewDevice(data))
-      .unwrap()
-      .then(() => {
-        message.success("Tạo thiết bị thành công!");
-        closeModal();
-        dispatch(getAllDevices());
-      })
-      .catch(() => {
-        message.error("Tạo bài lab thất bại.");
-      });
+    if (isEditing && currentDevice) {
+      const data = {
+        id: currentDevice.id,
+        tenThietBi: value.tenThietBi,
+        moTa: value.moTa,
+        maQR: value.maQR,
+      };
+      dispatch(updateDevice(data))
+        .unwrap()
+        .then(() => {
+          message.success("Cập nhật thiết bị thành công!");
+          closeModal();
+          dispatch(getAllDevices());
+        })
+        .catch(() => {
+          message.error("Cập nhật thiết bị thất bại.");
+        });
+      return;
+    } else {
+      const data = {
+        tenThietBi: value.tenThietBi,
+        donViId: "123",
+        serialNumber: value.serialNumber,
+        maQR: value.maQR,
+        moTa: value.moTa,
+        ghiChu: value.ghiChu,
+        isTrangThai: true,
+        loaiThietBiID: id,
+        thoiGianBaoHanh: value.thoiGianBaoHanh.format("YYYY-MM-DD"),
+      };
+      dispatch(addNewDevice(data))
+        .unwrap()
+        .then(() => {
+          message.success("Tạo thiết bị thành công!");
+          closeModal();
+          dispatch(getAllDevices());
+        })
+        .catch(() => {
+          message.error("Tạo thiết bị thất bại.");
+        });
+    }
   };
 
   return (
@@ -144,7 +175,7 @@ const DeviceTable = () => {
                   actions={[
                     <EditOutlined
                       key="edit"
-                      // onClick={() => handleEdit(data)}
+                      onClick={() => handleEditDevice(item)}
                     />,
                     <DeleteOutlined
                       key="delete"
@@ -190,8 +221,8 @@ const DeviceTable = () => {
       </Row>
 
       <Modal
-        title="Thêm thông tin thiết bị"
-        open={open && modalType === "add"}
+        title={isEditing ? "Sửa thông tin thiết bị" : "Thêm thông tin thiết bị"}
+        open={open}
         onCancel={closeModal}
         footer={null}
       >
@@ -208,14 +239,14 @@ const DeviceTable = () => {
             label="Số seri"
             rules={[{ required: true, message: "Vui lòng nhập số seri!" }]}
           >
-            <Input placeholder="Nhập số seri" />
+            <Input placeholder="Nhập số seri" disabled={isEditing} />
           </Form.Item>
           <Form.Item
             name="maQR"
             label="Mã QR"
             rules={[{ required: true, message: "Vui lòng nhập vào mã QR!" }]}
           >
-            <Input placeholder="Nhập mã QR" />
+            <Input placeholder="Nhập mã QR" disabled={isEditing} />
           </Form.Item>
           <Form.Item name="moTa" label="Mô tả">
             <TextArea placeholder="Mô tả" />
@@ -237,6 +268,7 @@ const DeviceTable = () => {
               placeholder="Hạn bảo hành"
               format="YYYY-MM-DD"
               className="rounded-lg w-full"
+              disabled={isEditing}
             />
           </Form.Item>
           <Form.Item>

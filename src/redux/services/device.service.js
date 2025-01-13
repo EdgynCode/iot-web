@@ -101,11 +101,13 @@ const removeDevice = async (deviceId) => {
   }
 };
 
-const updateDevice = async (id, tenThietBi) => {
+const updateDevice = async (id, tenThietBi, moTa, ghiChu) => {
   try {
     const response = await axiosInstance.put("Device/UpdateDeviceType", {
       id,
       tenThietBi,
+      moTa,
+      ghiChu,
     });
     return response.data;
   } catch (error) {
