@@ -117,15 +117,36 @@ export const removeDevice = createAsyncThunk(
 
 export const updateDevice = createAsyncThunk(
   "Device/UpdateDevice",
-  async ({ id, tenThietBi }, thunkAPI) => {
+  async ({ id, tenThietBi, moTa, ghiChu }, thunkAPI) => {
     try {
-      const device = await DeviceService.updateDevice(id, tenThietBi);
+      const device = await DeviceService.updateDevice(
+        id,
+        tenThietBi,
+        moTa,
+        ghiChu
+      );
       return device;
     } catch (error) {
       const message =
         error.response?.data?.message ||
         error.message ||
         "Failed to update device";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const getAllDevices = createAsyncThunk(
+  "Device/GetAllDevices",
+  async (_, thunkAPI) => {
+    try {
+      const devices = await DeviceService.getAllDevices();
+      return devices;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch device data";
       return thunkAPI.rejectWithValue(message);
     }
   }

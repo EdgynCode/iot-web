@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Badge,
   Card,
@@ -19,11 +19,15 @@ import {
   FilterOutlined,
   ImportOutlined,
   DeleteOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
-import { deviceData } from "../datas/device.d";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addNewDevice } from "../redux/actions/deviceAction";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addNewDevice,
+  getAllDevices,
+  updateDevice,
+} from "../redux/actions/deviceAction";
 import TextArea from "antd/es/input/TextArea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -34,18 +38,39 @@ const DeviceTable = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const [modalType, setModalType] = useState("");
   const [open, setOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentDevice, setCurrentDevice] = useState(null);
   const [form] = Form.useForm();
+
+  const deviceState = useSelector((state) => state.devices || {});
+  console.log(deviceState);
+  const { data: deviceData = [] } = deviceState;
+
+  useEffect(() => {
+    dispatch(getAllDevices()).then((response) => console.log(response));
+  }, [dispatch]);
 
   const handleAddDevice = () => {
     setOpen(true);
-    setModalType("add");
     console.log("Add device");
   };
 
+  const handleEditDevice = (data) => {
+    setIsEditing(true);
+    setCurrentDevice(data);
+    form.setFieldsValue({
+      tenThietBi: data.tenThietBi,
+      serialNumber: data.serialNumber,
+      maQR: data.maQR,
+      moTa: data.moTa,
+      ghiChu: data.ghiChu,
+      thoiGianBaoHanh: data.thoiGianBaoHanh,
+    });
+    setOpen(true);
+  };
+
   const handleDeleteDevice = () => {
-    setModalType("delete");
     console.log("Delete device");
   };
 
@@ -56,28 +81,47 @@ const DeviceTable = () => {
 
   const handleFormSubmit = async (value) => {
     form.validateFields();
-    const data = {
-      tenThietBi: value.tenThietBi,
-      donViId: "123",
-      serialNumber: value.serialNumber,
-      maQR: value.maQR,
-      moTa: value.moTa,
-      ghiChu: value.ghiChu,
-      isTrangThai: true,
-      loaiThietBiID: id,
-      thoiGianBaoHanh: value.thoiGianBaoHanh.format("YYYY-MM-DD"),
-    };
-    console.log(data);
-    dispatch(addNewDevice(data))
-      .unwrap()
-      .then(() => {
-        message.success("Tạo thiết bị thành công!");
-        closeModal();
-        // dispatch(getAllLabs());
-      })
-      .catch(() => {
-        message.error("Tạo bài lab thất bại.");
-      });
+    if (isEditing && currentDevice) {
+      const data = {
+        id: currentDevice.id,
+        tenThietBi: value.tenThietBi,
+        moTa: value.moTa,
+        maQR: value.maQR,
+      };
+      dispatch(updateDevice(data))
+        .unwrap()
+        .then(() => {
+          message.success("Cập nhật thiết bị thành công!");
+          closeModal();
+          dispatch(getAllDevices());
+        })
+        .catch(() => {
+          message.error("Cập nhật thiết bị thất bại.");
+        });
+      return;
+    } else {
+      const data = {
+        tenThietBi: value.tenThietBi,
+        donViId: "123",
+        serialNumber: value.serialNumber,
+        maQR: value.maQR,
+        moTa: value.moTa,
+        ghiChu: value.ghiChu,
+        isTrangThai: true,
+        loaiThietBiID: id,
+        thoiGianBaoHanh: value.thoiGianBaoHanh.format("YYYY-MM-DD"),
+      };
+      dispatch(addNewDevice(data))
+        .unwrap()
+        .then(() => {
+          message.success("Tạo thiết bị thành công!");
+          closeModal();
+          dispatch(getAllDevices());
+        })
+        .catch(() => {
+          message.error("Tạo thiết bị thất bại.");
+        });
+    }
   };
 
   return (
@@ -122,20 +166,35 @@ const DeviceTable = () => {
       <Row gutter={[16, 16]} className="mt-8">
         {deviceData.map(
           (item) =>
-            item.status === "Đã kết nối" && (
+            item.isTrangThai === true && (
               <Col key={item.id} xs={24} sm={12} md={8} lg={6}>
-                <Card bordered={false} className="rounded-[50]">
-                  <p className="font-bold text-[27px]">{item.id}</p>
+                <Card
+                  key={item.id}
+                  bordered={false}
+                  className="rounded-[50]"
+                  actions={[
+                    <EditOutlined
+                      key="edit"
+                      onClick={() => handleEditDevice(item)}
+                    />,
+                    <DeleteOutlined
+                      key="delete"
+                      // onClick={() => handleDelete(data.id)}
+                    />,
+                  ]}
+                >
+                  <p className="font-bold text-[27px]">{item.tenThietBi}</p>
                   <Badge
-                    count={item.status}
+                    count={item.isTrangThai ? "Đã kết nối" : "Chưa kết nối"}
                     style={{
-                      backgroundColor:
-                        item.color === "green" ? "#34C75938" : "#FF3B3021",
-                      color: item.color,
+                      backgroundColor: item.isTrangThai
+                        ? "#34C75938"
+                        : "#FF3B3021",
+                      color: "black",
                     }}
                   />
                   <i class="fa-solid fa-gear"></i>
-                  <div className="text-16">
+                  {/* <div className="text-16">
                     Nhóm <DownOutlined className="text-[12px]" />
                   </div>
                   {item.members.length > 0 && (
@@ -154,7 +213,7 @@ const DeviceTable = () => {
                         </Space>
                       ))}
                     </Space>
-                  )}
+                  )} */}
                 </Card>
               </Col>
             )
@@ -162,8 +221,8 @@ const DeviceTable = () => {
       </Row>
 
       <Modal
-        title="Thêm thông tin thiết bị"
-        open={open && modalType === "add"}
+        title={isEditing ? "Sửa thông tin thiết bị" : "Thêm thông tin thiết bị"}
+        open={open}
         onCancel={closeModal}
         footer={null}
       >
@@ -180,14 +239,14 @@ const DeviceTable = () => {
             label="Số seri"
             rules={[{ required: true, message: "Vui lòng nhập số seri!" }]}
           >
-            <Input placeholder="Nhập số seri" />
+            <Input placeholder="Nhập số seri" disabled={isEditing} />
           </Form.Item>
           <Form.Item
             name="maQR"
             label="Mã QR"
             rules={[{ required: true, message: "Vui lòng nhập vào mã QR!" }]}
           >
-            <Input placeholder="Nhập mã QR" />
+            <Input placeholder="Nhập mã QR" disabled={isEditing} />
           </Form.Item>
           <Form.Item name="moTa" label="Mô tả">
             <TextArea placeholder="Mô tả" />
@@ -209,6 +268,7 @@ const DeviceTable = () => {
               placeholder="Hạn bảo hành"
               format="YYYY-MM-DD"
               className="rounded-lg w-full"
+              disabled={isEditing}
             />
           </Form.Item>
           <Form.Item>

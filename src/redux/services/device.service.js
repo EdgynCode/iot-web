@@ -101,16 +101,31 @@ const removeDevice = async (deviceId) => {
   }
 };
 
-const updateDevice = async (id, tenThietBi) => {
+const updateDevice = async (id, tenThietBi, moTa, ghiChu) => {
   try {
     const response = await axiosInstance.put("Device/UpdateDeviceType", {
       id,
       tenThietBi,
+      moTa,
+      ghiChu,
     });
     return response.data;
   } catch (error) {
     console.error(
       "Error updating device:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
+const getAllDevices = async () => {
+  try {
+    const response = await axiosInstance.get("Device/GetAllDevices");
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching devices:",
       error.response?.data || error.message
     );
     throw error.response?.data || error.message;
@@ -123,6 +138,7 @@ const DeviceService = {
   addNewDevice,
   removeDevice,
   updateDevice,
+  getAllDevices,
 };
 
 export default DeviceService;
