@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   addNewDevice,
-  getAllDevices,
+  getDevicesByTypeId,
   removeDevice,
 } from "../actions/deviceAction";
 
@@ -16,15 +16,15 @@ const deviceReducer = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(getAllDevices.pending, (state) => {
+      .addCase(getDevicesByTypeId.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getAllDevices.fulfilled, (state, action) => {
+      .addCase(getDevicesByTypeId.fulfilled, (state, action) => {
         state.data = action.payload;
         state.loading = false;
       })
-      .addCase(getAllDevices.rejected, (state, action) => {
+      .addCase(getDevicesByTypeId.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
       })
