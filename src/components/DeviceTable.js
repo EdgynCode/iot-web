@@ -25,7 +25,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addNewDevice,
-  getAllDevices,
+  getDevicesByTypeId,
   updateDevice,
   removeDevice,
 } from "../redux/actions/deviceAction";
@@ -48,8 +48,12 @@ const DeviceTable = () => {
   const { data: deviceData = [] } = deviceState;
 
   useEffect(() => {
-    dispatch(getAllDevices());
-  }, [dispatch]);
+    dispatch(getDevicesByTypeId(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    console.log("Fetched Device Data:", deviceData);
+  }, [deviceData]);
 
   const handleAddDevice = () => {
     setOpen(true);
@@ -76,7 +80,7 @@ const DeviceTable = () => {
         dispatch(removeDevice(deviceId))
           .then(() => {
             message.success("Xóa thiết bị thành công!");
-            dispatch(getAllDevices());
+            dispatch(getDevicesByTypeId(id));
           })
           .catch((error) => {
             message.error("Xóa thiết bị thất bại.");
@@ -108,7 +112,7 @@ const DeviceTable = () => {
         .then(() => {
           message.success("Cập nhật thiết bị thành công!");
           closeModal();
-          dispatch(getAllDevices());
+          dispatch(getDevicesByTypeId(id));
         })
         .catch(() => {
           message.error("Cập nhật thiết bị thất bại.");
@@ -131,7 +135,7 @@ const DeviceTable = () => {
         .then(() => {
           message.success("Tạo thiết bị thành công!");
           closeModal();
-          dispatch(getAllDevices());
+          dispatch(getDevicesByTypeId(id));
         })
         .catch(() => {
           message.error("Tạo thiết bị thất bại.");
@@ -184,7 +188,6 @@ const DeviceTable = () => {
             item.isTrangThai === true && (
               <Col key={item.id} xs={24} sm={12} md={8} lg={6}>
                 <Card
-                  key={item.id}
                   bordered={false}
                   className="rounded-[50]"
                   actions={[

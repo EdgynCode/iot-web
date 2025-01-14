@@ -151,3 +151,19 @@ export const getAllDevices = createAsyncThunk(
     }
   }
 );
+
+export const getDevicesByTypeId = createAsyncThunk(
+  "Device/GetDevicesByTypeId",
+  async (deviceTypeId, thunkAPI) => {
+    try {
+      const devices = await DeviceService.getDevicesByTypeId(deviceTypeId);
+      return devices;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch device data";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);

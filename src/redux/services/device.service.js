@@ -131,6 +131,21 @@ const getAllDevices = async () => {
     throw error.response?.data || error.message;
   }
 };
+
+const getDevicesByTypeId = async (deviceTypeId) => {
+  try {
+    const response = await axiosInstance.get(
+      `Device/GetDevicesByTypeId?deviceTypeId=${deviceTypeId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching devices by type id:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
 const DeviceService = {
   addNewDeviceType,
   getAllDeviceTypes,
@@ -139,6 +154,7 @@ const DeviceService = {
   removeDevice,
   updateDevice,
   getAllDevices,
+  getDevicesByTypeId,
 };
 
 export default DeviceService;
