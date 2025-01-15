@@ -56,7 +56,7 @@ const getExperimentsByName = async (experimentName) => {
 const getExperimentsByLabId = async (labId) => {
   try {
     const response = await axiosInstance.get(
-      `Experiment/GetExperimentsByLab?labId==${labId}`
+      `Experiment/GetExperimentsByLab?labId=${labId}`
     );
     return response.data;
   } catch (error) {
