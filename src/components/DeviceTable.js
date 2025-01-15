@@ -56,6 +56,7 @@ const DeviceTable = () => {
   }, [deviceData]);
 
   const handleAddDevice = () => {
+    setIsEditing(false);
     setOpen(true);
   };
 
@@ -101,6 +102,8 @@ const DeviceTable = () => {
       const data = {
         id: currentDevice.id,
         tenThietBi: value.tenThietBi,
+        serialNumber: value.serialNumber,
+        maQR: value.maQR,
         moTa: value.moTa,
         ghiChu: value.ghiChu,
         isTrangThai: true,
@@ -171,13 +174,6 @@ const DeviceTable = () => {
             className="bg-[#1D1B23] text-white"
           >
             Thêm thiết bị
-          </Button>
-          <Button
-            onClick={handleDeleteDevice}
-            icon={<DeleteOutlined />}
-            className="bg-[#ff5656]"
-          >
-            Xóa thiết bị
           </Button>
         </Col>
       </Row>
@@ -251,6 +247,20 @@ const DeviceTable = () => {
             rules={[{ required: true, message: "Vui lòng nhập tên thiết bị!" }]}
           >
             <Input placeholder="Tên thiết bị" />
+          </Form.Item>
+          <Form.Item
+            name="serialNumber"
+            label="Số seri"
+            rules={[{ required: true, message: "Vui lòng nhập số seri!" }]}
+          >
+            <Input placeholder="Số seri" disabled={isEditing} />
+          </Form.Item>
+          <Form.Item
+            name="maQR"
+            label="Mã QR"
+            rules={[{ required: true, message: "Vui lòng nhập mã QR!" }]}
+          >
+            <Input placeholder="Mã QR" disabled={isEditing} />
           </Form.Item>
           <Form.Item name="moTa" label="Mô tả">
             <TextArea placeholder="Mô tả" />

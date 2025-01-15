@@ -11,13 +11,13 @@ import {
   createExperiment,
   updateExperiment,
   deleteExperiments,
-  getAllExperiments,
+  getExperimentsByLabId,
 } from "../../redux/actions/experimentAction";
 import "./index.css";
 import formatDate from "../../utils/formatDate";
 const { Meta } = Card;
 
-export const LabTab = ({ lab }) => {
+export const LabTab = ({ lab, labId }) => {
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentExperiment, setCurrentExperiment] = useState(null);
@@ -35,8 +35,8 @@ export const LabTab = ({ lab }) => {
   };
 
   useEffect(() => {
-    dispatch(getAllExperiments());
-  }, [dispatch]);
+    dispatch(getExperimentsByLabId(labId));
+  }, [dispatch, labId]);
 
   const closeModal = () => {
     setOpen(false);
@@ -61,7 +61,7 @@ export const LabTab = ({ lab }) => {
         .then(() => {
           message.success("Cập nhật bài thí nghiệm thành công!");
           closeModal();
-          dispatch(getAllExperiments());
+          dispatch(getExperimentsByLabId(labId));
         })
         .catch(() => {
           message.error("Cập nhật bài thí nghiệm thất bại.");
@@ -73,7 +73,7 @@ export const LabTab = ({ lab }) => {
           console.log("Submitted values:", value);
           message.success("Tạo bài thí nghiệm thành công!");
           closeModal();
-          dispatch(getAllExperiments());
+          dispatch(getExperimentsByLabId(labId));
         })
         .catch(() => {
           message.error("Tạo bài thí nghiệm thất bại.");
@@ -100,7 +100,7 @@ export const LabTab = ({ lab }) => {
         dispatch(deleteExperiments([experimentId]))
           .then(() => {
             message.success("Xóa thí nghiệm thành công!");
-            dispatch(getAllExperiments());
+            dispatch(getExperimentsByLabId(labId));
           })
           .catch((error) => {
             message.error("Xóa thí nghiệm thất bại.");

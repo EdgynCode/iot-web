@@ -11,7 +11,7 @@ const LabDetail = () => {
       {record ? (
         <>
           <BreadcrumbTab items={["Bài thí nghiệm", `Bài ${record.name}`]} />
-          <LabTab lab={record} />
+          <LabTab lab={record} labId={record.id} />
         </>
       ) : (
         <NotFound />
