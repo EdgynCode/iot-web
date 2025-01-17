@@ -17,7 +17,6 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { deviceData } from "../datas/device.d";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const { Search } = Input;
 const { Text } = Typography;

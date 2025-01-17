@@ -6,7 +6,10 @@ import { useNavigate } from "react-router-dom";
 export const Back = () => {
   const navigate = useNavigate();
   return (
-    <Col className="hover-effect" onClick={() => navigate(-1)}>
+    <Col
+      className="hover-effect text-greyText p-4 -mt-7"
+      onClick={() => navigate(-1)}
+    >
       <LeftCircleOutlined className="mr-2" />
       Quay về
     </Col>

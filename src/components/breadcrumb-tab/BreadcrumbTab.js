@@ -1,4 +1,4 @@
-import { LeftCircleOutlined, RightOutlined } from "@ant-design/icons";
+import { RightOutlined } from "@ant-design/icons";
 import { Col, Row, Breadcrumb } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";

@@ -4,15 +4,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        black: "#1D1B23",
-        white: "#F9F9FC",
-        grey: "#EDEDEF",
-        purple: "#C2BEE7",
+        primaryBlue: "rgb(23, 43, 77)",
+        greyText: "rgb(145, 158, 171)",
       },
-      backgroundImage: {
-        "custom-gradient":
-          "linear-gradient(180deg, #DEDADA 0%, #EAEAEA 77%, #C2BEE7 100%)",
-      },
+
       fontSize: {
         16: "16px",
         20: "20px",
