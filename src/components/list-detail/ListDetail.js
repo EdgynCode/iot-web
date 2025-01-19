@@ -56,16 +56,12 @@ export const ListDetail = ({
   return (
     <>
       <Selector title={title} actions={actions} filters={filters} />
-      <div className="bg-grey tab-rounded">
-        <div className="tab-header">
-          <p className="text-xs font-inter text-[#ABACBE]">
-            Hiện <span className="text-black">10 </span>
-            trong <span className="text-black">200</span> kết quả
-          </p>
+      <div className="bg-grey tab">
+        <div className="w-full flex justify-center tab-header">
           <Input
             placeholder="Search"
             suffix={<SearchOutlined />}
-            className="max-w-[420px]"
+            className="max-w-[200px]"
             color="#c4c4c4"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -77,18 +73,23 @@ export const ListDetail = ({
           columns={column}
           pagination={false}
         />
-        <Pagination
-          className="mt-10 w-full flex justify-end"
-          pageSize={itemsPerPage}
-          current={currentPage}
-          disabled={totalPage < 1}
-          total={filteredData.length}
-          size="small"
-          onChange={(page) => {
-            setCurrentPage(page);
-            setShowItems(data.slice(startIndex, endIndex));
-          }}
-        />
+        <div className="flex justify-between px-4">
+          <p className="text-xs font-inter text-[#ABACBE]">
+            Hiện <span className="text-black">10 </span>
+            trong <span className="text-black">200</span> kết quả
+          </p>
+          <Pagination
+            pageSize={itemsPerPage}
+            current={currentPage}
+            disabled={totalPage < 1}
+            total={filteredData.length}
+            size="small"
+            onChange={(page) => {
+              setCurrentPage(page);
+              setShowItems(data.slice(startIndex, endIndex));
+            }}
+          />
+        </div>
       </div>
     </>
   );

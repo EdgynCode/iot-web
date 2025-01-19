@@ -1,6 +1,5 @@
 .ant-table-wrapper .ant-table {
   overflow: hidden;
-  border-radius: 50px !important;
   padding-bottom: 2%;
 }
 .ant-table-body {
@@ -16,7 +15,51 @@
 .ant-table-content tr th:last-child {
   margin-right: 2% !important;
 }
-.ant-table-content tr td,
-.ant-table-content tr th {
+.ant-table-content tr td {
   background-color: #ffffff !important;
+}
+.ant-table-content {
+  background-color: rgb(255, 255, 255);
+  color: rgb(23, 43, 77);
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 2px,
+    rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+  background-image: none;
+  width: 100%;
+  overflow-x: auto;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 4px;
+}
+.ant-table-container {
+  border: 0.5px solid rgba(145, 158, 171, 0.23921568627450981);
+  border-radius: 4px;
+}
+.ant-table-content > table {
+  margin-bottom: 2rem;
+  border-top: 1px solid rgba(145, 158, 171, 0.23921568627450981);
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0px;
+}
+.ant-table-thead {
+  display: table-header-group;
+  color: inherit;
+}
+.ant-table-thead th {
+  font-size: 13px;
+  font-weight: 600;
+  background-color: #124874 !important;
+  border-bottom: 1px solid rgba(145, 158, 171, 0.23921568627450981);
+  color: #fff !important;
+  text-align: center;
+  padding: 0.3rem 1rem !important;
+  border-right: 1px solid rgba(145, 158, 171, 0.23921568627450981);
+}
+:where(.css-dev-only-do-not-override-1n2vyhh).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > th:not(:last-child):not(.ant-table-selection-column):not(
+    .ant-table-row-expand-icon-cell
+  ):not([colspan])::before {
+  width: 0px;
 }

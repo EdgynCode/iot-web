@@ -7,8 +7,6 @@ import {
   Button,
   Dropdown,
   Input,
-  Space,
-  Typography,
   Modal,
   Form,
   message,
@@ -30,10 +28,8 @@ import {
   removeDevice,
 } from "../redux/actions/deviceAction";
 import TextArea from "antd/es/input/TextArea";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const { Search } = Input;
-const { Text } = Typography;
 
 const DeviceTable = () => {
   const { id } = useParams();
