@@ -1,95 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Row,
-  Col,
-  Typography,
-  Image,
-  Form,
-  Input,
-  Button,
-  Modal,
-  message,
-  Upload,
-} from "antd";
+import { message, Upload } from "antd";
 import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
-import {
-  getCurrentUser,
-  updateUserInfo,
-  sendLinkResetPassword,
-} from "../../redux/actions/authAction";
-import InforTab from "./InforTab";
+import { getCurrentUser, updateUserInfo } from "../../redux/actions/authAction";
 import UpdateFormInput from "./UpdateFormInput";
-import { PlusOutlined } from "@ant-design/icons";
-const getBase64 = (img, callback) => {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-};
-const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-  if (!isJpgOrPng) {
-    message.error("Vui lòng chọn file với định dạng JPG/PNG!");
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error("Ảnh phải nhỏ hơn 2MB!");
-  }
-  return isJpgOrPng && isLt2M;
-};
+import { getBase64, beforeUpload } from "../../utils/UploadImage";
+import uploadButton from "./UploadButton";
+import getUserFormData from "../../datas/edit-account-info";
+
 const EditAccountInfo = () => {
   let navigate = useNavigate();
-  const [form] = Form.useForm();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const [originalEmail, setOriginalEmail] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
-  const data = [
-    { key: "Họ", value: user.firstName },
-    {
-      key: "Tên",
-      value: user.lastName,
-    },
-    { key: "Giới tính", value: user.gender },
-    {
-      key: "Ngày sinh",
-      value: user.doB,
-    },
-    {
-      key: "Email",
-      value: user.email,
-    },
-    { key: "Số điện thoại", value: user.phoneNumber },
-  ];
+  const data = getUserFormData(user);
 
   useEffect(() => {
     dispatch(getCurrentUser());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     form.setFieldsValue({
-  //       id: user.id,
-  //       firstName: user.firstName,
-  //       lastName: user.lastName,
-  //       // fullName not updating with changes
-  //       gender: user.gender,
-  //       doB: user.doB
-  //         ? new Date(user.doB).toLocaleDateString("en-GB", {
-  //             day: "2-digit",
-  //             month: "2-digit",
-  //             year: "numeric",
-  //           })
-  //         : null,
-  //       email: user.email,
-  //       phoneNumber: user.phoneNumber,
-  //     });
-  //     setOriginalEmail(user.email);
-  //   }
-  // }, [user, form]);
-
   const handleFinish = async (values) => {
+    console.log("🚀 ~ handleFinish ~ values:", values);
     const requestBody = { ...values, id: user.id };
 
     // Include the email only if it has changed
@@ -108,37 +40,6 @@ const EditAccountInfo = () => {
       });
   };
 
-  const handleResetPassword = () => {
-    Modal.confirm({
-      title: "Xác nhận đặt lại mật khẩu",
-      content:
-        "Bạn có chắc chắn muốn đặt lại mật khẩu? Một liên kết sẽ được gửi đến email của bạn.",
-      okText: "Xác nhận",
-      cancelText: "Hủy",
-      onOk: () => {
-        if (user && user.email) {
-          const clientUri = "http://localhost:3000/reset-password";
-          dispatch(sendLinkResetPassword({ email: user.email, clientUri }))
-            .unwrap()
-            .then(() => {
-              message.success(
-                "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn."
-              );
-            })
-            .catch((error) => {
-              message.error(
-                "Đã xảy ra lỗi khi gửi liên kết đặt lại mật khẩu: " +
-                  error.message
-              );
-            });
-        } else {
-          message.error(
-            "Không thể đặt lại mật khẩu vì thông tin email không khả dụng."
-          );
-        }
-      },
-    });
-  };
   const handleChange = async (info) => {
     if (info.file.status === "done") {
       // Get this url from response in real world.
@@ -151,152 +52,8 @@ const EditAccountInfo = () => {
   if (!user) {
     return <div>Loading...</div>;
   }
-  const uploadButton = (
-    <button
-      style={{
-        border: 0,
-        background: "none",
-      }}
-      type="button"
-    >
-      <PlusOutlined />
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Upload
-      </div>
-    </button>
-  );
-  return (
-    // <Row
-    //   justify="center"
-    //   align="middle"
-    //   className="w-full bg-[#EDEDEF] rounded-[50px] p-[46px_7px] overflow-hidden"
-    // >
-    //   <Col span={24}>
-    //     <Title level={4} className="text-center">
-    //       Chỉnh sửa thông tin tài khoản
-    //     </Title>
-    //   </Col>
-    //   <Col span={6}>
-    //     <Image
-    //       src="/public/images/default.png"
-    //       alt="Profile Picture"
-    //       className="rounded-[50%]"
-    //     />
-    //   </Col>
-    //   <Col span={18}>
-    //     <Form
-    //       form={form}
-    //       layout="vertical"
-    //       onFinish={handleFinish}
-    //       initialValues={user}
-    //       className="w-full"
-    //     >
-    //       <Row gutter={[16, 16]}>
-    //         <Col span={9}>
-    //           <Form.Item
-    //             label="Họ"
-    //             name="firstName"
-    //             rules={[
-    //               { required: true, message: "Please enter your first name" },
-    //             ]}
-    //           >
-    //             <Input />
-    //           </Form.Item>
-    //           <Form.Item
-    //             label="Tên"
-    //             name="lastName"
-    //             rules={[
-    //               { required: true, message: "Please enter your last name" },
-    //             ]}
-    //           >
-    //             <Input />
-    //           </Form.Item>
-    //           <Form.Item
-    //             label="Giới tính"
-    //             name="gender"
-    //             rules={[
-    //               { required: true, message: "Please specify your gender" },
-    //             ]}
-    //           >
-    //             <Input />
-    //           </Form.Item>
-    //         </Col>
-    //         <Col span={9}>
-    //           <Form.Item
-    //             label="Ngày sinh (dd/mm/yyyy)"
-    //             name="doB"
-    //             rules={[
-    //               {
-    //                 required: true,
-    //                 message: "Please enter your date of birth",
-    //               },
-    //               {
-    //                 validator: (_, value) => {
-    //                   if (
-    //                     value &&
-    //                     !dayjs(value, "DD/MM/YYYY", true).isValid()
-    //                   ) {
-    //                     return Promise.reject(
-    //                       "Invalid date format, use DD/MM/YYYY"
-    //                     );
-    //                   }
-    //                   return Promise.resolve();
-    //                 },
-    //               },
-    //             ]}
-    //           >
-    //             <Input placeholder="DD/MM/YYYY" />
-    //           </Form.Item>
-    //           <Form.Item
-    //             label="Email"
-    //             name="email"
-    //             rules={[
-    //               {
-    //                 required: true,
-    //                 type: "email",
-    //                 message: "Please enter a valid email",
-    //               },
-    //             ]}
-    //           >
-    //             <Input />
-    //           </Form.Item>
-    //           <Form.Item
-    //             label="Số điện thoại"
-    //             name="phoneNumber"
-    //             rules={[
-    //               {
-    //                 required: true,
-    //                 message: "Please enter your phone number",
-    //               },
-    //             ]}
-    //           >
-    //             <Input />
-    //           </Form.Item>
-    //         </Col>
-    //       </Row>
-    //       <Col span={18} className="items-center text-center mt-6">
-    //         <Button
-    //           type="primary"
-    //           htmlType="submit"
-    //           className="mr-4 bg-blue-500 text-white"
-    //         >
-    //           Lưu
-    //         </Button>
-    //         <Button
-    //           className="bg-blue-500 text-white"
-    //           onClick={handleResetPassword}
-    //         >
-    //           Đặt lại mật khẩu
-    //         </Button>
-    //       </Col>
-    //     </Form>
-    //   </Col>
-    // </Row>
 
+  return (
     <div className="flex w-full items-start gap-6 pt-6">
       {/* Avatar */}
       <div className="flex flex-col gap-4 w-5/12 ">
@@ -327,22 +84,7 @@ const EditAccountInfo = () => {
       </div>
       {/* Form */}
       <div className="flex flex-col gap-2 w-full">
-        <UpdateFormInput
-          title="Chỉnh sửa thông tin"
-          data={data}
-          onFinish={handleFinish}
-        />
-        <div className="flex justify-between w-full">
-          <button className="buttonCustom w-1/2" onClick={handleFinish}>
-            Lưu
-          </button>
-          <button
-            className="buttonCustom w-1/2 !m-0"
-            onClick={handleResetPassword}
-          >
-            Đổi mật khẩu
-          </button>
-        </div>
+        <UpdateFormInput data={data} onFinish={handleFinish} />
       </div>
     </div>
   );

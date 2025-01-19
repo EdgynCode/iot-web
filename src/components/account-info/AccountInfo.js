@@ -4,6 +4,7 @@ import { Col, Row, Typography, Image } from "antd";
 import { getCurrentUser } from "../../redux/actions/authAction";
 import InforTab from "./InforTab";
 import { useNavigate } from "react-router-dom";
+import formatDate from "../../utils/formatDate";
 
 const AccountInfo = () => {
   let navigate = useNavigate();
@@ -20,7 +21,7 @@ const AccountInfo = () => {
   const basicInfo = [
     { key: "Mã số", value: user.id },
     { key: "Họ tên", value: user.fullName },
-    { key: "Ngày sinh", value: user.doB },
+    { key: "Ngày sinh", value: formatDate(user.doB) },
     { key: "Giới tính", value: user.gender === "Male" ? "Nam" : "Nữ" },
   ];
   const accountInfo = [
@@ -39,8 +40,8 @@ const AccountInfo = () => {
       value: user.twoFactorEnabled ? "Đã xác thực" : "Chưa xác thực",
     },
     { key: "Số lần đăng nhập thất bại", value: user.accessFailedCount },
-    { key: "Ngày tạo", value: user.ngayTao },
-    { key: "Lần cuối thay đổi", value: user.ngayThayDoi },
+    { key: "Ngày tạo", value: formatDate(user.ngayTao) },
+    { key: "Lần cuối thay đổi", value: formatDate(user.ngayThayDoi) },
   ];
   return (
     <div className="flex w-full items-start gap-6 pt-6">
