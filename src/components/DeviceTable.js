@@ -38,6 +38,7 @@ const DeviceTable = () => {
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentDevice, setCurrentDevice] = useState(null);
+  const [modalType, setModalType] = useState("add-edit");
   const [form] = Form.useForm();
 
   const deviceState = useSelector((state) => state.devices || {});
@@ -71,20 +72,22 @@ const DeviceTable = () => {
   };
 
   const handleDeleteDevice = (deviceId) => {
-    Modal.confirm({
-      title: "Bạn có chắc chắn xóa thiết bị này không?",
-      onOk: () => {
-        dispatch(removeDevice(deviceId))
-          .then(() => {
-            message.success("Xóa thiết bị thành công!");
-            dispatch(getDevicesByTypeId(id));
-          })
-          .catch((error) => {
-            message.error("Xóa thiết bị thất bại.");
-            console.error("Error deleting device:", error);
-          });
-      },
-    });
+    setCurrentDevice(deviceId);
+    setOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setModalType("remove");
+    dispatch(removeDevice(currentDevice))
+      .then(() => {
+        message.success("Xóa thiết bị thành công!");
+        dispatch(getDevicesByTypeId(id));
+      })
+      .catch((error) => {
+        message.error("Xóa thiết bị thất bại.");
+        console.error("Error deleting device:", error);
+      });
+    setOpen(false);
   };
 
   const closeModal = () => {
@@ -232,7 +235,7 @@ const DeviceTable = () => {
 
       <Modal
         title={isEditing ? "Sửa thông tin thiết bị" : "Thêm thông tin thiết bị"}
-        open={open}
+        open={open && modalType === "add-edit"}
         onCancel={closeModal}
         footer={null}
       >
@@ -293,6 +296,15 @@ const DeviceTable = () => {
             </Button>
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        title={"Xóa thiết bị"}
+        open={open && modalType === "remove"}
+        onOk={handleDeleteConfirm}
+        onCancel={closeModal}
+      >
+        <p>Bạn có chắc chắn muốn xóa thiết bị này không?</p>
       </Modal>
     </div>
   );
