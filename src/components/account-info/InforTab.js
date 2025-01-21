@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./index.css";
+import "./index.css";
 const InforTab = ({ title, data }) => {
   return (
     <div className="container flex flex-col">

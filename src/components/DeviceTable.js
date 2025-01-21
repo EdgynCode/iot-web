@@ -72,12 +72,12 @@ const DeviceTable = () => {
   };
 
   const handleDeleteDevice = (deviceId) => {
+    setModalType("remove");
     setCurrentDevice(deviceId);
     setOpen(true);
   };
 
   const handleDeleteConfirm = async () => {
-    setModalType("remove");
     dispatch(removeDevice(currentDevice))
       .then(() => {
         message.success("Xóa thiết bị thành công!");

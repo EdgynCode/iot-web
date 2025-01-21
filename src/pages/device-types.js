@@ -82,6 +82,7 @@ const DeviceTypes = () => {
       <Modal
         title="Thêm loại thiết bị"
         open={open && modalType === "addDeviceType"}
+        onCancel={() => setOpen(false)}
         footer={[
           <Button key="cancel" onClick={() => setOpen(false)}>
             Hủy
