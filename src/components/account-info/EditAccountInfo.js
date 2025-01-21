@@ -17,27 +17,40 @@ const EditAccountInfo = () => {
   const data = getUserFormData(user);
 
   useEffect(() => {
-    dispatch(getCurrentUser());
-  }, [dispatch]);
+    dispatch(getCurrentUser()).then(setOriginalEmail(user.email));
+  }, [dispatch, user.email]);
 
-  const handleFinish = async (values) => {
-    console.log("🚀 ~ handleFinish ~ values:", values);
-    const requestBody = { ...values, id: user.id };
-
-    // Include the email only if it has changed
-    if (values.email === originalEmail) {
-      delete requestBody.email;
-    }
-
+  const handleUpdate = (requestBody) => {
     dispatch(updateUserInfo(requestBody))
       .unwrap()
       .then(() => {
         message.success("Cập nhật thông tin thành công!");
+        localStorage.removeItem("formData");
         navigate("/account-detail");
       })
       .catch((error) => {
         message.error("Cập nhật thông tin thất bại: " + error);
       });
+  };
+
+  const handleFinish = async (values) => {
+    const requestBody = {
+      id: user.id,
+      firstName: values["Họ"],
+      lastName: values["Tên"],
+      gender: values["Giới tính"],
+      email: values["Email"],
+      phoneNumber: values["Số điện thoại"],
+      doB: values["Ngày sinh"],
+    };
+
+    // Include the email only if it has changed
+    if (values["Email"] === originalEmail) {
+      delete requestBody.email;
+      handleUpdate(requestBody);
+    } else {
+      handleUpdate(requestBody);
+    }
   };
 
   const handleChange = async (info) => {

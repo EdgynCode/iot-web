@@ -1,6 +1,6 @@
 import { DatePicker, Form, Input, message, Modal, Select } from "antd";
 import React, { useEffect } from "react";
-import styles from "./index.css";
+import "./index.css";
 import dayjs from "dayjs";
 import { sendLinkResetPassword } from "../../redux/actions/authAction";
 import { useDispatch } from "react-redux";
