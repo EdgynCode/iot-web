@@ -9,6 +9,7 @@ import {
   Input,
   Modal,
   Form,
+  DatePicker,
   message,
 } from "antd";
 import {
@@ -66,7 +67,7 @@ const DeviceTable = () => {
       maQR: data.maQR,
       moTa: data.moTa,
       ghiChu: data.ghiChu,
-      thoiGianBaoHanh: data.thoiGianBaoHanh,
+      thoiGianBaoHanh: dayjs(data.thoiGianBaoHanh),
     });
     setOpen(true);
   };
@@ -207,26 +208,6 @@ const DeviceTable = () => {
                     }}
                   />
                   <i class="fa-solid fa-gear"></i>
-                  {/* <div className="text-16">
-                    Nhóm <DownOutlined className="text-[12px]" />
-                  </div>
-                  {item.members.length > 0 && (
-                    <Space
-                      direction="vertical"
-                      size="small"
-                      className="mt-[10px]"
-                    >
-                      {item.members.map((member, index) => (
-                        <Space
-                          key={index}
-                          size="small"
-                          className="flex items-center"
-                        >
-                          <Text italic>{member}</Text>
-                        </Space>
-                      ))}
-                    </Space>
-                  )} */}
                 </Card>
               </Col>
             )
@@ -239,7 +220,12 @@ const DeviceTable = () => {
         onCancel={closeModal}
         footer={null}
       >
-        <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
+        <Form
+          form={form}
+          layout="vertical"
+          labelCol={{ style: { width: "250px" } }}
+          onFinish={handleFormSubmit}
+        >
           <Form.Item
             name="tenThietBi"
             label="Tên thiết bị"
@@ -268,28 +254,24 @@ const DeviceTable = () => {
             <TextArea placeholder="Ghi chú" />
           </Form.Item>
           <Form.Item
-            label="Hạn bảo hành (yyyy-mm-dd)"
+            label="Hạn bảo hành (dd-mm-yyyy)"
             name="thoiGianBaoHanh"
             rules={[
               {
                 required: true,
                 message: "Thiết bị phải có hạn bảo hành!",
               },
-              {
-                validator: (_, value) => {
-                  if (value && !dayjs(value, "YYYY-MM-DD", true).isValid()) {
-                    return Promise.reject("Định dạng phải là YYYY-MM-DD");
-                  }
-                  return Promise.resolve();
-                },
-              },
             ]}
           >
-            <Input placeholder="YYYY-MM-DD" disabled={isEditing} />
+            <DatePicker
+              placeholder="DD-MM-YYYY"
+              format={"DD-MM-YYYY"}
+              disabled={isEditing}
+            />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Thêm thiết bị
+              {isEditing ? "Sửa thông tin thiết bị" : "Thêm thiết bị"}
             </Button>
             <Button style={{ marginLeft: 8 }} onClick={closeModal}>
               Hủy
