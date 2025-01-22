@@ -7,7 +7,7 @@ const InforTab = ({ title, data }) => {
       <table className="table-info">
         <tbody>
           {data.map((d, index) => (
-            <tr key={index} className="">
+            <tr key={index}>
               <td>
                 <h6>{d.key}</h6>
               </td>

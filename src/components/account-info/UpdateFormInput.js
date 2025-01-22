@@ -7,33 +7,15 @@ import { useDispatch } from "react-redux";
 const UpdateFormInput = ({ data, onFinish }) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const localStorageKey = "formData";
+
   useEffect(() => {
-    const storedData = localStorage.getItem(localStorageKey);
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      form.setFieldsValue(
-        parsedData.reduce((acc, { key, value }) => {
-          acc[key] = key === "Ngày sinh" && value ? dayjs(value) : value;
-          return acc;
-        }, {})
-      );
-    } else {
-      form.setFieldsValue(
-        data.reduce((acc, { key, value }) => {
-          acc[key] = key === "Ngày sinh" && value ? dayjs(value) : value;
-          return acc;
-        }, {})
-      );
-    }
+    const initialValues = data.reduce((acc, { key, value }) => {
+      acc[key] = key === "Ngày sinh" && value ? dayjs(value) : value;
+      return acc;
+    }, {});
+    form.setFieldsValue(initialValues);
   }, [data, form]);
-  const handleValuesChange = (changedValues, allValues) => {
-    const updatedData = Object.entries(allValues).map(([key, value]) => ({
-      key,
-      value: key === "Ngày sinh" ? value?.toISOString() : value,
-    }));
-    localStorage.setItem(localStorageKey, JSON.stringify(updatedData));
-  };
+
   const handleResetPassword = () => {
     Modal.confirm({
       title: "Xác nhận đặt lại mật khẩu",
@@ -77,7 +59,6 @@ const UpdateFormInput = ({ data, onFinish }) => {
         return acc;
       }, {})}
       onFinish={onFinish}
-      onValuesChange={handleValuesChange}
       className="update-form"
     >
       <div className="container flex flex-col">

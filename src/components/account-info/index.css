@@ -24,7 +24,7 @@
   vertical-align: middle;
   outline: 0px;
 }
-.ant-form-item-label {
+.update-form .ant-form-item-label {
   width: 20%;
   text-align: start !important;
 }

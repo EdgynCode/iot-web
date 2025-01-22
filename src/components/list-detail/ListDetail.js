@@ -11,6 +11,7 @@ export const ListDetail = ({
   data,
   column,
   onSelectionChange,
+  setHasSelected,
 }) => {
   // mapping key to data index
   const mappedData = data.map((item) => ({
@@ -32,7 +33,9 @@ export const ListDetail = ({
   const [currentPage, setCurrentPage] = useState(1);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const [showItems, setShowItems] = useState(data.slice(startIndex, endIndex));
+  const [showItems, setShowItems] = useState(
+    filteredData.slice(startIndex, endIndex)
+  );
   useEffect(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -42,7 +45,6 @@ export const ListDetail = ({
   // ------------------------------------------------------
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
     if (onSelectionChange) {
       onSelectionChange(newSelectedRowKeys);
@@ -52,7 +54,11 @@ export const ListDetail = ({
     selectedRowKeys,
     onChange: onSelectChange,
   };
-  const hasSelected = selectedRowKeys.length > 0;
+  useEffect(() => {
+    if (setHasSelected) {
+      setHasSelected(selectedRowKeys.length > 0);
+    }
+  }, [selectedRowKeys, setHasSelected]);
   return (
     <>
       <Selector title={title} actions={actions} filters={filters} />
@@ -75,8 +81,8 @@ export const ListDetail = ({
         />
         <div className="flex justify-between px-4">
           <p className="text-xs font-inter text-[#ABACBE]">
-            Hiện <span className="text-black">10 </span>
-            trong <span className="text-black">200</span> kết quả
+            Hiện <span className="text-black">{showItems.length} </span>
+            trong <span className="text-black">{data.length}</span> kết quả
           </p>
           <Pagination
             pageSize={itemsPerPage}

@@ -19,20 +19,27 @@ const DeviceTypes = () => {
   const [modalType, setModalType] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [hasSelected, setHasSelected] = useState(false);
   const deviceListState = useSelector((state) => state.devicetypes || {});
   const { data: deviceData = [], error = null } = deviceListState;
 
   useEffect(() => {
     dispatch(getAllDeviceTypes());
   }, [dispatch]);
-
+  const [modal] = Modal.useModal();
   const handleActionClick = (action) => {
     switch (action.title) {
       case "Thêm loại thiết bị":
         setModalType("addDeviceType");
         break;
       case "Xóa loại thiết bị":
+        // if (!hasSelected) {
+        //   modal.warning({
+        //     title: "Nhắc nhở!",
+        //     content: "Vui lòng chọn loại thiết bị muốn xóa",
+        //   });
+        //   return;
+        // }
         setModalType("deleteDeviceType");
         break;
       default:
@@ -72,9 +79,10 @@ const DeviceTypes = () => {
           ...action,
           onClick: () => handleActionClick(action),
         }))}
-        filters={deviceFilter}
+        // filters={deviceFilter}
         data={loading ? [] : deviceData}
         column={deviceListColumns(navigate)}
+        setHasSelected={setHasSelected}
       />
       {loading && <Spin size="large" />}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
@@ -87,6 +95,7 @@ const DeviceTypes = () => {
             Hủy
           </Button>,
         ]}
+        closable={false}
       >
         <Form
           name="addNewDeviceType"
@@ -100,7 +109,7 @@ const DeviceTypes = () => {
               { required: true, message: "Vui lòng nhập tên loại thiết bị!" },
             ]}
           >
-            <Input placeholder="Tên loại thiết bị" className="rounded-lg" />
+            <Input placeholder="Tên loại thiết bị" className="" />
           </Form.Item>
 
           <Form.Item
@@ -134,7 +143,7 @@ const DeviceTypes = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="w-full bg-black text-white hover:bg-gray-800 rounded-lg"
+              className="buttonCustom w-full"
               loading={loading}
             >
               Thêm loại thiết bị
@@ -142,6 +151,21 @@ const DeviceTypes = () => {
           </Form.Item>
         </Form>
       </Modal>
+
+      <Modal
+        title="Xóa loại thiết bị"
+        open={open && modalType === "deleteDeviceType"}
+        okText="Xóa"
+        okType="danger"
+        cancelText="Không"
+        onOk={() => {
+          setOpen(false);
+        }}
+        onCancel={() => {
+          setOpen(false);
+        }}
+        closable={false}
+      ></Modal>
     </>
   );
 };

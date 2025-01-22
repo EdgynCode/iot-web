@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   getExperimentsByName,
   getAllExperiments,
+  getExperimentsByLabId,
 } from "../actions/experimentAction.js";
 
 const experimentSlice = createSlice({
@@ -14,6 +15,7 @@ const experimentSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // Get by Name
       .addCase(getExperimentsByName.pending, (state) => {
         state.loading = true;
       })
@@ -25,6 +27,19 @@ const experimentSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      // Get by Lab Id
+      .addCase(getExperimentsByLabId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getExperimentsByLabId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(getExperimentsByLabId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Get all
       .addCase(getAllExperiments.pending, (state) => {
         state.loading = true;
       })

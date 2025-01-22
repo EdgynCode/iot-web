@@ -63,6 +63,22 @@ export const getExperimentsByName = createAsyncThunk(
   }
 );
 
+export const getExperimentsByLabId = createAsyncThunk(
+  "Experiment/GetExperimentsByLabId",
+  async (labId, thunkAPI) => {
+    try {
+      const experiments = await ExperimentService.getExperimentsByLabId(labId);
+      return experiments;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch experiment data";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const deleteExperiments = createAsyncThunk(
   "Experiment/DeleteExperiments",
   async (experimentIds, thunkAPI) => {

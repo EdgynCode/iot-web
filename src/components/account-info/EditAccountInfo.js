@@ -21,7 +21,6 @@ const EditAccountInfo = () => {
   }, [dispatch]);
 
   const handleFinish = async (values) => {
-    console.log("🚀 ~ handleFinish ~ values:", values);
     const requestBody = { ...values, id: user.id };
 
     // Include the email only if it has changed
