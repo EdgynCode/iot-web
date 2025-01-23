@@ -26,7 +26,6 @@ const DeviceTypes = () => {
   useEffect(() => {
     dispatch(getAllDeviceTypes());
   }, [dispatch]);
-  const [modal] = Modal.useModal();
   const handleActionClick = (action) => {
     switch (action.title) {
       case "Thêm loại thiết bị":

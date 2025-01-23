@@ -107,13 +107,13 @@ export const studentColumns = (navigate) => [
 export const studentDetailAction = (navigate, id) => [
   {
     title: "Chỉnh sửa thông tin",
-    onclick: () => {
+    onClick: () => {
       navigate(`/edit-student-detail/${id}`);
     },
   },
   {
     title: "Gửi tin nhắn",
-    onclick: () => {
+    onClick: () => {
       console.log("Delete");
     },
   },

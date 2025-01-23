@@ -23,6 +23,7 @@ import {
   LessonDetail,
   LabDetail,
 } from "../pages";
+import Schedule from "../pages/schedule";
 
 const home = {
   key: "home",
@@ -46,7 +47,13 @@ const lessons = {
   key: "lessons",
   element: <Lessons />,
   icon: <BookOutlined />,
-  title: "Bài học",
+  title: "Bài giảng",
+};
+const schedule = {
+  key: "schedule",
+  element: <Schedule />,
+  icon: <BookOutlined />,
+  title: "Buổi học",
 };
 const editAccountDetail = {
   key: "edit-account-detail",
@@ -100,6 +107,7 @@ const labDetail = { key: "lab-detail/:id", element: <LabDetail /> };
 export const learnerRoute = [home, accountDetail, editAccountDetail, logout];
 export const teacherRoute = [
   home,
+  schedule,
   lessons,
   labs,
   deviceTypes,
@@ -130,6 +138,7 @@ export const superAdminRoute = [
 export const learnerSidebar = [home, accountDetail, logout];
 export const teacherSidebar = [
   home,
+  schedule,
   lessons,
   labs,
   deviceTypes,

@@ -29,8 +29,8 @@
   text-align: start !important;
 }
 .table-info tr td,
-.ant-form-item-label,
-.ant-form-item-control {
+.update-account .ant-form-item-label,
+.update-account .ant-form-item-control {
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.43;
