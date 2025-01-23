@@ -7,10 +7,9 @@ import {
   Button,
   Dropdown,
   Input,
-  Space,
-  Typography,
   Modal,
   Form,
+  DatePicker,
   message,
 } from "antd";
 import {
@@ -30,10 +29,8 @@ import {
   removeDevice,
 } from "../redux/actions/deviceAction";
 import TextArea from "antd/es/input/TextArea";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const { Search } = Input;
-const { Text } = Typography;
 
 const DeviceTable = () => {
   const { id } = useParams();
@@ -42,6 +39,7 @@ const DeviceTable = () => {
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentDevice, setCurrentDevice] = useState(null);
+  const [modalType, setModalType] = useState("add-edit");
   const [form] = Form.useForm();
 
   const deviceState = useSelector((state) => state.devices || {});
@@ -69,26 +67,28 @@ const DeviceTable = () => {
       maQR: data.maQR,
       moTa: data.moTa,
       ghiChu: data.ghiChu,
-      thoiGianBaoHanh: data.thoiGianBaoHanh,
+      thoiGianBaoHanh: dayjs(data.thoiGianBaoHanh),
     });
     setOpen(true);
   };
 
   const handleDeleteDevice = (deviceId) => {
-    Modal.confirm({
-      title: "Bạn có chắc chắn xóa thiết bị này không?",
-      onOk: () => {
-        dispatch(removeDevice(deviceId))
-          .then(() => {
-            message.success("Xóa thiết bị thành công!");
-            dispatch(getDevicesByTypeId(id));
-          })
-          .catch((error) => {
-            message.error("Xóa thiết bị thất bại.");
-            console.error("Error deleting device:", error);
-          });
-      },
-    });
+    setModalType("remove");
+    setCurrentDevice(deviceId);
+    setOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    dispatch(removeDevice(currentDevice))
+      .then(() => {
+        message.success("Xóa thiết bị thành công!");
+        dispatch(getDevicesByTypeId(id));
+      })
+      .catch((error) => {
+        message.error("Xóa thiết bị thất bại.");
+        console.error("Error deleting device:", error);
+      });
+    setOpen(false);
   };
 
   const closeModal = () => {
@@ -208,26 +208,6 @@ const DeviceTable = () => {
                     }}
                   />
                   <i class="fa-solid fa-gear"></i>
-                  {/* <div className="text-16">
-                    Nhóm <DownOutlined className="text-[12px]" />
-                  </div>
-                  {item.members.length > 0 && (
-                    <Space
-                      direction="vertical"
-                      size="small"
-                      className="mt-[10px]"
-                    >
-                      {item.members.map((member, index) => (
-                        <Space
-                          key={index}
-                          size="small"
-                          className="flex items-center"
-                        >
-                          <Text italic>{member}</Text>
-                        </Space>
-                      ))}
-                    </Space>
-                  )} */}
                 </Card>
               </Col>
             )
@@ -236,11 +216,16 @@ const DeviceTable = () => {
 
       <Modal
         title={isEditing ? "Sửa thông tin thiết bị" : "Thêm thông tin thiết bị"}
-        open={open}
+        open={open && modalType === "add-edit"}
         onCancel={closeModal}
         footer={null}
       >
-        <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
+        <Form
+          form={form}
+          layout="vertical"
+          labelCol={{ style: { width: "250px" } }}
+          onFinish={handleFormSubmit}
+        >
           <Form.Item
             name="tenThietBi"
             label="Tên thiết bị"
@@ -269,34 +254,39 @@ const DeviceTable = () => {
             <TextArea placeholder="Ghi chú" />
           </Form.Item>
           <Form.Item
-            label="Hạn bảo hành (yyyy-mm-dd)"
+            label="Hạn bảo hành (dd-mm-yyyy)"
             name="thoiGianBaoHanh"
             rules={[
               {
                 required: true,
                 message: "Thiết bị phải có hạn bảo hành!",
               },
-              {
-                validator: (_, value) => {
-                  if (value && !dayjs(value, "YYYY-MM-DD", true).isValid()) {
-                    return Promise.reject("Định dạng phải là YYYY-MM-DD");
-                  }
-                  return Promise.resolve();
-                },
-              },
             ]}
           >
-            <Input placeholder="YYYY-MM-DD" disabled={isEditing} />
+            <DatePicker
+              placeholder="DD-MM-YYYY"
+              format={"DD-MM-YYYY"}
+              disabled={isEditing}
+            />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Thêm thiết bị
+              {isEditing ? "Sửa thông tin thiết bị" : "Thêm thiết bị"}
             </Button>
             <Button style={{ marginLeft: 8 }} onClick={closeModal}>
               Hủy
             </Button>
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        title={"Xóa thiết bị"}
+        open={open && modalType === "remove"}
+        onOk={handleDeleteConfirm}
+        onCancel={closeModal}
+      >
+        <p>Bạn có chắc chắn muốn xóa thiết bị này không?</p>
       </Modal>
     </div>
   );

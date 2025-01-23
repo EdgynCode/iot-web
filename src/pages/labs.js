@@ -59,6 +59,7 @@ const Labs = () => {
       .unwrap()
       .then(() => {
         message.success("Xóa bài thí nghiệm thành công!");
+        closeModal();
         dispatch(getAllLabs());
       })
       .catch(() => {

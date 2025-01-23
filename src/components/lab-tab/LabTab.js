@@ -21,6 +21,7 @@ export const LabTab = ({ lab, labId }) => {
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentExperiment, setCurrentExperiment] = useState(null);
+  const [modalType, setModalType] = useState("add-edit");
 
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -31,6 +32,8 @@ export const LabTab = ({ lab, labId }) => {
   console.log("🚀 ~ LabTab ~ experimentData:", experimentData);
 
   const openModal = () => {
+    setIsEditing(false);
+    setModalType("add-edit");
     setOpen(true);
   };
 
@@ -84,6 +87,7 @@ export const LabTab = ({ lab, labId }) => {
   const handleEdit = (experiment) => {
     setIsEditing(true);
     setCurrentExperiment(experiment);
+    setModalType("add-edit");
     form.setFieldsValue({
       tenThiNghiem: experiment.tenThiNghiem,
       moTaThiNghiem: experiment.moTaThiNghiem,
@@ -93,21 +97,23 @@ export const LabTab = ({ lab, labId }) => {
     setOpen(true);
   };
 
-  const handleDelete = (experimentId) => {
-    Modal.confirm({
-      title: "Bạn có chắc chắn xóa thí nghiệm này không?",
-      onOk: () => {
-        dispatch(deleteExperiments([experimentId]))
-          .then(() => {
-            message.success("Xóa thí nghiệm thành công!");
-            dispatch(getExperimentsByLabId(labId));
-          })
-          .catch((error) => {
-            message.error("Xóa thí nghiệm thất bại.");
-            console.error("Error deleting experiment:", error);
-          });
-      },
-    });
+  const handleDeleteExperiment = (experimentId) => {
+    setModalType("remove");
+    setOpen(true);
+    setCurrentExperiment(experimentId);
+  };
+
+  const handleDeleteConfirm = () => {
+    dispatch(deleteExperiments([currentExperiment]))
+      .then(() => {
+        message.success("Xóa thí nghiệm thành công!");
+        dispatch(getExperimentsByLabId(labId));
+      })
+      .catch((error) => {
+        message.error("Xóa thí nghiệm thất bại.");
+        console.error("Error deleting experiment:", error);
+      });
+    setOpen(false);
   };
 
   return (
@@ -126,7 +132,7 @@ export const LabTab = ({ lab, labId }) => {
                 <EditOutlined key="edit" onClick={() => handleEdit(data)} />,
                 <DeleteOutlined
                   key="delete"
-                  onClick={() => handleDelete(data.id)}
+                  onClick={() => handleDeleteExperiment(data.id)}
                 />,
               ]}
               cover={
@@ -146,14 +152,14 @@ export const LabTab = ({ lab, labId }) => {
       </div>
       <Modal
         title={isEditing ? "Chỉnh sửa bài thí nghiệm" : "Thêm bài thí nghiệm"}
-        open={open}
+        open={open && modalType === "add-edit"}
         onCancel={closeModal}
         footer={null}
       >
         <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
           <Form.Item
             name="tenThiNghiem"
-            label="Tên thí nghiệm "
+            label="Tên thí nghiệm"
             rules={[
               { required: true, message: "Vui lòng nhập tên thí nghiệm!" },
             ]}
@@ -167,7 +173,7 @@ export const LabTab = ({ lab, labId }) => {
             <Input placeholder="Nhập đường dẫn ảnh (local hoặc internet)" />
           </Form.Item>
           <Form.Item name="ghiChu" label="Ghi chú">
-            <TextArea placeholder="Chi chú" />
+            <TextArea placeholder="Ghi chú" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
@@ -178,6 +184,15 @@ export const LabTab = ({ lab, labId }) => {
             </Button>
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        title={"Xóa thí nghiệm"}
+        open={open && modalType === "remove"}
+        onOk={handleDeleteConfirm}
+        onCancel={closeModal}
+      >
+        <p>Bạn có chắc chắn muốn xóa thí nghiệm này không?</p>
       </Modal>
     </>
   );
