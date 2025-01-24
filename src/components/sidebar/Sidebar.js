@@ -71,12 +71,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
 
   return (
     <>
-      <Sider
-        // collapsible
-        // collapsed={!isExpanded}
-        // onCollapse={toggleSidebar}
-        className="sider"
-      >
+      <Sider className="sider">
         {/* Logo  */}
         <div className="div-logo">
           <a href="/">

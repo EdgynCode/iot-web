@@ -47,9 +47,8 @@ export const deviceListAction = () => [
   },
   {
     title: "Xóa loại thiết bị",
-    onClick: () => {
-      console.log("Deleting...");
-      // delete selected labs
+    onClick: (openModal) => {
+      openModal();
     },
   },
 ];

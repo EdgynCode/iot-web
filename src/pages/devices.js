@@ -1,9 +1,6 @@
 import React from "react";
-import { Row, Col, Typography } from "antd";
+import DeviceTable from "../components/device/DeviceTable";
 import { Back } from "../components/back/Back";
-import DeviceTable from "../components/DeviceTable";
-
-const { Title } = Typography;
 
 const Devices = () => {
   return (
