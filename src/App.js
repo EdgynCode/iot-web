@@ -9,7 +9,6 @@ import { jwtDecode } from "jwt-decode";
 
 function App() {
   const isLoggedIn = localStorage.getItem("user") ? 1 : 0;
-  console.log("🚀 ~ App ~ isLoggedIn:", isLoggedIn);
   const user = JSON.parse(localStorage.getItem("user")) || null;
   const decode = user ? jwtDecode(user?.jwtAccessToken) : null;
   const role = decode ? decode.role : null;

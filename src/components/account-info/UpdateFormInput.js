@@ -1,39 +1,27 @@
-import { DatePicker, Form, Input, message, Modal, Select } from "antd";
 import React, { useEffect } from "react";
-import "./index.css";
+import { Form, Input, Select, DatePicker, Modal, message } from "antd";
+import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import { sendLinkResetPassword } from "../../redux/actions/authAction";
-import { useDispatch } from "react-redux";
+import styles from "./index.css";
+
 const UpdateFormInput = ({ data, onFinish }) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const localStorageKey = "formData";
+
+  // Tạo initialValues cho form từ props `data`
+  const getInitialValues = () =>
+    data.reduce((acc, { key, value }) => {
+      acc[key] = key === "Ngày sinh" && value ? dayjs(value) : value;
+      return acc;
+    }, {});
+
+  // Set giá trị ban đầu khi `data` thay đổi
   useEffect(() => {
-    const storedData = localStorage.getItem(localStorageKey);
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      form.setFieldsValue(
-        parsedData.reduce((acc, { key, value }) => {
-          acc[key] = key === "Ngày sinh" && value ? dayjs(value) : value;
-          return acc;
-        }, {})
-      );
-    } else {
-      form.setFieldsValue(
-        data.reduce((acc, { key, value }) => {
-          acc[key] = key === "Ngày sinh" && value ? dayjs(value) : value;
-          return acc;
-        }, {})
-      );
-    }
+    form.setFieldsValue(getInitialValues());
   }, [data, form]);
-  const handleValuesChange = (changedValues, allValues) => {
-    const updatedData = Object.entries(allValues).map(([key, value]) => ({
-      key,
-      value: key === "Ngày sinh" ? value?.toISOString() : value,
-    }));
-    localStorage.setItem(localStorageKey, JSON.stringify(updatedData));
-  };
+
+  // Xử lý đặt lại mật khẩu
   const handleResetPassword = () => {
     Modal.confirm({
       title: "Xác nhận đặt lại mật khẩu",
@@ -65,60 +53,63 @@ const UpdateFormInput = ({ data, onFinish }) => {
       },
     });
   };
+
+  // Rules chung cho từng loại input
+  const getFieldRules = (key) => {
+    const baseRules = [
+      { required: true, message: `${key} không được để trống!` },
+    ];
+    if (key === "Email") {
+      baseRules.push({ type: "email", message: "Email không hợp lệ!" });
+    }
+    if (key === "Số điện thoại") {
+      baseRules.push({
+        pattern: /^[0-9]{10,11}$/,
+        message: "Số điện thoại không hợp lệ!",
+      });
+    }
+    return baseRules;
+  };
+
+  // Render Input theo loại `key`
+  const renderField = (key) => {
+    switch (key) {
+      case "Giới tính":
+        return (
+          <Select>
+            <Select.Option value="Male">Nam</Select.Option>
+            <Select.Option value="Female">Nữ</Select.Option>
+          </Select>
+        );
+      case "Ngày sinh":
+        return <DatePicker format={"DD-MM-YYYY"} />;
+      default:
+        return <Input />;
+    }
+  };
+
   return (
     <Form
       layout="horizontal"
       form={form}
-      initialValues={data.reduce((acc, { key, value }) => {
-        acc[key] =
-          key === "Ngày sinh" && value
-            ? dayjs(value) // Convert ISO string to dayjs object
-            : value;
-        return acc;
-      }, {})}
+      initialValues={getInitialValues()}
       onFinish={onFinish}
-      onValuesChange={handleValuesChange}
-      className="update-form"
+      className={styles.updateForm || "update-form"}
     >
-      <div className="container flex flex-col">
-        {data.map(({ key, value }) => (
+      <div className="update-account container flex flex-col">
+        {data.map(({ key }) => (
           <Form.Item
             key={key}
             label={key}
             name={key}
-            rules={[
-              { required: true, message: `${key} không được để trống!` },
-              ...(key === "Email"
-                ? [
-                    {
-                      type: "email",
-                      message: "Email không hợp lệ!",
-                    },
-                  ]
-                : []),
-              ...(key === "Số điện thoại"
-                ? [
-                    {
-                      pattern: /^[0-9]{10,11}$/,
-                      message: "Số điện thoại không hợp lệ!",
-                    },
-                  ]
-                : []),
-            ]}
+            rules={getFieldRules(key)}
           >
-            {key === "Giới tính" ? (
-              <Select>
-                <Select.Option value="Male">Nam</Select.Option>
-                <Select.Option value="Female">Nữ</Select.Option>
-              </Select>
-            ) : key === "Ngày sinh" ? (
-              <DatePicker format={"DD-MM-YYYY"} />
-            ) : (
-              <Input />
-            )}
+            {renderField(key)}
           </Form.Item>
         ))}
       </div>
+
+      {/* Buttons */}
       <Form.Item className="buttons-form-item">
         <div className="flex justify-between w-full">
           <button className="buttonCustom !w-1/2" htmltype="submit">

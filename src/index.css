@@ -93,3 +93,9 @@ aside {
     border-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
     color 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
+.ant-picker-cell-selected .ant-picker-calendar-date {
+  background-color: #fbf5dd !important;
+}
+.ant-picker-date-panel thead th {
+  font-weight: 500 !important;
+}

@@ -91,7 +91,6 @@ const Labs = () => {
         }))}
         filters={labFilter}
         data={loading ? [] : labData}
-        // data={loading ? [] : fakeData}
         column={labColumns(navigate)}
         onSelectionChange={handleSelectionChange}
       />

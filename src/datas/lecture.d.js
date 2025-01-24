@@ -1,19 +1,19 @@
 export const lectureAction = [
   {
     title: "New",
-    onclick: () => {
+    onClick: () => {
       console.log("New");
     },
   },
   {
     title: "Import",
-    onclick: () => {
+    onClick: () => {
       console.log("Import");
     },
   },
   {
     title: "Export",
-    onclick: () => {
+    onClick: () => {
       console.log("Export");
     },
   },
