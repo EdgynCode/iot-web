@@ -5,7 +5,7 @@ import {
   getAllExperiments,
 } from "../actions/experimentAction.js";
 
-const experimentSlice = createSlice({
+const experimentReducer = createSlice({
   name: "experiments",
   initialState: {
     data: [],
@@ -54,5 +54,5 @@ const experimentSlice = createSlice({
   },
 });
 
-const { reducer } = experimentSlice;
+const { reducer } = experimentReducer;
 export default reducer;

@@ -2,20 +2,24 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/auth";
 import userReducer from "./slices/userSlice";
 import studentReducer from "./slices/studentSlice";
-import experimentSlice from "./slices/experimentSlice";
-import labSlice from "./slices/labSlice";
-import deviceTypeSlice from "./slices/deviceTypeSlice";
+import experimentReducer from "./slices/experimentSlice";
+import labReducer from "./slices/labSlice";
+import deviceTypeReducer from "./slices/deviceTypeSlice";
 import deviceReducer from "./slices/deviceSlice";
+import classroomReducer from "./slices/classroomSlice";
+import semesterReducer from "./slices/semesterSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     user: userReducer,
     students: studentReducer,
-    experiments: experimentSlice,
-    labs: labSlice,
-    devicetypes: deviceTypeSlice,
+    experiments: experimentReducer,
+    labs: labReducer,
+    devicetypes: deviceTypeReducer,
     devices: deviceReducer,
+    classrooms: classroomReducer,
+    semesters: semesterReducer,
   },
   devTools: true,
 });
