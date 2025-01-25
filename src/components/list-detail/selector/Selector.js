@@ -13,7 +13,7 @@ const Selector = ({ title, actions, filters }) => {
       <hr />
       <div className="mt-2 p-4">
         <div className="gap-2 flex justify-between">
-          <Row className="gap-2">
+          <Row className="gap-2 filter-group-selector">
             {filters ? (
               filters.map((filter, index) => (
                 <Col key={index}>
@@ -36,7 +36,7 @@ const Selector = ({ title, actions, filters }) => {
               <></>
             )}
           </Row>
-          <div>
+          <div className="button-group-selector">
             <Button.Group>
               {actions ? (
                 actions.map((action, index) => (

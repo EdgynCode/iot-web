@@ -18,9 +18,9 @@ const AccountInfo = () => {
   }
 
   return (
-    <div className="flex w-full items-start gap-6 pt-6">
+    <div className="account-info-container flex w-full items-start gap-6 pt-6">
       {/* Avatar & Thông tin */}
-      <div className="flex flex-col gap-4 w-5/12 ">
+      <div className="avatar-basic-container flex flex-col gap-4 w-5/12 ">
         <div className="tab flex flex-col justify-center items-center p-4 pb-6">
           <div className="m-2 max-w-[130px] max-h-[130px]">
             <img

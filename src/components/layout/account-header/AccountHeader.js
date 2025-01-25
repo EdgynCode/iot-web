@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./index.css";
+import { HambugerMenuIcon } from "../../../datas/icon.d";
 
-const AccountHeader = () => {
+const AccountHeader = ({ toggleSidebar }) => {
   return (
     <header className="psc-navbar">
       <div className="content">
+        <button className={`p-3 hambuger-icon`} onClick={toggleSidebar}>
+          <HambugerMenuIcon />
+        </button>
         <h6 className="school-name">
           TRƯỜNG ĐẠI HỌC SƯ PHẠM THÀNH PHỐ HỒ CHÍ MINH
         </h6>
@@ -30,7 +34,7 @@ const AccountHeader = () => {
             <span></span>
           </button>
         </div>
-        <div className="avatar">
+        <a className="avatar" href="/account-detail">
           <button>
             <div>
               <svg>
@@ -39,7 +43,7 @@ const AccountHeader = () => {
             </div>
             <span></span>
           </button>
-        </div>
+        </a>
       </div>
     </header>
   );

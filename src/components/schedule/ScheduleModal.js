@@ -1,7 +1,7 @@
 import { DatePicker, Form, Modal, Select, Steps, TimePicker } from "antd";
 import React, { useEffect, useState } from "react";
 import { steps } from "../../datas/schedule.d";
-
+import styles from "./index.css";
 const ScheduleModal = ({ open, setOpen, selected }) => {
   const [current, setCurrent] = useState(0);
   const [form] = Form.useForm();
