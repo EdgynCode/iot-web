@@ -54,3 +54,18 @@ hr {
   border-style: solid;
   border-color: rgba(0, 0, 0, 0.12);
 }
+@media screen and (min-width: 320px) and (max-width: 480px) {
+  .button-group-selector .ant-btn-group,
+  .filter-group-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .filter-group-selector .ant-col {
+    width: 100%;
+  }
+  .filter-group-selector .ant-col button {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

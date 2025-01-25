@@ -1,13 +1,4 @@
-import {
-  BookOutlined,
-  ClockCircleOutlined,
-  EditOutlined,
-  HomeOutlined,
-  InfoCircleOutlined,
-  LogoutOutlined,
-  ThunderboltOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, LogoutOutlined } from "@ant-design/icons";
 import {
   Home,
   Lessons,
@@ -24,35 +15,45 @@ import {
   LabDetail,
 } from "../pages";
 import Schedule from "../pages/schedule";
+import {
+  BookmarkMenuIcon,
+  DeviceMenuIcon,
+  ExamMenuIcon,
+  HomeMenuIcon,
+  PersonalMenuIcon,
+  PhysicsMenuIcon,
+  ScheduleMenuIcon,
+  StudentMenuIcon,
+} from "./icon.d";
 
 const home = {
   key: "home",
   element: <Home />,
-  icon: <HomeOutlined />,
+  icon: <HomeMenuIcon />,
   title: "Trang chủ",
 };
 const accounts = {
   key: "accounts",
   element: <Accounts />,
-  icon: <UserOutlined />,
+  icon: <PersonalMenuIcon />,
   title: "Danh sách tài khoản",
 };
 const accountDetail = {
   key: "account-detail",
   element: <AccountDetail />,
-  icon: <InfoCircleOutlined />,
+  icon: <PersonalMenuIcon />,
   title: "Thông tin tài khoản",
 };
 const lessons = {
   key: "lessons",
   element: <Lessons />,
-  icon: <BookOutlined />,
+  icon: <BookmarkMenuIcon />,
   title: "Bài giảng",
 };
 const schedule = {
   key: "schedule",
   element: <Schedule />,
-  icon: <BookOutlined />,
+  icon: <ScheduleMenuIcon />,
   title: "Buổi học",
 };
 const editAccountDetail = {
@@ -66,13 +67,13 @@ const editStudentDetail = {
 const exams = {
   key: "exam",
   title: "Bài thi",
-  icon: <EditOutlined />,
+  icon: <ExamMenuIcon />,
   element: "Bài kiểm tra",
 };
 const students = {
   key: "students",
   element: <Students />,
-  icon: <UserOutlined />,
+  icon: <StudentMenuIcon />,
   title: "Học sinh",
 };
 const studentDetail = {
@@ -82,19 +83,19 @@ const studentDetail = {
 const labs = {
   key: "labs",
   element: <Labs />,
-  icon: <ClockCircleOutlined />,
+  icon: <PhysicsMenuIcon />,
   title: "Bài thực hành",
 };
 const devices = {
   key: "devices",
   element: <Devices />,
-  icon: <ThunderboltOutlined />,
+  icon: <DeviceMenuIcon />,
   title: "Thiết bị",
 };
 const deviceTypes = {
   key: "device-types",
   element: <DeviceTypes />,
-  icon: <ThunderboltOutlined />,
+  icon: <DeviceMenuIcon />,
   title: "Thiết bị",
 };
 const logout = {

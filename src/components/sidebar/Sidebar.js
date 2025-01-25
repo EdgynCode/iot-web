@@ -65,13 +65,9 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
     icon: route.icon,
   }));
 
-  const toggleSidebar = () => {
-    setIsExpanded(!isExpanded);
-  };
-
   return (
     <>
-      <Sider className="sider">
+      <Sider className={`sider ${isExpanded && "visible"}`}>
         {/* Logo  */}
         <div className="div-logo">
           <a href="/">
@@ -88,7 +84,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
         {/* Account */}
         <div className="div">
           <div className="account-container">
-            <a href="/account">
+            <a href="/account-detail">
               <div className="account-avatar"></div>
             </a>
             <div className="account-info">
@@ -110,6 +106,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
               } else {
                 navigate(key);
               }
+              setIsExpanded(false);
             }}
           />
         </div>

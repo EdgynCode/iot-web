@@ -53,9 +53,9 @@ const EditAccountInfo = () => {
   }
 
   return (
-    <div className="flex w-full items-start gap-6 pt-6">
+    <div className="edit-account-container flex w-full items-start gap-6 pt-6">
       {/* Avatar */}
-      <div className="flex flex-col gap-4 w-5/12 ">
+      <div className="avatar-edit-account flex flex-col gap-4 w-5/12 ">
         <div className="tab flex flex-col  justify-center items-center p-4 pb-6">
           <div className="m-2 max-w-[130px] max-h-[130px]">
             <Upload
