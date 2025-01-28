@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import { Modal, Button, Spin, Input, Form, message } from "antd";
+import TextArea from "antd/es/input/TextArea";
 import {
   classroomAction,
   classroomColumns,
@@ -13,6 +14,10 @@ import {
   addNewClassroom,
   removeClassroom,
 } from "../redux/actions/classroomAction";
+import {
+  createSemester,
+  removeSemester,
+} from "../redux/actions/semesterAction";
 
 const Classrooms = () => {
   const navigate = useNavigate();
@@ -35,12 +40,18 @@ const Classrooms = () => {
   };
 
   const handleActionClick = (action) => {
-    switch (action.title) {
-      case "Thêm lớp học":
+    switch (action.key) {
+      case 1:
         setModalType("addClass");
         break;
-      case "Xóa lớp học":
+      case 2:
         setModalType("removeClass");
+        break;
+      case 3:
+        setModalType("addSemester");
+        break;
+      case 4:
+        setModalType("removeSemester");
         break;
       default:
         console.log("Invalid action");
@@ -83,6 +94,27 @@ const Classrooms = () => {
     }
   };
 
+  const handleAddSemesterSubmit = async (values) => {
+    setLoading(true);
+
+    const data = {
+      tenHocKy: values.tenHocKy,
+      nameHoc: values.nameHoc,
+      notes: values.notes,
+    };
+    dispatch(createSemester(data))
+      .unwrap()
+      .then(() => {
+        message.success("Tạo học kì thành công!");
+        setOpen(false);
+        dispatch(getAllClassrooms());
+      })
+      .catch(() => {
+        message.error("Tạo học kì thất bại.");
+        setLoading(false);
+      });
+  };
+
   return (
     <>
       <ListDetail
@@ -117,7 +149,6 @@ const Classrooms = () => {
           >
             <Input placeholder="Tên lớp" className="rounded-lg" />
           </Form.Item>
-
           <Form.Item>
             <div className="flex justify-between">
               <Button
@@ -143,6 +174,58 @@ const Classrooms = () => {
         onCancel={() => setOpen(false)}
       >
         <p>Bạn có chắc chắn muốn xóa lớp học này không?</p>
+      </Modal>
+
+      <Modal
+        title="Thêm học kì"
+        open={open && modalType === "addSemester"}
+        onCancel={() => setOpen(false)}
+        footer={null}
+      >
+        <Form
+          name="addSemester"
+          onFinish={handleAddSemesterSubmit}
+          disabled={loading}
+          className="space-y-4"
+        >
+          <Form.Item
+            name="tenHocKy"
+            label="Tên học kỳ"
+            rules={[
+              { required: true, message: "Vui lòng nhập vào tên học kỳ!" },
+            ]}
+          >
+            <Input placeholder="Tên học kỳ" className="rounded-lg" />
+          </Form.Item>
+          <Form.Item
+            name="nameHoc"
+            label="Năm học"
+            rules={[{ required: true, message: "Vui lòng nhập vào năm học!" }]}
+          >
+            <Input placeholder="Năm học" className="rounded-lg" />
+          </Form.Item>
+          <Form.Item
+            name="notes"
+            label="Ghi chú"
+            rules={[{ required: true, message: "Vui lòng nhập vào năm học!" }]}
+          >
+            <TextArea placeholder="Ghi chú" />
+          </Form.Item>
+
+          <Form.Item>
+            <div className="flex justify-between">
+              <Button
+                className="bg-red-400 text-white"
+                onClick={() => setOpen(false)}
+              >
+                Hủy
+              </Button>
+              <Button type="primary" htmlType="submit" className="bg-blue-400">
+                Thêm
+              </Button>
+            </div>
+          </Form.Item>
+        </Form>
       </Modal>
     </>
   );

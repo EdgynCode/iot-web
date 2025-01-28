@@ -1,12 +1,28 @@
 export const classroomAction = () => [
   {
+    key: 1,
     title: "Thêm lớp học",
     onClick: (setOpen) => {
       setOpen(true);
     },
   },
   {
+    key: 2,
     title: "Xóa lớp học",
+    onClick: (setOpen) => {
+      setOpen(true);
+    },
+  },
+  {
+    key: 3,
+    title: "Thêm học kì",
+    onClick: (setOpen) => {
+      setOpen(true);
+    },
+  },
+  {
+    key: 4,
+    title: "Xóa học kì",
     onClick: (setOpen) => {
       setOpen(true);
     },

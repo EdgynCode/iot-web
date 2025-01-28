@@ -1,10 +1,10 @@
 import axiosInstance from "./axiosInstance";
 
-const createSemester = async (tenHocKy, namHoc, notes) => {
+const createSemester = async (tenHocKy, nameHoc, notes) => {
   try {
     const response = await axiosInstance.post(`Semester/CreateSemester`, {
       tenHocKy,
-      namHoc,
+      nameHoc,
       notes,
     });
     return response.data;

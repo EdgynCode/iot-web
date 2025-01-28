@@ -4,11 +4,11 @@ import { setMessage } from "../slices/message";
 
 export const createSemester = createAsyncThunk(
   "Semester/CreateSemester",
-  async ({ tenHocKy, namHoc, notes }, thunkAPI) => {
+  async ({ tenHocKy, nameHoc, notes }, thunkAPI) => {
     try {
       const semester = await SemesterService.createSemester(
         tenHocKy,
-        namHoc,
+        nameHoc,
         notes
       );
       thunkAPI.dispatch(setMessage("New semester created successfully!"));
