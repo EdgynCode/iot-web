@@ -1,10 +1,8 @@
 import axiosInstance from "./axiosInstance";
 
-const addNewClassroom = async (id, hocKyID, tenLop) => {
+const addNewClassroom = async (tenLop) => {
   try {
     const response = await axiosInstance.post(`Classroom/AddNewClassRoom`, {
-      id,
-      hocKyID,
       tenLop,
     });
     return response.data;

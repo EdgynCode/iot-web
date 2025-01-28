@@ -1,4 +1,4 @@
-import { EditOutlined, LogoutOutlined } from "@ant-design/icons";
+import { LogoutOutlined } from "@ant-design/icons";
 import {
   Home,
   Lessons,
@@ -13,6 +13,7 @@ import {
   Labs,
   LessonDetail,
   LabDetail,
+  Classrooms,
 } from "../pages";
 import Schedule from "../pages/schedule";
 import {
@@ -44,6 +45,12 @@ const accountDetail = {
   icon: <PersonalMenuIcon />,
   title: "Thông tin tài khoản",
 };
+const classrooms = {
+  key: "classrooms",
+  element: <Classrooms />,
+  icon: <PersonalMenuIcon />,
+  title: "Danh sách lớp học",
+};
 const lessons = {
   key: "lessons",
   element: <Lessons />,
@@ -63,12 +70,6 @@ const editAccountDetail = {
 const editStudentDetail = {
   key: "edit-student-detail/:id",
   element: <EditStudentDetail />,
-};
-const exams = {
-  key: "exam",
-  title: "Bài thi",
-  icon: <ExamMenuIcon />,
-  element: "Bài kiểm tra",
 };
 const students = {
   key: "students",
@@ -135,6 +136,7 @@ export const superAdminRoute = [
   devices,
   logout,
   lessonDetail,
+  classrooms,
 ];
 export const learnerSidebar = [home, accountDetail, logout];
 export const teacherSidebar = [
@@ -151,6 +153,7 @@ export const superAdminSidebar = [
   home,
   lessons,
   accounts,
+  classrooms,
   deviceTypes,
   accountDetail,
   logout,

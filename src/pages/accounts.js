@@ -78,7 +78,6 @@ const Accounts = () => {
       phoneNumber: values.phoneNumber,
       discriminator: values.discriminator,
     };
-    console.log(data);
     dispatch(register(data))
       .unwrap()
       .then(() => {
@@ -246,6 +245,7 @@ const Accounts = () => {
       <Modal
         title="Tạo tài khoản"
         open={open && modalType === "createAccount"}
+        onCancel={handleModalCancel}
         footer={[
           <Button key="cancel" onClick={() => setOpen(false)}>
             Hủy

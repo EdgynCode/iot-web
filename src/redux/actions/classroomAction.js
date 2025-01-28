@@ -4,9 +4,9 @@ import { setMessage } from "../slices/message";
 
 export const addNewClassroom = createAsyncThunk(
   "Classroom/AddNewClassRoom",
-  async ({ id, hocKyID, tenLop }, thunkAPI) => {
+  async (tenLop, thunkAPI) => {
     try {
-      const data = await ClassroomService.addNewClassroom(id, hocKyID, tenLop);
+      const data = await ClassroomService.addNewClassroom(tenLop);
       thunkAPI.dispatch(setMessage("New classroom added successfully!"));
       return data;
     } catch (error) {
