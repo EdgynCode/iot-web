@@ -88,6 +88,7 @@ const Classrooms = () => {
       await Promise.all(deletePromises);
 
       message.success("Xóa lớp học thành công!");
+      setOpen(false);
       dispatch(getAllClassrooms());
     } catch (error) {
       message.error("Có lỗi xảy ra khi xóa lớp học.");
