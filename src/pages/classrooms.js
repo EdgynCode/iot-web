@@ -26,6 +26,8 @@ const Classrooms = () => {
   const [open, setOpen] = useState(false);
   const [modalType, setModalType] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedYear, setSelectedYear] = useState("Năm học");
+  const [selectedSemester, setSelectedSemester] = useState("Học kì");
   const [loading, setLoading] = useState(false);
 
   const classroomState = useSelector((state) => state.classrooms || {});
@@ -37,6 +39,16 @@ const Classrooms = () => {
 
   const handleSelectionChange = (keys) => {
     setSelectedRowKeys(keys);
+  };
+
+  const handleYearChange = (key) => {
+    const year = key === "23-24" ? "2023-2024" : "2024-2025";
+    setSelectedYear(year);
+  };
+
+  const handleSemesterChange = (key) => {
+    const semester = key === "1" ? "Học kì 1" : "Học kì 2";
+    setSelectedSemester(semester);
   };
 
   const handleActionClick = (action) => {
@@ -124,7 +136,25 @@ const Classrooms = () => {
           ...action,
           onClick: () => handleActionClick(action),
         }))}
-        filters={gradeFilter}
+        filters={gradeFilter.map((filter) => ({
+          ...filter,
+          label:
+            filter.key === "Year"
+              ? selectedYear
+              : filter.key === "Semester"
+              ? selectedSemester
+              : filter.label,
+          options: filter.options.map((option) => ({
+            ...option,
+            onClick: () => {
+              if (filter.key === "Year") {
+                handleYearChange(option.key);
+              } else if (filter.key === "Semester") {
+                handleSemesterChange(option.key);
+              }
+            },
+          })),
+        }))}
         data={loading ? [] : classroomData}
         column={classroomColumns(navigate)}
         onSelectionChange={handleSelectionChange}
@@ -146,6 +176,7 @@ const Classrooms = () => {
         >
           <Form.Item
             name="tenLop"
+            label="Tên lớp"
             rules={[{ required: true, message: "Vui lòng nhập vào tên lớp!" }]}
           >
             <Input placeholder="Tên lớp" className="rounded-lg" />

@@ -20,7 +20,21 @@ const createSemester = async (tenHocKy, nameHoc, notes) => {
 const getAllSemesters = async () => {
   try {
     const response = await axiosInstance.get(`Semester/GetAllSemesters`);
-    return response.data;
+    const semesters = response.data;
+
+    // Extract unique academic years
+    const years = [...new Set(semesters.map((s) => s.nameHoc))].map((year) => ({
+      key: year.toString(),
+      label: year.toString(),
+    }));
+
+    // Format semesters
+    const formattedSemesters = semesters.map((s) => ({
+      key: s.id.toString(),
+      label: s.tenHocKy,
+    }));
+
+    return { years, semesters: formattedSemesters };
   } catch (error) {
     console.error(
       "Error fetching semester data:",

@@ -28,8 +28,8 @@ export const getAllSemesters = createAsyncThunk(
   "Semester/GetAllSemesters",
   async (_, thunkAPI) => {
     try {
-      const semesters = await SemesterService.getAllSemesters();
-      return semesters;
+      const { years, semesters } = await SemesterService.getAllSemesters();
+      return { years, semesters };
     } catch (error) {
       const message =
         error.response?.data?.message ||

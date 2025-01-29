@@ -1,3 +1,18 @@
+// import { useSelector, useDispatch } from "react-redux";
+// import { useEffect } from "react";
+// import { getAllSemesters } from "../redux/actions/semesterAction";
+
+// export const useSemesterData = () => {
+//   const dispatch = useDispatch();
+//   const { years, semesters, loading } = useSelector((state) => state.semesters);
+
+//   useEffect(() => {
+//     dispatch(getAllSemesters());
+//   }, [dispatch]);
+
+//   return { years, semesters, loading };
+// };
+
 export const classroomAction = () => [
   {
     key: 1,
@@ -35,8 +50,8 @@ const gradeMenu = [
   { key: "4", label: "Tự do" },
 ];
 const yearMenu = [
-  { key: "2023-2024", label: "2023-2024" },
-  { key: "2024-2025", label: "2024-2025" },
+  { key: "23-24", label: "2023-2024" },
+  { key: "24-25", label: "2024-2025" },
 ];
 const semesterMenu = [
   { key: "1", label: "Học kì 1" },
@@ -47,6 +62,15 @@ export const gradeFilter = [
   { key: "Year", label: "Năm học", options: yearMenu },
   { key: "Semester", label: "Học kì", options: semesterMenu },
 ];
+// export const useGradeFilter = () => {
+//   const { years, semesters } = useSemesterData();
+
+//   return [
+//     { key: "Grade", label: "Khối", options: gradeMenu },
+//     { key: "Year", label: "Năm học", options: years },
+//     { key: "Semester", label: "Học kì", options: semesters },
+//   ];
+// };
 export const classroomColumns = (navigate) => [
   {
     title: "Tên lớp",

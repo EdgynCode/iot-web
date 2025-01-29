@@ -8,6 +8,8 @@ import {
 
 const initialState = {
   data: [],
+  years: [],
+  semesters: [],
   loading: false,
   error: null,
 };
@@ -22,7 +24,30 @@ const semesterReducer = createSlice({
         state.error = null;
       })
       .addCase(getAllSemesters.fulfilled, (state, action) => {
-        state.data = action.payload;
+        if (Array.isArray(action.payload)) {
+          state.data = action.payload;
+
+          // Extract unique academic years
+          const years = [...new Set(action.payload.map((s) => s.nameHoc))].map(
+            (year) => ({
+              key: year.toString(),
+              label: year.toString(),
+            })
+          );
+
+          // Format semester dropdown options
+          const semesters = action.payload.map((s) => ({
+            key: s.id.toString(),
+            label: s.tenHocKy,
+          }));
+
+          state.years = years;
+          state.semesters = semesters;
+        } else {
+          state.data = [];
+          state.years = [];
+          state.semesters = [];
+        }
         state.loading = false;
       })
       .addCase(getAllSemesters.rejected, (state, action) => {
