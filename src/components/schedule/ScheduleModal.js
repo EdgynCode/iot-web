@@ -1,8 +1,30 @@
-import { DatePicker, Form, Modal, Select, Steps, TimePicker } from "antd";
+import {
+  DatePicker,
+  Form,
+  Modal,
+  Select,
+  Steps,
+  TimePicker,
+  message,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { steps } from "../../datas/schedule.d";
-import styles from "./index.css";
+import { getAllClassrooms } from "../../redux/actions/classroomAction";
+import { getAllLabs } from "../../redux/actions/labAction";
+import { getCurrentUser } from "../../redux/actions/authAction";
+import { createLesson } from "../../redux/actions/lessonAction";
+import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
+import { v4 as uuidv4 } from "uuid";
+import "./index.css";
+
 const ScheduleModal = ({ open, setOpen, selected }) => {
+  const dispatch = useDispatch();
+  const classrooms = useSelector((state) => state.classrooms.data || {});
+  const labs = useSelector((state) => state.labs.data || {});
+  const isClassroomLoading = useSelector((state) => state.classrooms.loading);
+  const isLabLoading = useSelector((state) => state.labs.loading);
+
   const [current, setCurrent] = useState(0);
   const [form] = Form.useForm();
   useEffect(() => {
@@ -14,26 +36,74 @@ const ScheduleModal = ({ open, setOpen, selected }) => {
     }
   }, [open, selected, form]);
 
+  useEffect(() => {
+    dispatch(getAllClassrooms());
+    dispatch(getAllLabs());
+  }, [dispatch]);
+
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
   const handleCancel = () => {
-    if (current === 0) {
-      setOpen(false);
-    } else if (current === 1) {
-      setCurrent(0);
+    switch (current) {
+      case 0:
+        setOpen(false);
+        break;
+      case 1:
+        setCurrent(0);
+        break;
+      default:
+        break;
     }
   };
 
   const handleOk = () => {
-    if (current === 0) {
-      setCurrent(1);
-    } else if (current === 1) {
-      setOpen(false);
-      setCurrent(0);
+    switch (current) {
+      case 0:
+        setCurrent(1);
+        break;
+      case 1:
+        onFinish();
+        setOpen(false);
+        setCurrent(0);
+        break;
+      default:
+        setOpen(false);
+        setCurrent(0);
+        break;
     }
   };
 
   const onFinish = async () => {
-    setOpen(false);
+    const currentUser = await dispatch(getCurrentUser()).unwrap();
+    const id = currentUser.id;
+
+    const data = {
+      lopHocId: form.getFieldValue("class"),
+      nguoiDayId: id,
+      startTime: moment(
+        form.getFieldValue("date").format("YYYY-MM-DD") +
+          "T" +
+          form.getFieldValue("startTime").format("HH:mm")
+      ).toISOString(),
+      endTime: moment(
+        form.getFieldValue("date").format("YYYY-MM-DD") +
+          "T" +
+          form.getFieldValue("endTime").format("HH:mm")
+      ).toISOString(),
+      wifiHotspot: "IOT-Hotspot",
+      brokerAddress: "iot.eclipse.org",
+      port: 1883,
+      clientId: uuidv4(),
+      labIds: form.getFieldValue("lab"),
+    };
+    dispatch(createLesson(data))
+      .unwrap()
+      .then(() => {
+        message.success("Tạo buổi học thành công!");
+        setOpen(false);
+      })
+      .catch(() => {
+        message.error("Tạo buổi học thất bại. Vui lòng thử lại.");
+      });
   };
   return (
     <Modal
@@ -65,8 +135,19 @@ const ScheduleModal = ({ open, setOpen, selected }) => {
               </div>
               <div className="w-full">
                 <Form.Item
-                  name="time"
-                  label="Giờ"
+                  name="startTime"
+                  label="Giờ bắt đầu"
+                  rules={[
+                    { required: true, message: "Vui lòng chọn thời gian" },
+                  ]}
+                >
+                  <TimePicker className="w-full" format="HH:mm" />
+                </Form.Item>
+              </div>
+              <div className="w-full">
+                <Form.Item
+                  name="endTime"
+                  label="Giờ kết thúc"
                   rules={[
                     { required: true, message: "Vui lòng chọn thời gian" },
                   ]}
@@ -81,7 +162,15 @@ const ScheduleModal = ({ open, setOpen, selected }) => {
                 label="Lớp"
                 rules={[{ required: true, message: "Vui lòng chọn lớp!" }]}
               >
-                <Select mode="multiple" allowClear className="w-full" />
+                <Select
+                  allowClear
+                  className="w-full"
+                  loading={isClassroomLoading}
+                  options={classrooms.map((classroom) => ({
+                    value: classroom.id,
+                    label: classroom.tenLop,
+                  }))}
+                />
               </Form.Item>
             </div>
             <div className="w-full">
@@ -95,7 +184,16 @@ const ScheduleModal = ({ open, setOpen, selected }) => {
                   },
                 ]}
               >
-                <Select mode="multiple" allowClear className="w-full" />
+                <Select
+                  mode="multiple"
+                  allowClear
+                  className="w-full"
+                  loading={isLabLoading}
+                  options={labs.map((classroom) => ({
+                    value: classroom.id,
+                    label: classroom.name,
+                  }))}
+                />
               </Form.Item>
             </div>
           </>
