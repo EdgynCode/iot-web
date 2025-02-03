@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getAllDeviceTypes } from "../actions/deviceAction";
 
-const deviceTypeSlice = createSlice({
+const deviceTypeReducer = createSlice({
   name: "devicetypes",
   initialState: {
     data: [],
@@ -25,5 +25,5 @@ const deviceTypeSlice = createSlice({
   },
 });
 
-const { reducer } = deviceTypeSlice;
+const { reducer } = deviceTypeReducer;
 export default reducer;

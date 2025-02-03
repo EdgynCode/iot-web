@@ -21,7 +21,7 @@ import {
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { createMultipleLearner } from "../redux/actions/learnerAction";
-import { listAllUsersByType } from "../redux/actions/userAction";
+import { listAllUsersByType, deleteUser } from "../redux/actions/userAction";
 import { v4 as uuidv4 } from "uuid";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { register } from "../redux/actions/authAction";
@@ -42,6 +42,7 @@ const Accounts = () => {
   const [fileName, setFileName] = useState("student_data");
   const [selectedAccountType, setSelectedAccountType] = useState("Learner");
   const [selectedAccountLabel, setSelectedAccountLabel] = useState("Học sinh");
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const studentsState = useSelector((state) => state.students || {});
   const { data: studentData = [], error = null } = studentsState;
@@ -63,6 +64,10 @@ const Accounts = () => {
     setSelectedAccountLabel(accountLabel);
   };
 
+  const handleSelectionChange = (keys) => {
+    setSelectedRowKeys(keys);
+  };
+
   const onFinish = async (values) => {
     setLoading(true);
 
@@ -78,7 +83,6 @@ const Accounts = () => {
       phoneNumber: values.phoneNumber,
       discriminator: values.discriminator,
     };
-    console.log(data);
     dispatch(register(data))
       .unwrap()
       .then(() => {
@@ -176,6 +180,27 @@ const Accounts = () => {
     reader.readAsArrayBuffer(file);
   };
 
+  const handleDeleteAccount = async () => {
+    if (selectedRowKeys.length === 0) {
+      message.warning("Chọn ít nhất 1 tài khoản để xóa.");
+      return;
+    }
+
+    try {
+      const deletePromises = selectedRowKeys.map((key) =>
+        dispatch(deleteUser(key)).unwrap()
+      );
+
+      await Promise.all(deletePromises);
+
+      message.success("Xóa tài khoản thành công!");
+      setOpen(false);
+      dispatch(listAllUsersByType(selectedAccountType));
+    } catch (error) {
+      message.error("Có lỗi xảy ra khi xóa tài khoản.");
+    }
+  };
+
   const handleModalCancel = () => {
     setFile(null);
     setOpen(false);
@@ -220,6 +245,7 @@ const Accounts = () => {
         }))}
         data={loading ? [] : studentData}
         column={studentColumns(navigate)}
+        onSelectionChange={handleSelectionChange}
       />
       {loading && <Spin size="large" />}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
@@ -246,6 +272,7 @@ const Accounts = () => {
       <Modal
         title="Tạo tài khoản"
         open={open && modalType === "createAccount"}
+        onCancel={handleModalCancel}
         footer={[
           <Button key="cancel" onClick={() => setOpen(false)}>
             Hủy
@@ -392,6 +419,17 @@ const Accounts = () => {
             onChange={(e) => setFileName(e.target.value)}
           />
         </Form.Item>
+      </Modal>
+
+      <Modal
+        title="Xóa bài thí nghiệm"
+        open={open && modalType === "deleteAccount"}
+        okText="Xóa"
+        cancelText="Hủy"
+        onOk={handleDeleteAccount}
+        onCancel={() => setOpen(false)}
+      >
+        <p>Bạn có chắc chắn muốn xóa những tài khoản này không?</p>
       </Modal>
     </>
   );

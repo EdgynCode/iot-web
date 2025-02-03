@@ -16,3 +16,4 @@ export { default as DeviceTypes } from "./device-types";
 export { default as Labs } from "./labs";
 export { default as LabDetail } from "./lab-detail";
 export { default as Schedule } from "./schedule";
+export { default as Classrooms } from "./classrooms";

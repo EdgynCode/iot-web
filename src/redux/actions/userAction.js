@@ -18,3 +18,20 @@ export const listAllUsersByType = createAsyncThunk(
     }
   }
 );
+
+export const deleteUser = createAsyncThunk(
+  "User/DeleteUser",
+  async (id, thunkAPI) => {
+    try {
+      const response = await UserService.deleteUser(id);
+      return response;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to delete user";
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);

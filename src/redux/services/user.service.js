@@ -15,8 +15,22 @@ const listAllUsersByType = async (usertype) => {
   }
 };
 
+const deleteUser = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`User/DeleteUser?userid=${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error deleting user:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const UserService = {
   listAllUsersByType,
+  deleteUser,
 };
 
 export default UserService;

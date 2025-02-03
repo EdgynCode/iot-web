@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Selector from "../components/list-detail/selector/Selector";
 import { Badge, Calendar } from "antd";
 import { getListData, getMonthData, scheduleAction } from "../datas/schedule.d";
@@ -6,23 +6,25 @@ import "dayjs/locale/vi";
 import locale from "antd/es/calendar/locale/vi_VN";
 import dayjs from "dayjs";
 import ScheduleModal from "../components/schedule/ScheduleModal";
+import { useLessonData } from "../hooks/useLessonData";
 
 const Schedule = () => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(dayjs());
+  const { lessons } = useLessonData();
 
   // Calendar antd
   const monthCellRender = (value) => {
-    const num = getMonthData(value);
-    return num ? (
+    const monthValue = getMonthData(value, lessons);
+    return monthValue ? (
       <div className="">
-        <section>{num}</section>
+        <section>{monthValue}</section>
         <span>Backlog number</span>
       </div>
     ) : null;
   };
   const dateCellRender = (value) => {
-    const listData = getListData(value);
+    const listData = getListData(value, lessons);
     return (
       <ul className="events">
         {listData.map((item) => (

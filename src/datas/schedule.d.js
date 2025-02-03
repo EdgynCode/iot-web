@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const scheduleAction = (setOpen) => [
   {
     title: "Tạo buổi học",
@@ -15,71 +17,36 @@ export const steps = [
     title: "Chia nhóm",
   },
 ];
-export const getMonthData = (value) => {
-  if (value.month() === 8) {
-    return 1394;
-  }
+export const getMonthData = (value, lessons) => {
+  if (!lessons || lessons.length === 0) return null;
+
+  const lesson = lessons.find((lesson) => {
+    return dayjs(lesson.startTime).month() === value.month();
+  });
+
+  return lesson ? dayjs(lesson.startTime).month() : null;
 };
-export const getListData = (value) => {
-  let listData = []; // Specify the type of listData
-  switch (value.date()) {
-    case 8:
-      listData = [
-        {
-          type: "warning",
-          content: "This is warning event.",
-        },
-        {
-          type: "success",
-          content: "This is usual event.",
-        },
-      ];
-      break;
-    case 10:
-      listData = [
-        {
-          type: "warning",
-          content: "This is warning event.",
-        },
-        {
-          type: "success",
-          content: "This is usual event.",
-        },
-        {
-          type: "error",
-          content: "This is error event.",
-        },
-      ];
-      break;
-    case 15:
-      listData = [
-        {
-          type: "warning",
-          content: "This is warning event",
-        },
-        {
-          type: "success",
-          content: "This is very long usual event......",
-        },
-        {
-          type: "error",
-          content: "This is error event 1.",
-        },
-        {
-          type: "error",
-          content: "This is error event 2.",
-        },
-        {
-          type: "error",
-          content: "This is error event 3.",
-        },
-        {
-          type: "error",
-          content: "This is error event 4.",
-        },
-      ];
-      break;
-    default:
-  }
-  return listData || [];
+
+export const getListData = (value, lessons) => {
+  let listData = [];
+
+  if (!lessons || lessons.length === 0) return listData;
+
+  lessons.forEach((lesson) => {
+    const lessonDate = dayjs(lesson.startTime);
+    if (
+      lessonDate.date() === value.date() &&
+      lessonDate.month() === value.month() &&
+      lessonDate.year() === value.year()
+    ) {
+      lesson.labIds.forEach((labId) => {
+        listData.push({
+          type: "info",
+          content: `Lab ID: ${labId}`,
+        });
+      });
+    }
+  });
+
+  return listData;
 };
