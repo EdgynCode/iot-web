@@ -1,6 +1,6 @@
 export const accountAction = () => [
   {
-    title: "Thêm người học vào lớp",
+    title: "Thêm người học/giáo viên vào lớp",
     onClick: (setOpen) => {
       setOpen(true);
     },

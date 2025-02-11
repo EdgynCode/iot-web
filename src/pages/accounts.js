@@ -23,6 +23,7 @@ import {
   createMultipleLearner,
   assignLearnerToClass,
 } from "../redux/actions/learnerAction";
+import { assignTeachersToClass } from "../redux/actions/teacherAction";
 import { getAllClassrooms } from "../redux/actions/classroomAction";
 import { listAllUsersByType, deleteUser } from "../redux/actions/userAction";
 import { v4 as uuidv4 } from "uuid";
@@ -178,7 +179,7 @@ const Accounts = () => {
     }
   };
 
-  const handleAssignLearners = async () => {
+  const handleAssignAccounts = async () => {
     const classId = form.getFieldValue("class");
 
     if (selectedRowKeys.length === 0) {
@@ -186,15 +187,32 @@ const Accounts = () => {
       return;
     }
 
-    dispatch(assignLearnerToClass({ learners: selectedRowKeys, classId })) // "learners" included in json object
-      .unwrap()
-      .then(() => {
-        message.success("Thêm người học thành công!");
-        setOpen(false);
-      })
-      .catch(() => {
-        message.error("Thêm người học thất bại. Vui lòng thử lại.");
-      });
+    switch (selectedAccountType) {
+      case "Learner":
+        dispatch(assignLearnerToClass({ learners: selectedRowKeys, classId }))
+          .unwrap()
+          .then(() => {
+            message.success("Thêm người học thành công!");
+            setOpen(false);
+          })
+          .catch(() => {
+            message.error("Thêm người học thất bại. Vui lòng thử lại.");
+          });
+        break;
+      case "Teacher":
+        dispatch(assignTeachersToClass({ teachers: selectedRowKeys, classId }))
+          .unwrap()
+          .then(() => {
+            message.success("Thêm giáo viên thành công!");
+            setOpen(false);
+          })
+          .catch(() => {
+            message.error("Thêm giáo viên thất bại. Vui lòng thử lại.");
+          });
+        break;
+      default:
+        console.log("Invalid account type");
+    }
   };
 
   const handleModalCancel = () => {
@@ -204,7 +222,7 @@ const Accounts = () => {
 
   const handleActionClick = (action) => {
     switch (action.title) {
-      case "Thêm người học vào lớp":
+      case "Thêm người học/giáo viên vào lớp":
         setModalType("assignToClass");
         break;
       case "Thêm tài khoản":
@@ -251,7 +269,7 @@ const Accounts = () => {
       <Modal
         title="Thêm người học vào lớp"
         open={open && modalType === "assignToClass"}
-        onOk={handleAssignLearners}
+        onOk={handleAssignAccounts}
         onCancel={() => setOpen(false)}
         okText="Thêm vào lớp"
         cancelText="Hủy"
@@ -259,7 +277,7 @@ const Accounts = () => {
         <Form
           form={form}
           name="assignToClass"
-          onFinish={handleAssignLearners}
+          onFinish={handleAssignAccounts}
           className="space-y-4"
         >
           <div className="w-full">
