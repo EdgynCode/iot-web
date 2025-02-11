@@ -1,5 +1,11 @@
 export const accountAction = () => [
   {
+    title: "Thêm người học vào lớp",
+    onClick: (setOpen) => {
+      setOpen(true);
+    },
+  },
+  {
     title: "Thêm tài khoản",
     onClick: (setOpen) => {
       setOpen(true);

@@ -127,13 +127,17 @@ const Students = () => {
   };
 
   const handleActionClick = (action) => {
-    if (action.title === "Xuất dữ liệu") {
-      setModalType("export");
-      setOpen(true);
-    } else {
-      setModalType("import");
-      action.onClick(setOpen);
+    switch (action.title) {
+      case "Xuất dữ liệu":
+        setModalType("export");
+        break;
+      case "Thêm danh sách tài khoản":
+        setModalType("import");
+        break;
+      default:
+        console.log("Invalid action");
     }
+    setOpen(true);
   };
 
   return (

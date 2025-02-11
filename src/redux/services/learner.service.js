@@ -16,8 +16,25 @@ const createMultipleLearner = async (learners) => {
   }
 };
 
+const assignLearnerToClass = async (learners, classId) => {
+  try {
+    const response = await axiosInstance.post(
+      `Learner/AssignLearnersToClass?classId=${classId}`,
+      learners
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error assigning learners to class:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const LearnerService = {
   createMultipleLearner,
+  assignLearnerToClass,
 };
 
 export default LearnerService;

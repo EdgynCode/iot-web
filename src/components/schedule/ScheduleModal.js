@@ -93,7 +93,7 @@ const ScheduleModal = ({ open, setOpen, selected }) => {
       brokerAddress: "iot.eclipse.org",
       port: 1883,
       clientId: uuidv4(),
-      labIds: form.getFieldValue("lab"),
+      labIds: form.getFieldValue("lab"), // current output: uuid-labName
     };
     dispatch(createLesson(data))
       .unwrap()
@@ -189,9 +189,9 @@ const ScheduleModal = ({ open, setOpen, selected }) => {
                   allowClear
                   className="w-full"
                   loading={isLabLoading}
-                  options={labs.map((classroom) => ({
-                    value: classroom.id,
-                    label: classroom.name,
+                  options={labs.map((lab) => ({
+                    value: lab.id,
+                    label: lab.name,
                   }))}
                 />
               </Form.Item>

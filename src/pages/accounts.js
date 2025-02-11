@@ -7,9 +7,23 @@ import {
 } from "../datas/account.d";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal, Upload, Button, Spin, Radio, Input, Form, message } from "antd";
+import {
+  Modal,
+  Upload,
+  Button,
+  Spin,
+  Radio,
+  Input,
+  Form,
+  Select,
+  message,
+} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { createMultipleLearner } from "../redux/actions/learnerAction";
+import {
+  createMultipleLearner,
+  assignLearnerToClass,
+} from "../redux/actions/learnerAction";
+import { getAllClassrooms } from "../redux/actions/classroomAction";
 import { listAllUsersByType, deleteUser } from "../redux/actions/userAction";
 import { v4 as uuidv4 } from "uuid";
 import * as XLSX from "xlsx";
@@ -29,13 +43,17 @@ const Accounts = () => {
   const [selectedAccountType, setSelectedAccountType] = useState("Learner");
   const [selectedAccountLabel, setSelectedAccountLabel] = useState("Học sinh");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [form] = Form.useForm();
 
+  const classrooms = useSelector((state) => state.classrooms.data || {});
   const studentsState = useSelector((state) => state.students || {});
+  const isClassroomLoading = useSelector((state) => state.classrooms.loading);
   const { data: studentData = [], error = null } = studentsState;
 
   useEffect(() => {
     dispatch(listAllUsersByType(selectedAccountType));
-  }, [dispatch, selectedAccountType]);
+    dispatch(getAllClassrooms());
+  }, [dispatch, selectedAccountType, form]);
 
   const handleAccountTypeChange = (value) => {
     const accountType =
@@ -160,6 +178,25 @@ const Accounts = () => {
     }
   };
 
+  const handleAssignLearners = async () => {
+    const classId = form.getFieldValue("class");
+
+    if (selectedRowKeys.length === 0) {
+      message.warning("Chọn ít nhất 1 người học để thêm vào lớp.");
+      return;
+    }
+
+    dispatch(assignLearnerToClass({ learners: selectedRowKeys, classId })) // "learners" included in json object
+      .unwrap()
+      .then(() => {
+        message.success("Thêm người học thành công!");
+        setOpen(false);
+      })
+      .catch(() => {
+        message.error("Thêm người học thất bại. Vui lòng thử lại.");
+      });
+  };
+
   const handleModalCancel = () => {
     setFile(null);
     setOpen(false);
@@ -167,6 +204,9 @@ const Accounts = () => {
 
   const handleActionClick = (action) => {
     switch (action.title) {
+      case "Thêm người học vào lớp":
+        setModalType("assignToClass");
+        break;
       case "Thêm tài khoản":
         setModalType("createAccount");
         break;
@@ -208,6 +248,39 @@ const Accounts = () => {
       />
       {loading && <Spin size="large" />}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
+      <Modal
+        title="Thêm người học vào lớp"
+        open={open && modalType === "assignToClass"}
+        onOk={handleAssignLearners}
+        onCancel={() => setOpen(false)}
+        okText="Thêm vào lớp"
+        cancelText="Hủy"
+      >
+        <Form
+          form={form}
+          name="assignToClass"
+          onFinish={handleAssignLearners}
+          className="space-y-4"
+        >
+          <div className="w-full">
+            <Form.Item
+              name="class"
+              label="Lớp"
+              rules={[{ required: true, message: "Vui lòng chọn lớp!" }]}
+            >
+              <Select
+                allowClear
+                className="w-full"
+                loading={isClassroomLoading}
+                options={classrooms.map((classroom) => ({
+                  value: classroom.id,
+                  label: classroom.tenLop,
+                }))}
+              />
+            </Form.Item>
+          </div>
+        </Form>
+      </Modal>
       <Modal
         title="Thêm danh sách tài khoản"
         open={open && modalType === "importAccount"}
@@ -270,7 +343,7 @@ const Accounts = () => {
       </Modal>
 
       <Modal
-        title="Xóa bài thí nghiệm"
+        title="Xóa tài khoản"
         open={open && modalType === "deleteAccount"}
         okText="Xóa"
         cancelText="Hủy"
