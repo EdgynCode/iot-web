@@ -19,3 +19,24 @@ export const createMultipleLearner = createAsyncThunk(
     }
   }
 );
+
+export const assignLearnerToClass = createAsyncThunk(
+  "Learner/AssignLearnersToClass",
+  async ({ learners, classId }, thunkAPI) => {
+    try {
+      const learner = await LearnerService.assignLearnerToClass(
+        learners,
+        classId
+      );
+      thunkAPI.dispatch(setMessage("Learners assigned successfully!"));
+      return learner;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to assign learners to class";
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);

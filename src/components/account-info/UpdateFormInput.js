@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Select, DatePicker, Modal, message } from "antd";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
@@ -8,6 +8,8 @@ import styles from "./index.css";
 const UpdateFormInput = ({ data, onFinish }) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
+
+  const [open, setOpen] = useState(false);
 
   // Tạo initialValues cho form từ props `data`
   const getInitialValues = () =>
@@ -23,35 +25,27 @@ const UpdateFormInput = ({ data, onFinish }) => {
 
   // Xử lý đặt lại mật khẩu
   const handleResetPassword = () => {
-    Modal.confirm({
-      title: "Xác nhận đặt lại mật khẩu",
-      content:
-        "Bạn có chắc chắn muốn đặt lại mật khẩu? Một liên kết sẽ được gửi đến email của bạn.",
-      okText: "Xác nhận",
-      cancelText: "Hủy",
-      onOk: () => {
-        if (data && data.email) {
-          const clientUri = "http://localhost:3000/reset-password";
-          dispatch(sendLinkResetPassword({ email: data.email, clientUri }))
-            .unwrap()
-            .then(() => {
-              message.success(
-                "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn."
-              );
-            })
-            .catch((error) => {
-              message.error(
-                "Đã xảy ra lỗi khi gửi liên kết đặt lại mật khẩu: " +
-                  error.message
-              );
-            });
-        } else {
-          message.error(
-            "Không thể đặt lại mật khẩu vì thông tin email không khả dụng."
+    const emailObject = data.find((item) => item.key === "Email");
+    const email = emailObject ? emailObject.value : null;
+    if (email) {
+      const clientUri = "http://localhost:3000/reset-password";
+      dispatch(sendLinkResetPassword({ email: email, clientUri }))
+        .unwrap()
+        .then(() => {
+          message.success(
+            "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn."
           );
-        }
-      },
-    });
+        })
+        .catch((error) => {
+          message.error(
+            "Đã xảy ra lỗi khi gửi liên kết đặt lại mật khẩu: " + error.message
+          );
+        });
+    } else {
+      message.error(
+        "Không thể đặt lại mật khẩu vì thông tin email không khả dụng."
+      );
+    }
   };
 
   // Rules chung cho từng loại input
@@ -89,42 +83,59 @@ const UpdateFormInput = ({ data, onFinish }) => {
   };
 
   return (
-    <Form
-      layout="horizontal"
-      form={form}
-      initialValues={getInitialValues()}
-      onFinish={onFinish}
-      className={styles.updateForm || "update-form"}
-    >
-      <div className="update-account container flex flex-col">
-        {data.map(({ key }) => (
-          <Form.Item
-            key={key}
-            label={key}
-            name={key}
-            rules={getFieldRules(key)}
-          >
-            {renderField(key)}
-          </Form.Item>
-        ))}
-      </div>
-
-      {/* Buttons */}
-      <Form.Item className="buttons-form-item">
-        <div className="flex justify-between w-full">
-          <button className="buttonCustom !w-1/2" htmltype="submit">
-            Lưu
-          </button>
-          <button
-            className="buttonCustom !w-1/2 !m-0"
-            onClick={handleResetPassword}
-            type="button"
-          >
-            Đổi mật khẩu
-          </button>
+    <>
+      <Form
+        layout="horizontal"
+        form={form}
+        initialValues={getInitialValues()}
+        onFinish={onFinish}
+        className={styles.updateForm || "update-form"}
+      >
+        <div className="update-account container flex flex-col">
+          {data.map(({ key }) => (
+            <Form.Item
+              key={key}
+              label={key}
+              name={key}
+              rules={getFieldRules(key)}
+            >
+              {renderField(key)}
+            </Form.Item>
+          ))}
         </div>
-      </Form.Item>
-    </Form>
+
+        {/* Buttons */}
+        <Form.Item className="buttons-form-item">
+          <div className="flex justify-between w-full">
+            <button className="buttonCustom !w-1/2" htmltype="submit">
+              Lưu
+            </button>
+            <button
+              className="buttonCustom !w-1/2 !m-0"
+              onClick={() => setOpen(true)}
+              type="button"
+            >
+              Đổi mật khẩu
+            </button>
+          </div>
+        </Form.Item>
+      </Form>
+
+      <Modal
+        title="Đặt lại mật khẩu"
+        open={open}
+        onOk={handleResetPassword}
+        onCancel={() => setOpen(false)}
+        okText="Xác nhận"
+        cancelText="Hủy"
+      >
+        <p>
+          Bạn có chắc chắn muốn đặt lại mật khẩu?
+          <br />
+          Một liên kết sẽ được gửi đến email của bạn.
+        </p>
+      </Modal>
+    </>
   );
 };
 
