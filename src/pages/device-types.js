@@ -1,25 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import { deviceListAction, deviceListColumns } from "../datas/device.d";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { Spin, Modal, Button } from "antd";
-import { getAllDeviceTypes } from "../redux/actions/deviceAction";
 import AddDeviceTypeForm from "../components/AddDeviceTypeForm";
+import { useDeviceTypeData } from "../hooks/useDeviceTypeData";
 
 const DeviceTypes = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [modalType, setModalType] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [hasSelected, setHasSelected] = useState(false);
-  const deviceListState = useSelector((state) => state.devicetypes || {});
-  const { data: deviceData = [], error = null } = deviceListState;
-
-  useEffect(() => {
-    dispatch(getAllDeviceTypes());
-  }, [dispatch]);
+  const { deviceTypes: deviceData, error } = useDeviceTypeData();
 
   const handleActionClick = (action) => {
     switch (action.title) {

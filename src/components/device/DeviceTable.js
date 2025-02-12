@@ -49,10 +49,6 @@ const DeviceTable = () => {
     dispatch(getDevicesByTypeId(id));
   }, [dispatch, id]);
 
-  useEffect(() => {
-    console.log("Fetched Device Data:", deviceData);
-  }, [deviceData]);
-
   // search query
   const [searchQuery, setSearchQuery] = useState("");
 

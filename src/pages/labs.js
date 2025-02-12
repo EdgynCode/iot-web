@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import { labAction, labColumns, labFilter } from "../datas/lab.d";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Spin, Modal, Input, Form, Button, message } from "antd";
 import { getAllLabs, createLab, deleteLabs } from "../redux/actions/labAction";
+import { useLabData } from "../hooks/useLabData";
 
 const Labs = () => {
   const navigate = useNavigate();
@@ -14,13 +15,8 @@ const Labs = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
-
-  const labState = useSelector((state) => state.labs || {});
-  const { data: labData = [], loading = false, error = null } = labState;
-
-  useEffect(() => {
-    dispatch(getAllLabs());
-  }, [dispatch]);
+  const [loading, setLoading] = useState(false);
+  const { labs: labData, error } = useLabData();
 
   const closeModal = () => {
     setOpen(false);
@@ -33,6 +29,7 @@ const Labs = () => {
 
   const handleFormSubmit = async (value) => {
     form.validateFields();
+    setLoading(true);
     const data = {
       name: value.name,
       pathImage: value.pathImage,
@@ -46,6 +43,7 @@ const Labs = () => {
       })
       .catch(() => {
         message.error("Tạo bài lab thất bại.");
+        setLoading(false);
       });
   };
 

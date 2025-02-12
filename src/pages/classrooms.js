@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import { Modal, Button, Spin, Input, Form, message } from "antd";
@@ -14,10 +14,8 @@ import {
   addNewClassroom,
   removeClassroom,
 } from "../redux/actions/classroomAction";
-import {
-  createSemester,
-  removeSemester,
-} from "../redux/actions/semesterAction";
+import { createSemester } from "../redux/actions/semesterAction";
+import { useClassroomData } from "../hooks/useClassroomData";
 
 const Classrooms = () => {
   const navigate = useNavigate();
@@ -30,12 +28,7 @@ const Classrooms = () => {
   const [selectedSemester, setSelectedSemester] = useState("Học kì");
   const [loading, setLoading] = useState(false);
 
-  const classroomState = useSelector((state) => state.classrooms || {});
-  const { data: classroomData = [], error = null } = classroomState;
-
-  useEffect(() => {
-    dispatch(getAllClassrooms());
-  }, [dispatch]);
+  const { classrooms: classroomData, error } = useClassroomData();
 
   const handleSelectionChange = (keys) => {
     setSelectedRowKeys(keys);
