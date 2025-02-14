@@ -16,6 +16,7 @@ import {
 } from "../redux/actions/classroomAction";
 import { createSemester } from "../redux/actions/semesterAction";
 import { useClassroomData } from "../hooks/useClassroomData";
+import { getLearnersByClassId } from "../redux/actions/learnerAction";
 
 const Classrooms = () => {
   const navigate = useNavigate();
@@ -86,13 +87,17 @@ const Classrooms = () => {
     }
 
     try {
-      const deletePromises = selectedRowKeys.map((key) =>
-        dispatch(removeClassroom(key)).unwrap()
-      );
+      for (const key of selectedRowKeys) {
+        const isClassEmpty = await dispatch(getLearnersByClassId(key)).unwrap();
+        if (isClassEmpty.length > 0) {
+          message.warning(`Lớp học ${key} chứa học sinh, không thể xóa.`);
+          continue;
+        }
 
-      await Promise.all(deletePromises);
+        await dispatch(removeClassroom(key)).unwrap();
+        message.success(`Xóa lớp học ${key} thành công!`);
+      }
 
-      message.success("Xóa lớp học thành công!");
       setOpen(false);
       dispatch(getAllClassrooms());
     } catch (error) {
