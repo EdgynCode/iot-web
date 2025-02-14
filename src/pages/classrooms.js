@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import { Modal, Button, Spin, Input, Form, message } from "antd";
@@ -14,10 +14,9 @@ import {
   addNewClassroom,
   removeClassroom,
 } from "../redux/actions/classroomAction";
-import {
-  createSemester,
-  removeSemester,
-} from "../redux/actions/semesterAction";
+import { createSemester } from "../redux/actions/semesterAction";
+import { useClassroomData } from "../hooks/useClassroomData";
+import { getLearnersByClassId } from "../redux/actions/learnerAction";
 
 const Classrooms = () => {
   const navigate = useNavigate();
@@ -30,12 +29,7 @@ const Classrooms = () => {
   const [selectedSemester, setSelectedSemester] = useState("Học kì");
   const [loading, setLoading] = useState(false);
 
-  const classroomState = useSelector((state) => state.classrooms || {});
-  const { data: classroomData = [], error = null } = classroomState;
-
-  useEffect(() => {
-    dispatch(getAllClassrooms());
-  }, [dispatch]);
+  const { classrooms: classroomData, error } = useClassroomData();
 
   const handleSelectionChange = (keys) => {
     setSelectedRowKeys(keys);
@@ -93,13 +87,17 @@ const Classrooms = () => {
     }
 
     try {
-      const deletePromises = selectedRowKeys.map((key) =>
-        dispatch(removeClassroom(key)).unwrap()
-      );
+      for (const key of selectedRowKeys) {
+        const isClassEmpty = await dispatch(getLearnersByClassId(key)).unwrap();
+        if (isClassEmpty.length > 0) {
+          message.warning(`Lớp học ${key} chứa học sinh, không thể xóa.`);
+          continue;
+        }
 
-      await Promise.all(deletePromises);
+        await dispatch(removeClassroom(key)).unwrap();
+        message.success(`Xóa lớp học ${key} thành công!`);
+      }
 
-      message.success("Xóa lớp học thành công!");
       setOpen(false);
       dispatch(getAllClassrooms());
     } catch (error) {

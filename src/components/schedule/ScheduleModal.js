@@ -9,8 +9,8 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { steps } from "../../datas/schedule.d";
-import { getAllClassrooms } from "../../redux/actions/classroomAction";
-import { getAllLabs } from "../../redux/actions/labAction";
+import { useClassroomData } from "../../hooks/useClassroomData";
+import { useLabData } from "../../hooks/useLabData";
 import { getCurrentUser } from "../../redux/actions/authAction";
 import { createLesson } from "../../redux/actions/lessonAction";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,8 +20,8 @@ import "./index.css";
 
 const ScheduleModal = ({ open, setOpen, selected }) => {
   const dispatch = useDispatch();
-  const classrooms = useSelector((state) => state.classrooms.data || {});
-  const labs = useSelector((state) => state.labs.data || {});
+  const { classrooms } = useClassroomData();
+  const { labs } = useLabData();
   const isClassroomLoading = useSelector((state) => state.classrooms.loading);
   const isLabLoading = useSelector((state) => state.labs.loading);
 
@@ -35,11 +35,6 @@ const ScheduleModal = ({ open, setOpen, selected }) => {
       });
     }
   }, [open, selected, form]);
-
-  useEffect(() => {
-    dispatch(getAllClassrooms());
-    dispatch(getAllLabs());
-  }, [dispatch]);
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
   const handleCancel = () => {

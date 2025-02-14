@@ -32,9 +32,25 @@ const assignLearnerToClass = async (learners, classId) => {
   }
 };
 
+const getLearnersByClassId = async (classId) => {
+  try {
+    const response = await axiosInstance.get(
+      `Learner/GetLearnersByClassId?classId=${classId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching learners:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const LearnerService = {
   createMultipleLearner,
   assignLearnerToClass,
+  getLearnersByClassId,
 };
 
 export default LearnerService;

@@ -22,3 +22,20 @@ export const assignTeachersToClass = createAsyncThunk(
     }
   }
 );
+
+export const getTeachersByClassId = createAsyncThunk({
+  type: "Teacher/GetTeachersByClassId",
+  payloadCreator: async (classId, thunkAPI) => {
+    try {
+      const teachers = await TeacherService.getTeachersByClassId(classId);
+      return teachers;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch teacher data";
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  },
+});

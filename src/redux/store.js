@@ -9,6 +9,8 @@ import deviceReducer from "./slices/deviceSlice";
 import classroomReducer from "./slices/classroomSlice";
 import semesterReducer from "./slices/semesterSlice";
 import lessonReducer from "./slices/lessonSlice";
+import learnerReducer from "./slices/learnerSlice";
+import teacherReducer from "./slices/teacherSlice";
 
 export const store = configureStore({
   reducer: {
@@ -17,11 +19,13 @@ export const store = configureStore({
     students: studentReducer,
     experiments: experimentReducer,
     labs: labReducer,
+    learners: learnerReducer,
     lessons: lessonReducer,
     devicetypes: deviceTypeReducer,
     devices: deviceReducer,
     classrooms: classroomReducer,
     semesters: semesterReducer,
+    teachers: teacherReducer,
   },
   devTools: true,
 });

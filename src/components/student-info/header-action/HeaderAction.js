@@ -17,7 +17,7 @@ export const HeaderAction = () => {
       <Col>
         <ButtonGroup>
           {studentDetailAction(navigate, id).map((action, index) => (
-            <Button key={index} shape="round" onClick={action.onclick}>
+            <Button key={index} shape="round" onClick={action.onClick}>
               {action.title}
             </Button>
           ))}

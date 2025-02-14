@@ -24,8 +24,8 @@ import {
   assignLearnerToClass,
 } from "../redux/actions/learnerAction";
 import { assignTeachersToClass } from "../redux/actions/teacherAction";
-import { getAllClassrooms } from "../redux/actions/classroomAction";
 import { listAllUsersByType, deleteUser } from "../redux/actions/userAction";
+import { useClassroomData } from "../hooks/useClassroomData";
 import { v4 as uuidv4 } from "uuid";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
@@ -46,14 +46,13 @@ const Accounts = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [form] = Form.useForm();
 
-  const classrooms = useSelector((state) => state.classrooms.data || {});
+  const { classrooms } = useClassroomData();
   const studentsState = useSelector((state) => state.students || {});
   const isClassroomLoading = useSelector((state) => state.classrooms.loading);
   const { data: studentData = [], error = null } = studentsState;
 
   useEffect(() => {
     dispatch(listAllUsersByType(selectedAccountType));
-    dispatch(getAllClassrooms());
   }, [dispatch, selectedAccountType, form]);
 
   const handleAccountTypeChange = (value) => {
