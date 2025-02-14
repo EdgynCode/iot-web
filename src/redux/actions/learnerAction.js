@@ -40,3 +40,20 @@ export const assignLearnerToClass = createAsyncThunk(
     }
   }
 );
+
+export const getLearnersByClassId = createAsyncThunk(
+  "Learner/GetLearnersByClassId",
+  async (classId, thunkAPI) => {
+    try {
+      const learners = await LearnerService.getLearnersByClassId(classId);
+      return learners;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch learners";
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);

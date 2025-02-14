@@ -65,9 +65,9 @@ export const ListDetail = ({
       <div className="bg-grey tab">
         <div className="w-full flex justify-center tab-header">
           <Input
-            placeholder="Search"
+            placeholder="Tìm kiếm theo tên, lớp, giới tính,..."
             suffix={<SearchOutlined />}
-            className="max-w-[200px]"
+            className="max-w-[400px]"
             color="#c4c4c4"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

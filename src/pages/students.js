@@ -131,7 +131,7 @@ const Students = () => {
       case "Xuất dữ liệu":
         setModalType("export");
         break;
-      case "Thêm danh sách tài khoản":
+      case "Thêm danh sách học sinh":
         setModalType("import");
         break;
       default:

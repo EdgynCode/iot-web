@@ -33,27 +33,12 @@ export const accountAction = () => [
     },
   },
 ];
-const gradeMenu = [
-  { key: "1", label: "Khối 10" },
-  { key: "2", label: "Khối 11" },
-  { key: "3", label: "Khối 12" },
-  { key: "4", label: "Tự do" },
-];
-const classMenu = [
-  { key: "1", label: "Lớp 10C1" },
-  { key: "2", label: "Lớp 10C2" },
-  { key: "3", label: "Lớp 10C3" },
-  { key: "4", label: "Lớp 10C4" },
-  { key: "5", label: "Lớp 10C5" },
-];
 const accountTypeMenu = [
   { key: "1", label: "Học sinh", role: "Learner" },
   { key: "2", label: "Giáo viên", role: "Teacher" },
   { key: "3", label: "Quản trị viên" },
 ];
 export const accountFilter = [
-  { key: "Grade", label: "Khối", options: gradeMenu },
-  { key: "Class", label: "Lớp", options: classMenu },
   { key: "AccountType", label: "Loại tài khoản", options: accountTypeMenu },
 ];
 export const studentColumns = (navigate) => [
