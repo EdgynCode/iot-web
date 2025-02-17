@@ -6,25 +6,16 @@ import {
   lectureData,
   lectureFilter,
 } from "../datas/lecture.d.js";
-import {
-  createLesson,
-  getAllLessons,
-  updateLesson,
-  deleteLesson,
-} from "../redux/actions/lessonAction";
+import { useLessonData } from "../hooks/useLessonData.js";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import { useNavigate } from "react-router-dom";
 
 const Lessons = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { sessions } = useLessonData();
   const [open, setOpen] = useState(false);
   const [modalType, setModalType] = useState("");
-
-  useEffect(() => {
-    dispatch(getAllLessons());
-  }, [dispatch]);
 
   const handleActionClick = (action) => {
     switch (action.title) {

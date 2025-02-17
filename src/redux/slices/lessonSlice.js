@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  createLesson,
-  getAllLessons,
-  getLessonDetails,
-  deleteLesson,
+  createClassSession,
+  getAllClassSessions,
+  getClassSessionDetails,
+  deleteClassSession,
 } from "../actions/lessonAction";
 
 const initialState = {
@@ -17,53 +17,53 @@ const lessonReducer = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(getAllLessons.pending, (state) => {
+      .addCase(getAllClassSessions.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getAllLessons.fulfilled, (state, action) => {
+      .addCase(getAllClassSessions.fulfilled, (state, action) => {
         state.data = action.payload;
         state.loading = false;
       })
-      .addCase(getAllLessons.rejected, (state, action) => {
+      .addCase(getAllClassSessions.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
       })
-      .addCase(getLessonDetails.pending, (state) => {
+      .addCase(getClassSessionDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getLessonDetails.fulfilled, (state, action) => {
+      .addCase(getClassSessionDetails.fulfilled, (state, action) => {
         state.data = action.payload;
         state.loading = false;
       })
-      .addCase(getLessonDetails.rejected, (state, action) => {
+      .addCase(getClassSessionDetails.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
       })
-      .addCase(createLesson.pending, (state) => {
+      .addCase(createClassSession.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createLesson.fulfilled, (state, action) => {
+      .addCase(createClassSession.fulfilled, (state, action) => {
         state.data.push(action.payload);
         state.loading = false;
       })
-      .addCase(createLesson.rejected, (state, action) => {
+      .addCase(createClassSession.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
       })
-      .addCase(deleteLesson.pending, (state) => {
+      .addCase(deleteClassSession.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteLesson.fulfilled, (state, action) => {
+      .addCase(deleteClassSession.fulfilled, (state, action) => {
         state.data = state.data.filter(
           (device) => device.id !== action.payload.id
         );
         state.loading = false;
       })
-      .addCase(deleteLesson.rejected, (state, action) => {
+      .addCase(deleteClassSession.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
       });

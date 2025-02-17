@@ -12,7 +12,7 @@ import { steps } from "../../datas/schedule.d";
 import { useClassroomData } from "../../hooks/useClassroomData";
 import { useLabData } from "../../hooks/useLabData";
 import { getCurrentUser } from "../../redux/actions/authAction";
-import { createLesson } from "../../redux/actions/lessonAction";
+import { createClassSession } from "../../redux/actions/lessonAction";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
@@ -90,7 +90,7 @@ const ScheduleModal = ({ open, setOpen, selected }) => {
       clientId: uuidv4(),
       labIds: form.getFieldValue("lab"), // current output: uuid-labName
     };
-    dispatch(createLesson(data))
+    dispatch(createClassSession(data))
       .unwrap()
       .then(() => {
         message.success("Tạo buổi học thành công!");

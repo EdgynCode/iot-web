@@ -17,29 +17,29 @@ export const steps = [
     title: "Chia nhóm",
   },
 ];
-export const getMonthData = (value, lessons) => {
-  if (!lessons || lessons.length === 0) return null;
+export const getMonthData = (value, sessions) => {
+  if (!sessions || sessions.length === 0) return null;
 
-  const lesson = lessons.find((lesson) => {
+  const lesson = sessions.find((lesson) => {
     return dayjs(lesson.startTime).month() === value.month();
   });
 
   return lesson ? dayjs(lesson.startTime).month() : null;
 };
 
-export const getListData = (value, lessons) => {
+export const getListData = (value, sessions) => {
   let listData = [];
 
-  if (!lessons || lessons.length === 0) return listData;
+  if (!sessions || sessions.length === 0) return listData;
 
-  lessons.forEach((lesson) => {
-    const lessonDate = dayjs(lesson.startTime);
+  sessions.forEach((session) => {
+    const sessionDate = dayjs(session.startTime);
     if (
-      lessonDate.date() === value.date() &&
-      lessonDate.month() === value.month() &&
-      lessonDate.year() === value.year()
+      sessionDate.date() === value.date() &&
+      sessionDate.month() === value.month() &&
+      sessionDate.year() === value.year()
     ) {
-      lesson.labIds.forEach((labId) => {
+      session.labIds.forEach((labId) => {
         listData.push({
           type: "info",
           content: `Lab ID: ${labId}`,
