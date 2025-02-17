@@ -1,3 +1,5 @@
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+
 export const deviceListAction = () => [
   {
     title: "Thêm loại thiết bị",
@@ -16,12 +18,6 @@ export const deviceListAction = () => [
 export const deviceAction = () => [
   {
     title: "Thêm thiết bị",
-    onClick: (openModal) => {
-      openModal();
-    },
-  },
-  {
-    title: "Xóa thiết bị",
     onClick: (openModal) => {
       openModal();
     },
@@ -68,6 +64,58 @@ export const deviceListColumns = (navigate) => [
     key: "ghiChu",
     render: (text, record) => (
       <a onClick={() => navigate(`/devices/${record.id}`)}>{text}</a>
+    ),
+  },
+];
+export const deviceColumns = (onUpdate, onRemove) => [
+  {
+    title: "Số seri",
+    dataIndex: "serialNumber",
+    key: "serialNumber",
+    render: (text) => <p>{text}</p>,
+  },
+  {
+    title: "Tên thiết bị",
+    dataIndex: "tenThietBi",
+    key: "tenThietBi",
+    render: (text) => <p>{text}</p>,
+  },
+  {
+    title: "Mô tả",
+    dataIndex: "moTa",
+    key: "moTa",
+    render: (text) => <p>{text}</p>,
+  },
+  {
+    title: "Ghi chú",
+    dataIndex: "ghiChu",
+    key: "ghiChu",
+    render: (text) => <p>{text}</p>,
+  },
+  {
+    title: "Hạn bảo hành",
+    dataIndex: "thoiGianBaoHanh",
+    key: "thoiGianBaoHanh",
+    render: (text) => <p>{text}</p>,
+  },
+  {
+    title: "Tác vụ",
+    key: "actions",
+    render: (record) => (
+      <span>
+        <button
+          onClick={() => onUpdate(record)}
+          className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700"
+        >
+          <EditOutlined />
+        </button>
+        <button
+          onClick={() => onRemove(record.id)}
+          className="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700 ml-2"
+        >
+          <DeleteOutlined />
+        </button>
+      </span>
     ),
   },
 ];
