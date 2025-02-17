@@ -1,6 +1,6 @@
 import axiosInstance from "./axiosInstance";
 
-const createLesson = async (
+const createClassSession = async (
   id,
   lopHocId,
   nguoiDayId,
@@ -13,18 +13,21 @@ const createLesson = async (
   labIds
 ) => {
   try {
-    const response = await axiosInstance.post(`Lesson/CreateLesson`, {
-      id,
-      lopHocId,
-      nguoiDayId,
-      startTime,
-      endTime,
-      wifiHotspot,
-      brokerAddress,
-      port,
-      clientId,
-      labIds,
-    });
+    const response = await axiosInstance.post(
+      `ClassSession/CreateClassSession`,
+      {
+        id,
+        lopHocId,
+        nguoiDayId,
+        startTime,
+        endTime,
+        wifiHotspot,
+        brokerAddress,
+        port,
+        clientId,
+        labIds,
+      }
+    );
     return response.data;
   } catch (error) {
     console.error(
@@ -35,23 +38,10 @@ const createLesson = async (
   }
 };
 
-const getAllLessons = async () => {
-  try {
-    const response = await axiosInstance.get(`Lesson/GetAllLessons`);
-    return response.data;
-  } catch (error) {
-    console.error(
-      "Error fetching lesson data:",
-      error.response?.data || error.message
-    );
-    throw error.response?.data || error.message;
-  }
-};
-
-const getLessonDetails = async (lessonID) => {
+const getAllClassSessions = async () => {
   try {
     const response = await axiosInstance.get(
-      `Lesson/GetLessonDetails?id${lessonID}`
+      `ClassSession/GetAllClassSessions`
     );
     return response.data;
   } catch (error) {
@@ -63,10 +53,25 @@ const getLessonDetails = async (lessonID) => {
   }
 };
 
-const deleteLesson = async (lessonID) => {
+const getClassSessionDetails = async (sessionID) => {
+  try {
+    const response = await axiosInstance.get(
+      `ClassSession/GetClassSessionDetails?id${sessionID}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching lesson data:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
+const deleteClassSession = async (sessionID) => {
   try {
     const response = await axiosInstance.delete(
-      `Lesson/DeleteLesson?id${lessonID}`
+      `ClassSession/DeleteClassSession?id=${sessionID}`
     );
     return response.data;
   } catch (error) {
@@ -78,7 +83,7 @@ const deleteLesson = async (lessonID) => {
   }
 };
 
-const updateLesson = async (
+const updateClassSession = async (
   id,
   lopHocId,
   nguoiDayId,
@@ -89,16 +94,19 @@ const updateLesson = async (
   labIds
 ) => {
   try {
-    const response = await axiosInstance.patch(`Lesson/UpdateLesson`, {
-      id,
-      lopHocId,
-      nguoiDayId,
-      wifiHotspot,
-      brokerAddress,
-      port,
-      clientId,
-      labIds,
-    });
+    const response = await axiosInstance.patch(
+      `ClassSession/UpdateClassSession?id=${id}`,
+      {
+        id,
+        lopHocId,
+        nguoiDayId,
+        wifiHotspot,
+        brokerAddress,
+        port,
+        clientId,
+        labIds,
+      }
+    );
     return response.data;
   } catch (error) {
     console.error(
@@ -110,11 +118,11 @@ const updateLesson = async (
 };
 
 const LessonService = {
-  createLesson,
-  getAllLessons,
-  getLessonDetails,
-  updateLesson,
-  deleteLesson,
+  createClassSession,
+  getAllClassSessions,
+  getClassSessionDetails,
+  deleteClassSession,
+  updateClassSession,
 };
 
 export default LessonService;

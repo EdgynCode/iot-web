@@ -11,11 +11,11 @@ import { useLessonData } from "../hooks/useLessonData";
 const Schedule = () => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(dayjs());
-  const { lessons } = useLessonData();
+  const { sessions } = useLessonData();
 
   // Calendar antd
   const monthCellRender = (value) => {
-    const monthValue = getMonthData(value, lessons);
+    const monthValue = getMonthData(value, sessions);
     return monthValue ? (
       <div className="">
         <section>{monthValue}</section>
@@ -24,7 +24,7 @@ const Schedule = () => {
     ) : null;
   };
   const dateCellRender = (value) => {
-    const listData = getListData(value, lessons);
+    const listData = getListData(value, sessions);
     return (
       <ul className="events">
         {listData.map((item) => (

@@ -2,8 +2,8 @@ import LessonService from "../services/lesson.service";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "../slices/message";
 
-export const createLesson = createAsyncThunk(
-  "Lesson/CreateLesson",
+export const createClassSession = createAsyncThunk(
+  "Classroom/CreateClassSession",
   async (
     {
       id,
@@ -20,7 +20,7 @@ export const createLesson = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const data = await LessonService.createLesson(
+      const data = await LessonService.createClassSession(
         id,
         lopHocId,
         nguoiDayId,
@@ -32,7 +32,7 @@ export const createLesson = createAsyncThunk(
         clientId,
         labIds
       );
-      thunkAPI.dispatch(setMessage("New lesson created successfully!"));
+      thunkAPI.dispatch(setMessage("Class session created successfully!"));
       return data;
     } catch (error) {
       const message =
@@ -41,18 +41,17 @@ export const createLesson = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-      thunkAPI.dispatch(setMessage(message));
-      return thunkAPI.rejectWithValue();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-export const getAllLessons = createAsyncThunk(
-  "Lesson/GetAllLessons",
+export const getAllClassSessions = createAsyncThunk(
+  "Classroom/GetAllClassSessions",
   async (_, thunkAPI) => {
     try {
-      const data = await LessonService.getAllLessons();
-      thunkAPI.dispatch(setMessage("Lesson data fetched successfully!"));
+      const data = await LessonService.getAllClassSessions();
+      thunkAPI.dispatch(setMessage("Class sessions fetched successfully!"));
       return data;
     } catch (error) {
       const message =
@@ -66,12 +65,14 @@ export const getAllLessons = createAsyncThunk(
   }
 );
 
-export const getLessonDetails = createAsyncThunk(
-  "Classroom/RemoveClassRoom",
-  async (id, thunkAPI) => {
+export const getClassSessionDetails = createAsyncThunk(
+  "Classroom/GetClassSessionDetails",
+  async (sessionID, thunkAPI) => {
     try {
-      const data = await LessonService.getLessonDetails(id);
-      thunkAPI.dispatch(setMessage("Lesson data fetched successfully!"));
+      const data = await LessonService.getClassSessionDetails(sessionID);
+      thunkAPI.dispatch(
+        setMessage("Class session details fetched successfully!")
+      );
       return data;
     } catch (error) {
       const message =
@@ -85,8 +86,27 @@ export const getLessonDetails = createAsyncThunk(
   }
 );
 
-export const updateLesson = createAsyncThunk(
-  "Lesson/UpdateLesson",
+export const deleteClassSession = createAsyncThunk(
+  "Classroom/DeleteClassSession",
+  async (sessionID, thunkAPI) => {
+    try {
+      const data = await LessonService.deleteClassSession(sessionID);
+      thunkAPI.dispatch(setMessage("Class session deleted successfully!"));
+      return data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const updateClassSession = createAsyncThunk(
+  "Classroom/UpdateClassSession",
   async (
     {
       id,
@@ -101,7 +121,7 @@ export const updateLesson = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const data = await LessonService.updateLesson(
+      const data = await LessonService.updateClassSession(
         id,
         lopHocId,
         nguoiDayId,
@@ -111,26 +131,7 @@ export const updateLesson = createAsyncThunk(
         clientId,
         labIds
       );
-      thunkAPI.dispatch(setMessage("Lesson updated successfully!"));
-      return data;
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const deleteLesson = createAsyncThunk(
-  "Lesson/DeleteLesson",
-  async (id, thunkAPI) => {
-    try {
-      const data = await LessonService.deleteLesson(id);
-      thunkAPI.dispatch(setMessage("Lesson deleted successfully!"));
+      thunkAPI.dispatch(setMessage("Class session updated successfully!"));
       return data;
     } catch (error) {
       const message =
