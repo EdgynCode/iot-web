@@ -14,7 +14,7 @@ export const steps = [
     title: "Thông tin buổi học",
   },
   {
-    title: "Chia nhóm",
+    title: "Tạo danh sách nhóm",
   },
 ];
 export const getMonthData = (value, sessions) => {

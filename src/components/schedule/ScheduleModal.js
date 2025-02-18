@@ -13,10 +13,12 @@ import { useClassroomData } from "../../hooks/useClassroomData";
 import { useLabData } from "../../hooks/useLabData";
 import { getCurrentUser } from "../../redux/actions/authAction";
 import { createClassSession } from "../../redux/actions/lessonAction";
+import { createGroup } from "../../redux/actions/groupAction";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 import "./index.css";
+import Input from "antd/es/input/Input";
 
 const ScheduleModal = ({ open, setOpen, selected }) => {
   const dispatch = useDispatch();
@@ -70,8 +72,10 @@ const ScheduleModal = ({ open, setOpen, selected }) => {
   const onFinish = async () => {
     const currentUser = await dispatch(getCurrentUser()).unwrap();
     const id = currentUser.id;
+    const sessionId = uuidv4();
 
-    const data = {
+    const sessionData = {
+      id: sessionId,
       lopHocId: form.getFieldValue("class"),
       nguoiDayId: id,
       startTime: moment(
@@ -90,14 +94,21 @@ const ScheduleModal = ({ open, setOpen, selected }) => {
       clientId: uuidv4(),
       labIds: form.getFieldValue("lab"), // current output: uuid-labName
     };
-    dispatch(createClassSession(data))
+    dispatch(createClassSession(sessionData))
       .unwrap()
-      .then(() => {
-        message.success("Tạo buổi học thành công!");
+      .then(async () => {
+        const numberOfGroups = form.getFieldValue("soNhom");
+        for (let i = 1; i <= numberOfGroups; i++) {
+          const groupName = `Group ${i.toString().padStart(2, "0")}`;
+          await dispatch(
+            createGroup({ tenNhom: groupName, sessionId })
+          ).unwrap();
+        }
+        message.success("Class session and groups created successfully!");
         setOpen(false);
       })
       .catch(() => {
-        message.error("Tạo buổi học thất bại. Vui lòng thử lại.");
+        message.error("Failed to create class session. Please try again.");
       });
   };
   return (
@@ -194,7 +205,19 @@ const ScheduleModal = ({ open, setOpen, selected }) => {
           </>
         ) : (
           current === 1 && (
-            <div className="w-full p-20 text-center">Chia nhóm</div>
+            <>
+              <div className="w-full">
+                <Form.Item
+                  name="soNhom"
+                  label="Số lượng nhóm"
+                  rules={[
+                    { required: true, message: "Vui lòng nhập số lượng nhóm!" },
+                  ]}
+                >
+                  <Input placeholder="Số lượng nhóm" className="rounded-lg" />
+                </Form.Item>
+              </div>
+            </>
           )
         )}
       </Form>
