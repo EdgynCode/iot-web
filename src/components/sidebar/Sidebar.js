@@ -60,49 +60,56 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
 
   const menuItems = routes.map((route) => ({
     key: route.key,
-    label: isExpanded && <span>{route.title}</span>,
+    label: <span>{route.title}</span>,
     title: route.title,
     icon: route.icon,
   }));
 
-  const toggleSidebar = () => {
-    setIsExpanded(!isExpanded);
-  };
-
   return (
     <>
-      <Sider
-        collapsible
-        collapsed={!isExpanded}
-        onCollapse={toggleSidebar}
-        className="bg-transparent fixed"
-      >
-        <div className="absolute inset-0 bg-black/10 backdrop-blur-md -z-10"></div>
-        {/* Logo section  */}
-        <div
-          className={`${
-            isExpanded ? "justify-start gap-3 mx-3 " : "justify-center"
-          } z-10 my-7 flex items-center transition-all duration-300 ease-in-out`}
-        >
-          <div className="w-10 h-10 bg-gray-700 rounded-full transition-all ease-in-out duration-300"></div>
-          {isExpanded && (
-            <p className="transition-opacity transform ease-in-out duration-500 opacity-100">
-              LOGO
-            </p>
-          )}
+      <Sider className={`sider ${isExpanded && "visible"}`}>
+        {/* Logo  */}
+        <div className="div-logo">
+          <a href="/">
+            <div className="flex justify-center ">
+              <img
+                className="w-[60%]"
+                alt="Auth Platform"
+                src="/images/logo.png"
+              />
+            </div>
+          </a>
         </div>
+        <hr />
+        {/* Account */}
+        <div className="div">
+          <div className="account-container">
+            <a href="/account-detail">
+              <div className="account-avatar"></div>
+            </a>
+            <div className="account-info">
+              <h6 className="account-name">{decode.unique_name}</h6>
+              <h6 className="account-number">{decode.email}</h6>
+              <p className="account-role">{decode.role}</p>
+            </div>
+          </div>
+        </div>
+        <hr />
         {/* Menu items */}
-        <Menu
-          items={menuItems}
-          className="bg-transparent"
-          onClick={({ key }) => {
-            if (key === "logout") {
-              showLogoutModal();
-            } else {
-              navigate(key);
-            }
-          }}
-        />
+        <div className="div">
+          <Menu
+            items={menuItems}
+            className="bg-transparent"
+            onClick={({ key }) => {
+              if (key === "logout") {
+                showLogoutModal();
+              } else {
+                navigate(key);
+              }
+              setIsExpanded(false);
+            }}
+          />
+        </div>
       </Sider>
 
       {/* Logout confirmation modal */}

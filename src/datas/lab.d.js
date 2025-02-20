@@ -48,18 +48,28 @@ export const labColumns = (navigate) => [
     title: "Tên bài tập",
     dataIndex: "name",
     key: "name",
-    render: (text) => <a>{text}</a>,
+    render: (text, record) => (
+      <a
+        onClick={() => {
+          navigate(`/lab-detail/${record.id}`, { state: { record } });
+        }}
+      >
+        {text}
+      </a>
+    ),
   },
   {
     title: "Xem trước",
     dataIndex: "pathImage",
     key: "pathImage",
-    render: (text) => <a>{text}</a>,
+    render: (text, record) => (
+      <a
+        onClick={() => {
+          navigate(`/lab-detail/${record.id}`, { state: { record } });
+        }}
+      >
+        {text}
+      </a>
+    ),
   },
 ];
-export const fakeData = [...Array(23).keys()].map((index) => ({
-  key: index + 1,
-  labId: `LAB-${index + 1}`,
-  name: `Bài tập ${index + 1}`,
-  pathImage: `/images/lab${index + 1}.png`,
-}));

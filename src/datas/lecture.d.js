@@ -1,20 +1,20 @@
-export const lectureAction = [
+export const lectureAction = () => [
   {
-    title: "New",
-    onclick: () => {
-      console.log("New");
+    title: "Thêm bài giảng",
+    onClick: (openModal) => {
+      openModal();
     },
   },
   {
-    title: "Import",
-    onclick: () => {
-      console.log("Import");
+    title: "Sửa bài giảng",
+    onClick: (openModal) => {
+      openModal();
     },
   },
   {
-    title: "Export",
-    onclick: () => {
-      console.log("Export");
+    title: "Xóa bài giảng",
+    onClick: (openModal) => {
+      openModal();
     },
   },
 ];

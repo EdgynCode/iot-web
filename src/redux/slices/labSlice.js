@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getAllLabs } from "../actions/labAction";
 
-const labSlice = createSlice({
+const labReducer = createSlice({
   name: "labs",
   initialState: {
     data: [],
@@ -25,5 +25,5 @@ const labSlice = createSlice({
   },
 });
 
-const { reducer } = labSlice;
+const { reducer } = labReducer;
 export default reducer;

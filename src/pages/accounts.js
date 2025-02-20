@@ -15,21 +15,22 @@ import {
   Radio,
   Input,
   Form,
-  message,
   Select,
-  DatePicker,
+  message,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { createMultipleLearner } from "../redux/actions/learnerAction";
-import { listAllUsersByType } from "../redux/actions/userAction";
+import {
+  createMultipleLearner,
+  assignLearnerToClass,
+} from "../redux/actions/learnerAction";
+import { assignTeachersToClass } from "../redux/actions/teacherAction";
+import { listAllUsersByType, deleteUser } from "../redux/actions/userAction";
+import { useClassroomData } from "../hooks/useClassroomData";
 import { v4 as uuidv4 } from "uuid";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { register } from "../redux/actions/authAction";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
-
-const { Option } = Select;
+import RegisterForm from "../components/RegisterForm";
 
 const Accounts = () => {
   const navigate = useNavigate();
@@ -42,13 +43,17 @@ const Accounts = () => {
   const [fileName, setFileName] = useState("student_data");
   const [selectedAccountType, setSelectedAccountType] = useState("Learner");
   const [selectedAccountLabel, setSelectedAccountLabel] = useState("Học sinh");
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [form] = Form.useForm();
 
+  const { classrooms } = useClassroomData();
   const studentsState = useSelector((state) => state.students || {});
+  const isClassroomLoading = useSelector((state) => state.classrooms.loading);
   const { data: studentData = [], error = null } = studentsState;
 
   useEffect(() => {
     dispatch(listAllUsersByType(selectedAccountType));
-  }, [dispatch, selectedAccountType]);
+  }, [dispatch, selectedAccountType, form]);
 
   const handleAccountTypeChange = (value) => {
     const accountType =
@@ -63,32 +68,8 @@ const Accounts = () => {
     setSelectedAccountLabel(accountLabel);
   };
 
-  const onFinish = async (values) => {
-    setLoading(true);
-
-    const data = {
-      id: uuidv4(),
-      firstName: values.firstName,
-      lastName: values.lastName,
-      gender: values.gender,
-      doB: values.doB.format("YYYY-MM-DD"),
-      userName: values.userName,
-      email: values.email,
-      password: values.password,
-      phoneNumber: values.phoneNumber,
-      discriminator: values.discriminator,
-    };
-    console.log(data);
-    dispatch(register(data))
-      .unwrap()
-      .then(() => {
-        message.success("Đăng ký thành công!");
-        setOpen(false);
-      })
-      .catch(() => {
-        message.error("Đăng ký thất bại. Vui lòng thử lại.");
-        setLoading(false);
-      });
+  const handleSelectionChange = (keys) => {
+    setSelectedRowKeys(keys);
   };
 
   const handleExport = async () => {
@@ -176,6 +157,63 @@ const Accounts = () => {
     reader.readAsArrayBuffer(file);
   };
 
+  const handleDeleteAccount = async () => {
+    if (selectedRowKeys.length === 0) {
+      message.warning("Chọn ít nhất 1 tài khoản để xóa.");
+      return;
+    }
+
+    try {
+      const deletePromises = selectedRowKeys.map((key) =>
+        dispatch(deleteUser(key)).unwrap()
+      );
+
+      await Promise.all(deletePromises);
+
+      message.success("Xóa tài khoản thành công!");
+      setOpen(false);
+      dispatch(listAllUsersByType(selectedAccountType));
+    } catch (error) {
+      message.error("Có lỗi xảy ra khi xóa tài khoản.");
+    }
+  };
+
+  const handleAssignAccounts = async () => {
+    const classId = form.getFieldValue("class");
+
+    if (selectedRowKeys.length === 0) {
+      message.warning("Chọn ít nhất 1 người học để thêm vào lớp.");
+      return;
+    }
+
+    switch (selectedAccountType) {
+      case "Learner":
+        dispatch(assignLearnerToClass({ learners: selectedRowKeys, classId }))
+          .unwrap()
+          .then(() => {
+            message.success("Thêm người học thành công!");
+            setOpen(false);
+          })
+          .catch(() => {
+            message.error("Thêm người học thất bại. Vui lòng thử lại.");
+          });
+        break;
+      case "Teacher":
+        dispatch(assignTeachersToClass({ teachers: selectedRowKeys, classId }))
+          .unwrap()
+          .then(() => {
+            message.success("Thêm giáo viên thành công!");
+            setOpen(false);
+          })
+          .catch(() => {
+            message.error("Thêm giáo viên thất bại. Vui lòng thử lại.");
+          });
+        break;
+      default:
+        console.log("Invalid account type");
+    }
+  };
+
   const handleModalCancel = () => {
     setFile(null);
     setOpen(false);
@@ -183,6 +221,9 @@ const Accounts = () => {
 
   const handleActionClick = (action) => {
     switch (action.title) {
+      case "Thêm người học/giáo viên vào lớp":
+        setModalType("assignToClass");
+        break;
       case "Thêm tài khoản":
         setModalType("createAccount");
         break;
@@ -220,9 +261,43 @@ const Accounts = () => {
         }))}
         data={loading ? [] : studentData}
         column={studentColumns(navigate)}
+        onSelectionChange={handleSelectionChange}
       />
       {loading && <Spin size="large" />}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
+      <Modal
+        title="Thêm người học vào lớp"
+        open={open && modalType === "assignToClass"}
+        onOk={handleAssignAccounts}
+        onCancel={() => setOpen(false)}
+        okText="Thêm vào lớp"
+        cancelText="Hủy"
+      >
+        <Form
+          form={form}
+          name="assignToClass"
+          onFinish={handleAssignAccounts}
+          className="space-y-4"
+        >
+          <div className="w-full">
+            <Form.Item
+              name="class"
+              label="Lớp"
+              rules={[{ required: true, message: "Vui lòng chọn lớp!" }]}
+            >
+              <Select
+                allowClear
+                className="w-full"
+                loading={isClassroomLoading}
+                options={classrooms.map((classroom) => ({
+                  value: classroom.id,
+                  label: classroom.tenLop,
+                }))}
+              />
+            </Form.Item>
+          </div>
+        </Form>
+      </Modal>
       <Modal
         title="Thêm danh sách tài khoản"
         open={open && modalType === "importAccount"}
@@ -246,128 +321,18 @@ const Accounts = () => {
       <Modal
         title="Tạo tài khoản"
         open={open && modalType === "createAccount"}
+        onCancel={handleModalCancel}
         footer={[
           <Button key="cancel" onClick={() => setOpen(false)}>
             Hủy
           </Button>,
         ]}
       >
-        <Form
-          name="register"
-          onFinish={onFinish}
-          disabled={loading}
-          className="space-y-4"
-        >
-          <Form.Item
-            name="discriminator"
-            rules={[
-              { required: true, message: "Vui lòng chọn loại người dùng!" },
-            ]}
-          >
-            <Select placeholder="Loại người dùng" className="rounded-lg">
-              <Option value="Teacher">Người dạy</Option>
-              <Option value="Learner">Người học</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            name="firstName"
-            rules={[{ required: true, message: "Vui lòng nhập họ!" }]}
-          >
-            <Input placeholder="Họ" className="rounded-lg" />
-          </Form.Item>
-
-          <Form.Item
-            name="lastName"
-            rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
-          >
-            <Input placeholder="Tên" className="rounded-lg" />
-          </Form.Item>
-
-          <Form.Item
-            name="gender"
-            rules={[{ required: true, message: "Vui lòng chọn giới tính!" }]}
-          >
-            <Select placeholder="Giới tính" className="rounded-lg">
-              <Option value="Nam">Nam</Option>
-              <Option value="Nữ">Nữ</Option>
-              <Option value="Khác">Khác</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            name="doB"
-            rules={[{ required: true, message: "Vui lòng chọn ngày sinh!" }]}
-          >
-            <DatePicker
-              placeholder="Ngày sinh"
-              format="YYYY-MM-DD"
-              className="rounded-lg w-full"
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="userName"
-            rules={[
-              { required: true, message: "Vui lòng nhập tên người dùng!" },
-            ]}
-          >
-            <Input placeholder="Tên người dùng" className="rounded-lg" />
-          </Form.Item>
-
-          <Form.Item
-            name="email"
-            rules={[
-              {
-                required: true,
-                type: "email",
-                message: "Vui lòng nhập email hợp lệ!",
-              },
-            ]}
-          >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Email"
-              className="rounded-lg"
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="password"
-            rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
-          >
-            <Input.Password
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              placeholder="Mật khẩu"
-              className="rounded-lg"
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="phoneNumber"
-            rules={[
-              { required: true, message: "Vui lòng nhập số điện thoại!" },
-              {
-                pattern: /^0\d{9}$/,
-                message:
-                  "Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0!",
-              },
-            ]}
-          >
-            <Input placeholder="Số điện thoại" className="rounded-lg" />
-          </Form.Item>
-
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="w-full bg-black text-white hover:bg-gray-800 rounded-lg"
-              loading={loading}
-            >
-              Đăng ký
-            </Button>
-          </Form.Item>
-        </Form>
+        <RegisterForm
+          loading={loading}
+          setLoading={setLoading}
+          setOpen={setOpen}
+        />
       </Modal>
 
       <Modal
@@ -392,6 +357,17 @@ const Accounts = () => {
             onChange={(e) => setFileName(e.target.value)}
           />
         </Form.Item>
+      </Modal>
+
+      <Modal
+        title="Xóa tài khoản"
+        open={open && modalType === "deleteAccount"}
+        okText="Xóa"
+        cancelText="Hủy"
+        onOk={handleDeleteAccount}
+        onCancel={() => setOpen(false)}
+      >
+        <p>Bạn có chắc chắn muốn xóa những tài khoản này không?</p>
       </Modal>
     </>
   );

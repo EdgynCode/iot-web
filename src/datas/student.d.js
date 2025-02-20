@@ -3,14 +3,12 @@ export const studentAction = () => [
     title: "Thêm danh sách học sinh",
     onClick: (setOpen) => {
       setOpen(true);
-      console.log("Importing...");
     },
   },
   {
     title: "Xuất dữ liệu",
     onClick: (setOpen) => {
       setOpen(true);
-      console.log("Exporting...");
     },
   },
 ];
@@ -107,13 +105,13 @@ export const studentColumns = (navigate) => [
 export const studentDetailAction = (navigate, id) => [
   {
     title: "Chỉnh sửa thông tin",
-    onclick: () => {
+    onClick: () => {
       navigate(`/edit-student-detail/${id}`);
     },
   },
   {
     title: "Gửi tin nhắn",
-    onclick: () => {
+    onClick: () => {
       console.log("Delete");
     },
   },
