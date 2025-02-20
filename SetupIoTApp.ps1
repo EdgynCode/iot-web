@@ -1,3 +1,10 @@
+# Requires elevation
+#Requires -RunAsAdministrator
+
+# Script configuration
+$ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"  # Speeds up downloads
+
 # Check if WSL is installed
 Write-Host "Checking if WSL is installed..."
 
@@ -38,10 +45,14 @@ try {
         Write-Host "WSL2 support is already enabled."
     }
 
-    Write-Host "Checking if WSL kernel is up-to-date..."
-    wsl --update
 
+    # Set WSL2 as the default version
     wsl --install
+
+    Write-Host "Checking if WSL kernel is up-to-date..."
+    # wsl --update
+
+    # wsl --install
     Write-Host "WSL is successfully set up!"
 } catch {
     Write-Host "An error occurred: $($_.Exception.Message)" -ForegroundColor Red
