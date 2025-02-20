@@ -40,4 +40,4 @@ jobs:
         with:
           context: .  # The location of your Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/iot-web-frontend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/iot-web-frontend:latest
