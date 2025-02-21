@@ -1,14 +1,12 @@
 import React from "react";
 import { Button, Col, Dropdown, Row } from "antd";
 import { DownOutlined } from "@ant-design/icons";
-import styles from "./index.css";
+import "./index.css";
 const Selector = ({ title, actions, filters }) => {
   return (
     <>
       <div className="title">
-        <div>
-          <h5>{title}</h5>
-        </div>
+        <h5>{title}</h5>
       </div>
       <hr />
       <div className="mt-2 p-4">

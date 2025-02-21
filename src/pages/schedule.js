@@ -12,6 +12,21 @@ const Schedule = () => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(dayjs());
   const { sessions } = useLessonData();
+  const [modalType, setModalType] = useState("");
+
+  const handleActionClick = (action) => {
+    switch (action.title) {
+      case "Tạo buổi học":
+        setModalType("createSession");
+        break;
+      case "Tạo nhóm":
+        setModalType("createGroup");
+        break;
+      default:
+        console.log("Invalid action");
+    }
+    setOpen(true);
+  };
 
   // Calendar antd
   const monthCellRender = (value) => {
@@ -43,13 +58,25 @@ const Schedule = () => {
 
   return (
     <>
-      <Selector title="Buổi học" actions={scheduleAction(setOpen)} />
+      <Selector
+        title="Buổi học"
+        actions={scheduleAction().map((action) => ({
+          ...action,
+          onClick: () => handleActionClick(action),
+        }))}
+      />
       <Calendar
         cellRender={cellRender}
         locale={locale}
         onSelect={(value) => setSelected(value)}
       />
-      <ScheduleModal open={open} setOpen={setOpen} selected={selected} />
+      <ScheduleModal
+        open={open}
+        setOpen={setOpen}
+        selected={selected}
+        modalType={modalType}
+        sessionData={sessions}
+      />
     </>
   );
 };

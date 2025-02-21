@@ -1,30 +1,27 @@
 import dayjs from "dayjs";
 
-export const scheduleAction = (setOpen) => [
+export const scheduleAction = () => [
   {
     title: "Tạo buổi học",
-    onClick: () => {
+    onClick: (setOpen) => {
       setOpen(true);
     },
   },
-];
-
-export const steps = [
   {
-    title: "Thông tin buổi học",
-  },
-  {
-    title: "Tạo danh sách nhóm",
+    title: "Tạo nhóm",
+    onClick: (setOpen) => {
+      setOpen(true);
+    },
   },
 ];
 export const getMonthData = (value, sessions) => {
   if (!sessions || sessions.length === 0) return null;
 
-  const lesson = sessions.find((lesson) => {
-    return dayjs(lesson.startTime).month() === value.month();
+  const session = sessions.find((session) => {
+    return dayjs(session.startTime).month() === value.month();
   });
 
-  return lesson ? dayjs(lesson.startTime).month() : null;
+  return session ? dayjs(session.startTime).month() : null;
 };
 
 export const getListData = (value, sessions) => {
@@ -39,11 +36,9 @@ export const getListData = (value, sessions) => {
       sessionDate.month() === value.month() &&
       sessionDate.year() === value.year()
     ) {
-      session.labIds.forEach((labId) => {
-        listData.push({
-          type: "info",
-          content: `Lab ID: ${labId}`,
-        });
+      listData.push({
+        type: "default",
+        content: `Hotspot name: ${session.wifiHotspot}`,
       });
     }
   });

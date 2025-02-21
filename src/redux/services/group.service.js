@@ -4,7 +4,7 @@ const createGroup = async (tenNhom, sessionId) => {
   try {
     const response = await axiosInstance.post(
       `Group/CreateGroup?classSessionId=${sessionId}`,
-      tenNhom
+      { tenNhom }
     );
     return response.data;
   } catch (error) {
