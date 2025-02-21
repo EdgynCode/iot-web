@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   addNewClassroom,
   getAllClassrooms,
+  getClassesByTeacherId,
   updateClassroom,
   removeClassroom,
 } from "../actions/classroomAction";
@@ -26,6 +27,18 @@ const classroomReducer = createSlice({
         state.loading = false;
       })
       .addCase(getAllClassrooms.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      })
+      .addCase(getClassesByTeacherId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getClassesByTeacherId.fulfilled, (state, action) => {
+        state.data = action.payload;
+        state.loading = false;
+      })
+      .addCase(getClassesByTeacherId.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
       })

@@ -28,6 +28,21 @@ const getAllClassrooms = async () => {
   }
 };
 
+const getClassesByTeacherId = async (teacherId) => {
+  try {
+    const response = await axiosInstance.get(
+      `Classroom/GetClassroomsByTeacherId?id=${teacherId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching classroom data:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const removeClassroom = async (id) => {
   try {
     const response = await axiosInstance.delete(
@@ -62,6 +77,7 @@ const updateClassroom = async (id, hocKyID, tenLop) => {
 const ClassroomService = {
   addNewClassroom,
   getAllClassrooms,
+  getClassesByTeacherId,
   removeClassroom,
   updateClassroom,
 };

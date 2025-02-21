@@ -41,6 +41,25 @@ export const getAllClassrooms = createAsyncThunk(
   }
 );
 
+export const getClassesByTeacherId = createAsyncThunk(
+  "Classroom/GetClassroomsByTeacherId",
+  async (teacherId, thunkAPI) => {
+    try {
+      const data = await ClassroomService.getClassesByTeacherId(teacherId);
+      thunkAPI.dispatch(setMessage("Classroom data fetched successfully!"));
+      return data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const removeClassroom = createAsyncThunk(
   "Classroom/RemoveClassRoom",
   async (id, thunkAPI) => {
