@@ -10,7 +10,7 @@ const LabDetail = () => {
     <>
       {record ? (
         <>
-          <BreadcrumbTab items={["Bài thí nghiệm", `Bài ${record.name}`]} />
+          <BreadcrumbTab items={["Bài thực hành", `Bài ${record.name}`]} />
           <LabTab lab={record} labId={record.id} />
         </>
       ) : (

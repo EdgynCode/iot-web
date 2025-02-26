@@ -12,12 +12,13 @@ export const BreadcrumbTab = ({ items }) => {
   }));
   return (
     <>
-      <Row className="flex justify-between align-middle p-[25px_24px] mt-6 bg-white rounded-[40px] overflow-hidden">
+      <Row className="flex breadcrumbtab-title justify-between align-middle pb-6 overflow-hidden">
         <Col>
           <Breadcrumb separator={<RightOutlined />} items={breadcrumbItems} />
+          <hr />
         </Col>
       </Row>
-      <Row className="my-5 mx-8">
+      <Row>
         <Back />
       </Row>
     </>

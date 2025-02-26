@@ -26,6 +26,7 @@ import {
   ScheduleMenuIcon,
   StudentMenuIcon,
 } from "./icon.d";
+import ExperimentDetail from "../pages/experiment-detail";
 
 const home = {
   key: "home",
@@ -87,6 +88,12 @@ const labs = {
   icon: <PhysicsMenuIcon />,
   title: "Bài thực hành",
 };
+const experimentDetail = {
+  key: "experiment-detail",
+  element: <ExperimentDetail />,
+  icon: <PhysicsMenuIcon />,
+  title: "Chi tiết bài thí nghiệm",
+};
 const devices = {
   key: "devices/:id",
   element: <Devices />,
@@ -122,6 +129,7 @@ export const teacherRoute = [
   logout,
   lessonDetail,
   labDetail,
+  experimentDetail,
 ];
 export const superAdminRoute = [
   home,
@@ -137,6 +145,7 @@ export const superAdminRoute = [
   logout,
   lessonDetail,
   classrooms,
+  experimentDetail,
 ];
 export const learnerSidebar = [home, accountDetail, logout];
 export const teacherSidebar = [
