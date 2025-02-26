@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   columns,
   lectureAction,
@@ -9,6 +9,8 @@ import {
 import { useLessonData } from "../hooks/useLessonData.js";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import { useNavigate } from "react-router-dom";
+import { Button, Drawer, Space, Tabs } from "antd";
+import { LessonTab } from "../components/lesson-tab/LessonTab.js";
 
 const Lessons = () => {
   const navigate = useNavigate();
@@ -16,7 +18,8 @@ const Lessons = () => {
   const { sessions } = useLessonData();
   const [open, setOpen] = useState(false);
   const [modalType, setModalType] = useState("");
-
+  const [openDrawer, setOpenDrawer] = useState(0);
+  const [selectedLesson, setSelectedLesson] = useState(null);
   const handleActionClick = (action) => {
     switch (action.title) {
       case "Thêm bài giảng":
@@ -34,6 +37,24 @@ const Lessons = () => {
     setOpen(true);
   };
 
+  const onShow = () => {
+    setOpenDrawer(true);
+  };
+  const onClose = () => {
+    setOpenDrawer(false);
+  };
+  const items = [
+    {
+      label: `Thông tin`,
+      key: 1,
+      children: <LessonTab lesson={selectedLesson} />,
+    },
+    {
+      label: `Bài tập`,
+      key: 2,
+      children: "Bài tập",
+    },
+  ];
   return (
     <>
       <ListDetail
@@ -44,8 +65,30 @@ const Lessons = () => {
         }))}
         filters={lectureFilter}
         data={lectureData}
-        column={columns(navigate)}
+        column={columns(onShow, setSelectedLesson)}
       />
+      <Drawer
+        title={
+          <p className="text-[#959597] font-semibold font-inter">
+            Bài {selectedLesson?.lesson}: {selectedLesson?.title}
+          </p>
+        }
+        className="draw-lesson"
+        placement="right"
+        size={"large"}
+        onClose={onClose}
+        open={openDrawer}
+        extra={
+          <Space>
+            <Button onClick={onClose}>Cập nhật</Button>
+            <Button type="primary" onClick={onClose}>
+              OK
+            </Button>
+          </Space>
+        }
+      >
+        <Tabs tabPosition="left" items={items} />
+      </Drawer>
     </>
   );
 };
