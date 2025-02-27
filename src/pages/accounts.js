@@ -143,12 +143,18 @@ const Accounts = () => {
           };
           studentList.push(student);
         });
-        console.log(studentList);
-        dispatch(createMultipleLearner(studentList));
-        message.success("Students imported successfully!");
-        dispatch(listAllUsersByType("Learner"));
-        setFile(null);
-        setOpen(false);
+        dispatch(createMultipleLearner(studentList))
+          .unwrap()
+          .then(() => {
+            message.success("Thêm danh sách tài khoản thành công!");
+            setFile(null);
+            setOpen(false);
+            dispatch(listAllUsersByType("Learner"));
+          })
+          .catch(() => {
+            message.error("Thêm danh sách tài khoản thất bại.");
+            setLoading(false);
+          });
       } catch (error) {
         console.error("Error processing file:", error);
         message.error("Failed to process the file. Please check the format.");
