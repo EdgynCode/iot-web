@@ -26,6 +26,7 @@ const AddDeviceTypeForm = ({ setOpen, setLoading }) => {
         message.success("Thêm loại thiết bị thành công!");
         setOpen(false);
         dispatch(getAllDeviceTypes());
+        setLoading(false);
       })
       .catch(() => {
         message.error("Thêm loại thiết bị thất bại. Vui lòng thử lại.");

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Input, Modal, Form, DatePicker, message } from "antd";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import {
   addNewDevice,
@@ -10,11 +10,13 @@ import {
   removeDevice,
 } from "../../redux/actions/deviceAction";
 import { deviceAction, deviceColumns } from "../../datas/device.d";
+import { useDeviceData } from "../../hooks/useDeviceData";
 import TextArea from "antd/es/input/TextArea";
 import { ListDetail } from "../list-detail/ListDetail";
 
 const DeviceTable = () => {
   const { id } = useParams();
+  const { devices } = useDeviceData(id);
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
@@ -23,13 +25,6 @@ const DeviceTable = () => {
   const [currentDevice, setCurrentDevice] = useState(null);
   const [modalType, setModalType] = useState("add-edit");
   const [form] = Form.useForm();
-
-  const deviceState = useSelector((state) => state.devices || {});
-  const { data: deviceData = [] } = deviceState;
-
-  useEffect(() => {
-    dispatch(getDevicesByTypeId(id));
-  }, [dispatch, id]);
 
   const handleEditDevice = (data) => {
     setIsEditing(true);
@@ -91,9 +86,11 @@ const DeviceTable = () => {
           message.success("Cập nhật thiết bị thành công!");
           closeModal();
           dispatch(getDevicesByTypeId(id));
+          setLoading(false);
         })
         .catch(() => {
           message.error("Cập nhật thiết bị thất bại.");
+          setLoading(false);
         });
       return;
     } else {
@@ -114,9 +111,11 @@ const DeviceTable = () => {
           message.success("Tạo thiết bị thành công!");
           closeModal();
           dispatch(getDevicesByTypeId(id));
+          setLoading(false);
         })
         .catch(() => {
           message.error("Tạo thiết bị thất bại.");
+          setLoading(false);
         });
     }
   };
@@ -125,6 +124,7 @@ const DeviceTable = () => {
     switch (action.title) {
       case "Thêm thiết bị":
         setModalType("add-edit");
+        setIsEditing(false);
         break;
       default:
         console.log("Invalid action");
@@ -139,7 +139,7 @@ const DeviceTable = () => {
           ...action,
           onClick: () => handleActionClick(action),
         }))}
-        data={loading ? [] : deviceData}
+        data={loading ? [] : devices}
         column={deviceColumns(handleEditDevice, handleDeleteDevice)}
       />
       <Modal

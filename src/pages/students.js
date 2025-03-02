@@ -3,7 +3,7 @@ import { ListDetail } from "../components/list-detail/ListDetail";
 import {
   studentAction,
   studentColumns,
-  studentFilter,
+  StudentFilter,
 } from "../datas/student.d";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -148,7 +148,7 @@ const Students = () => {
           ...action,
           onClick: () => handleActionClick(action),
         }))}
-        filters={studentFilter}
+        filters={StudentFilter}
         data={loading ? [] : studentData}
         column={studentColumns(navigate)}
       />

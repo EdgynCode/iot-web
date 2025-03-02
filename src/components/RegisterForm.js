@@ -1,42 +1,10 @@
 import React from "react";
-import { Form, Input, Select, DatePicker, Button, message } from "antd";
+import { Form, Input, Select, DatePicker, Button } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { v4 as uuidv4 } from "uuid";
-import { useDispatch } from "react-redux";
-import { register } from "../redux/actions/authAction";
 
 const { Option } = Select;
 
-const RegisterForm = ({ loading, setLoading, setOpen }) => {
-  const dispatch = useDispatch();
-
-  const onFinish = async (values) => {
-    setLoading(true);
-
-    const data = {
-      id: uuidv4(),
-      firstName: values.firstName,
-      lastName: values.lastName,
-      gender: values.gender,
-      doB: values.doB.format("YYYY-MM-DD"),
-      userName: values.userName,
-      email: values.email,
-      password: values.password,
-      phoneNumber: values.phoneNumber,
-      discriminator: values.discriminator,
-    };
-    dispatch(register(data))
-      .unwrap()
-      .then(() => {
-        message.success("Đăng ký thành công!");
-        setOpen(false);
-      })
-      .catch(() => {
-        message.error("Đăng ký thất bại. Vui lòng thử lại.");
-        setLoading(false);
-      });
-  };
-
+const RegisterForm = ({ loading, onFinish }) => {
   return (
     <Form
       name="register"
