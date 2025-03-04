@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import moment from "moment";
 
 export const scheduleAction = () => [
   {
@@ -38,7 +39,10 @@ export const getListData = (value, sessions) => {
     ) {
       listData.push({
         type: "default",
-        content: `Hotspot name: ${session.wifiHotspot}`,
+        content: `
+          Giờ bắt đầu: ${moment(session.startTime).format("HH:mm")}\n
+          Giờ kết thúc: ${moment(session.endTime).format("HH:mm")}
+        `,
       });
     }
   });

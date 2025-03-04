@@ -3,14 +3,15 @@ import { ListDetail } from "../components/list-detail/ListDetail";
 import {
   studentAction,
   studentColumns,
-  StudentFilter,
+  useStudentFilter,
 } from "../datas/student.d";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Modal, Upload, Button, Spin, Radio, Input, Form, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { createMultipleLearner } from "../redux/actions/learnerAction";
 import { listAllUsersByType } from "../redux/actions/userAction";
+import { getLearnersByClassId } from "../redux/actions/learnerAction";
 import { v4 as uuidv4 } from "uuid";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
@@ -24,17 +25,39 @@ const Students = () => {
   const [modalType, setModalType] = useState("");
   const [exportType, setExportType] = useState("pdf");
   const [fileName, setFileName] = useState("student_data");
+  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedClassLabel, setSelectedClassLabel] = useState("Lớp");
+  const _filters = useStudentFilter();
 
-  const studentsState = useSelector((state) => state.students || {});
-  const {
-    data: studentData = [],
-    loading = false,
-    error = null,
-  } = studentsState;
+  const learners = useSelector((state) => state.learners.data || {});
+  const loading = useSelector((state) => state.learners.loading || false);
+  const error = useSelector((state) => state.learners.error || null);
 
   useEffect(() => {
-    dispatch(listAllUsersByType("Learner"));
-  }, [dispatch]);
+    if (
+      _filters.length > 0 &&
+      _filters[0].options &&
+      _filters[0].options.length > 0
+    ) {
+      setSelectedClass(_filters[0].options[0].key);
+      setSelectedClassLabel(_filters[0].options[0].label);
+    }
+    if (selectedClass) {
+      const timeoutId = setTimeout(() => {
+        dispatch(getLearnersByClassId(selectedClass));
+      }, 3000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [_filters, selectedClass, dispatch]);
+
+  const handleClassChange = (value) => {
+    setSelectedClass(value);
+    const selectedOption = _filters[0].options.find(
+      (option) => option.key === value
+    );
+    setSelectedClassLabel(selectedOption ? selectedOption.label : "Unknown");
+  };
 
   const handleExport = async () => {
     const formattedFileName = `${fileName}`;
@@ -53,7 +76,7 @@ const Students = () => {
               "Phone Number",
             ],
           ],
-          body: studentData.map((student) => [
+          body: learners.map((student) => [
             student.firstName,
             student.lastName,
             student.gender,
@@ -66,7 +89,7 @@ const Students = () => {
         doc.save(`${formattedFileName}.pdf`);
         break;
       case "excel":
-        const worksheet = XLSX.utils.json_to_sheet(studentData);
+        const worksheet = XLSX.utils.json_to_sheet(learners);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
         XLSX.writeFile(workbook, `${formattedFileName}.xlsx`);
@@ -148,8 +171,19 @@ const Students = () => {
           ...action,
           onClick: () => handleActionClick(action),
         }))}
-        filters={StudentFilter}
-        data={loading ? [] : studentData}
+        filters={
+          Array.isArray(_filters)
+            ? _filters.map((filter) => ({
+                ...filter,
+                label: selectedClassLabel,
+                options: filter.options.map((option) => ({
+                  ...option,
+                  onClick: () => handleClassChange(option.key),
+                })),
+              }))
+            : []
+        }
+        data={loading ? [] : learners}
         column={studentColumns(navigate)}
       />
       {loading && <Spin size="large" />}

@@ -81,15 +81,15 @@ export const deviceColumns = (onUpdate, onRemove) => [
     render: (text) => <p>{text}</p>,
   },
   {
-    title: "Mô tả",
-    dataIndex: "moTa",
-    key: "moTa",
-    render: (text) => <p>{text}</p>,
-  },
-  {
     title: "Ghi chú",
     dataIndex: "ghiChu",
     key: "ghiChu",
+    render: (text) => <p>{text}</p>,
+  },
+  {
+    title: "Trạng thái",
+    dataIndex: "isTrangThai",
+    key: "isTrangThai",
     render: (text) => <p>{text}</p>,
   },
   {
