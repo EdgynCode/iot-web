@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Input, Modal, Form, DatePicker, message } from "antd";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -13,6 +13,7 @@ import { deviceAction, deviceColumns } from "../../datas/device.d";
 import { useDeviceData } from "../../hooks/useDeviceData";
 import TextArea from "antd/es/input/TextArea";
 import { ListDetail } from "../list-detail/ListDetail";
+import { jwtDecode } from "jwt-decode";
 
 const DeviceTable = () => {
   const { id } = useParams();
@@ -25,6 +26,17 @@ const DeviceTable = () => {
   const [currentDevice, setCurrentDevice] = useState(null);
   const [modalType, setModalType] = useState("add-edit");
   const [form] = Form.useForm();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user")) || null;
+  const decode = user ? jwtDecode(user?.jwtAccessToken) : null;
+  const role = decode ? decode.role : null;
+
+  useEffect(() => {
+    if (role === "SuperAdmin") {
+      setIsAdmin(true);
+    }
+  }, [role]);
 
   const handleEditDevice = (data) => {
     setIsEditing(true);
@@ -140,7 +152,7 @@ const DeviceTable = () => {
           onClick: () => handleActionClick(action),
         }))}
         data={loading ? [] : devices}
-        column={deviceColumns(handleEditDevice, handleDeleteDevice)}
+        column={deviceColumns(handleEditDevice, handleDeleteDevice, isAdmin)}
       />
       <Modal
         title={isEditing ? "Sửa thông tin thiết bị" : "Thêm thông tin thiết bị"}

@@ -1,47 +1,4 @@
-export const accountAction = () => [
-  {
-    title: "Thêm người học/giáo viên vào lớp",
-    onClick: (setOpen) => {
-      setOpen(true);
-    },
-  },
-  {
-    title: "Thêm tài khoản",
-    onClick: (setOpen) => {
-      setOpen(true);
-    },
-  },
-  {
-    title: "Thêm danh sách tài khoản",
-    onClick: (setOpen) => {
-      setOpen(true);
-      console.log("Importing...");
-    },
-  },
-  {
-    title: "Xóa tài khoản",
-    onClick: (setOpen) => {
-      setOpen(true);
-      console.log("Importing...");
-    },
-  },
-  {
-    title: "Xuất dữ liệu",
-    onClick: (setOpen) => {
-      setOpen(true);
-      console.log("Exporting...");
-    },
-  },
-];
-const accountTypeMenu = [
-  { key: "1", label: "Học sinh", role: "Learner" },
-  { key: "2", label: "Giáo viên", role: "Teacher" },
-  { key: "3", label: "Quản trị viên" },
-];
-export const accountFilter = [
-  { key: "AccountType", label: "Loại tài khoản", options: accountTypeMenu },
-];
-export const studentColumns = (navigate) => [
+export const userColumns = (navigate) => [
   {
     title: "Mã số",
     dataIndex: "id",
@@ -49,7 +6,6 @@ export const studentColumns = (navigate) => [
     render: (text, record) => (
       <a onClick={() => navigate(`/user-detail/${record.id}`)}>{text}</a>
     ),
-    //sorter: (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10),
   },
   {
     title: "Họ tên",
@@ -75,12 +31,6 @@ export const studentColumns = (navigate) => [
     ],
     filterMode: "tree",
     onFilter: (value, record) => record.gender.includes(value),
-  },
-  {
-    title: "Lớp",
-    dataIndex: "nguoiHocLopHocs",
-    key: "nguoiHocLopHocs",
-    render: (text) => <a>{text}</a>,
   },
   {
     title: "Email",
@@ -114,17 +64,11 @@ export const studentColumns = (navigate) => [
     key: "phoneNumber",
   },
 ];
-export const studentDetailAction = (navigate, id) => [
+export const userDetailAction = (navigate, id) => [
   {
     title: "Chỉnh sửa thông tin",
-    onclick: () => {
-      navigate(`/edit-student-detail/${id}`);
-    },
-  },
-  {
-    title: "Gửi tin nhắn",
-    onclick: () => {
-      console.log("Delete");
+    onClick: () => {
+      navigate(`/edit-user-detail/${id}`);
     },
   },
 ];

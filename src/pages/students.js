@@ -27,6 +27,7 @@ const Students = () => {
   const [fileName, setFileName] = useState("student_data");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedClassLabel, setSelectedClassLabel] = useState("Lớp");
+  const [initialFetch, setInitialFetch] = useState(false);
   const _filters = useStudentFilter();
 
   const learners = useSelector((state) => state.learners.data || {});
@@ -42,14 +43,15 @@ const Students = () => {
       setSelectedClass(_filters[0].options[0].key);
       setSelectedClassLabel(_filters[0].options[0].label);
     }
-    if (selectedClass) {
+    if (selectedClass && !initialFetch) {
       const timeoutId = setTimeout(() => {
         dispatch(getLearnersByClassId(selectedClass));
-      }, 3000);
+        setInitialFetch(true);
+      }, 1000);
 
       return () => clearTimeout(timeoutId);
     }
-  }, [_filters, selectedClass, dispatch]);
+  }, [_filters, selectedClass, dispatch, initialFetch]);
 
   const handleClassChange = (value) => {
     setSelectedClass(value);
