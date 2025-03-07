@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { now } from "moment";
 
 export const scheduleAction = () => [
   {
@@ -23,7 +24,6 @@ export const getMonthData = (value, sessions) => {
 
   return session ? dayjs(session.startTime).month() : null;
 };
-
 export const getListData = (value, sessions) => {
   let listData = [];
 
@@ -36,9 +36,11 @@ export const getListData = (value, sessions) => {
       sessionDate.month() === value.month() &&
       sessionDate.year() === value.year()
     ) {
+      const end = dayjs(session.endTime).isBefore(now);
       listData.push({
-        type: "default",
-        content: `Hotspot name: ${session.wifiHotspot}`,
+        type: end ? "warning" : "success",
+        // content: `Hotspot name: ${session.wifiHotspot}`,
+        content: <>Lớp: {session.lopHocId}</>,
       });
     }
   });
