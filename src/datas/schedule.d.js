@@ -39,8 +39,7 @@ export const getListData = (value, sessions) => {
       const end = dayjs(session.endTime).isBefore(now);
       listData.push({
         type: end ? "warning" : "success",
-        // content: `Hotspot name: ${session.wifiHotspot}`,
-        content: <>Lớp: {session.lopHocId}</>,
+        content: <>Giờ bắt đầu: {session.startTime}</>,
       });
     }
   });

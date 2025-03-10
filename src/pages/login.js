@@ -5,7 +5,6 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { clearMessage } from "../redux/slices/message";
 import { login } from "../redux/actions/authAction";
-import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   let navigate = useNavigate();
