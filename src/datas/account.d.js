@@ -22,14 +22,12 @@ export const accountAction = () => [
     title: "Xóa tài khoản",
     onClick: (setOpen) => {
       setOpen(true);
-      console.log("Importing...");
     },
   },
   {
     title: "Xuất dữ liệu",
     onClick: (setOpen) => {
       setOpen(true);
-      console.log("Exporting...");
     },
   },
 ];
@@ -49,7 +47,6 @@ export const studentColumns = (navigate) => [
     render: (text, record) => (
       <a onClick={() => navigate(`/user-detail/${record.id}`)}>{text}</a>
     ),
-    //sorter: (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10),
   },
   {
     title: "Họ tên",

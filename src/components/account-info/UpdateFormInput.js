@@ -71,8 +71,8 @@ const UpdateFormInput = ({ data, onFinish }) => {
       case "Giới tính":
         return (
           <Select>
-            <Select.Option value="Nam">Nam</Select.Option>
-            <Select.Option value="Nữ">Nữ</Select.Option>
+            <Select.Option value="Male">Nam</Select.Option>
+            <Select.Option value="Female">Nữ</Select.Option>
           </Select>
         );
       case "Ngày sinh":
