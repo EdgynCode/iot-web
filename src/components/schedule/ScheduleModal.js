@@ -3,7 +3,10 @@ import React, { useEffect } from "react";
 import { useClassroomData } from "../../hooks/useClassroomData";
 import { useLabData } from "../../hooks/useLabData";
 import { getCurrentUser } from "../../redux/actions/authAction";
-import { createClassSession } from "../../redux/actions/lessonAction";
+import {
+  createClassSession,
+  getAllClassSessions,
+} from "../../redux/actions/lessonAction";
 import { createGroup } from "../../redux/actions/groupAction";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
@@ -44,12 +47,12 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
         form.getFieldValue("date").format("YYYY-MM-DD") +
           "T" +
           form.getFieldValue("startTime").format("HH:mm")
-      ).toISOString(),
+      ).format("YYYY-MM-DDTHH:mm:ss"),
       endTime: moment(
         form.getFieldValue("date").format("YYYY-MM-DD") +
           "T" +
           form.getFieldValue("endTime").format("HH:mm")
-      ).toISOString(),
+      ).format("YYYY-MM-DDTHH:mm:ss"),
       wifiHotspot: "IOT-Hotspot",
       brokerAddress: "iot.eclipse.org",
       port: 1883,
@@ -61,6 +64,7 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
       .then(() => {
         message.success("Class session created successfully!");
         setOpen(false);
+        dispatch(getAllClassSessions());
       })
       .catch(() => {
         message.error("Failed to create class session. Please try again.");

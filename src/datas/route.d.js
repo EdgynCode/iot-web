@@ -4,6 +4,8 @@ import {
   Lessons,
   Students,
   StudentDetail,
+  UserDetail,
+  EditUserDetail,
   EditStudentDetail,
   Accounts,
   AccountDetail,
@@ -72,6 +74,10 @@ const editStudentDetail = {
   key: "edit-student-detail/:id",
   element: <EditStudentDetail />,
 };
+const editUserDetail = {
+  key: "edit-user-detail/:id",
+  element: <EditUserDetail />,
+};
 const students = {
   key: "students",
   element: <Students />,
@@ -93,6 +99,10 @@ const experimentDetail = {
   element: <ExperimentDetail />,
   icon: <PhysicsMenuIcon />,
   title: "Chi tiết bài thí nghiệm",
+};
+const userDetail = {
+  key: "user-detail/:id",
+  element: <UserDetail />,
 };
 const devices = {
   key: "devices/:id",
@@ -134,16 +144,14 @@ export const teacherRoute = [
 export const superAdminRoute = [
   home,
   lessons,
-  students,
-  studentDetail,
-  editStudentDetail,
+  userDetail,
+  editUserDetail,
   accounts,
   accountDetail,
   editAccountDetail,
   deviceTypes,
   devices,
   logout,
-  lessonDetail,
   classrooms,
   experimentDetail,
 ];

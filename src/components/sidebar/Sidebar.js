@@ -5,11 +5,8 @@ import { Layout, Menu, Modal, message } from "antd";
 import "./index.css";
 import { logout } from "../../redux/actions/authAction";
 import {
-  learnerRoute,
   learnerSidebar,
-  superAdminRoute,
   superAdminSidebar,
-  teacherRoute,
   teacherSidebar,
 } from "../../datas/route.d";
 import { jwtDecode } from "jwt-decode";
@@ -85,7 +82,11 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
         <div className="div">
           <div className="account-container">
             <a href="/account-detail">
-              <div className="account-avatar"></div>
+              <img
+                className="account-avatar"
+                alt="avatar"
+                src="/images/default.png"
+              ></img>
             </a>
             <div className="account-info">
               <h6 className="account-name">{decode.unique_name}</h6>

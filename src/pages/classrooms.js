@@ -21,6 +21,7 @@ import { getLearnersByClassId } from "../redux/actions/learnerAction";
 const Classrooms = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
 
   const [open, setOpen] = useState(false);
   const [modalType, setModalType] = useState("");
@@ -73,6 +74,8 @@ const Classrooms = () => {
         message.success("Tạo lớp học thành công!");
         setOpen(false);
         dispatch(getAllClassrooms());
+        form.resetFields();
+        setLoading(false);
       })
       .catch(() => {
         message.error("Tạo lớp học thất bại.");
@@ -168,6 +171,7 @@ const Classrooms = () => {
       >
         <Form
           name="addClass"
+          form={form}
           onFinish={handleAddClassroomSubmit}
           disabled={loading}
           className="space-y-4"

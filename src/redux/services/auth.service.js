@@ -120,6 +120,22 @@ const resetPassword = async (password, confirmPassword, token, email) => {
     throw error.response?.data || error.message;
   }
 };
+
+const updateRole = async (userId, role) => {
+  try {
+    const response = await axiosInstance.put(
+      `Account/EditRoles?userId=${userId}`,
+      { role }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error updating role:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
 const AuthService = {
   register,
   login,
@@ -128,6 +144,7 @@ const AuthService = {
   updateUserInfo,
   sendLinkResetPassword,
   resetPassword,
+  updateRole,
 };
 
 export default AuthService;
