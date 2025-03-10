@@ -7,30 +7,20 @@ import {
 } from "../datas/account.d";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Modal,
-  Upload,
-  Button,
-  Spin,
-  Radio,
-  Input,
-  Form,
-  Select,
-  message,
-} from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { Spin, Form, message } from "antd";
 import {
   createMultipleLearner,
   assignLearnerToClass,
 } from "../redux/actions/learnerAction";
 import { assignTeachersToClass } from "../redux/actions/teacherAction";
 import { listAllUsersByType, deleteUser } from "../redux/actions/userAction";
+import { register } from "../redux/actions/authAction";
 import { useClassroomData } from "../hooks/useClassroomData";
 import { v4 as uuidv4 } from "uuid";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
-import RegisterForm from "../components/RegisterForm";
+import AccountsModal from "../components/AccountsModal";
 
 const Accounts = () => {
   const navigate = useNavigate();
@@ -143,18 +133,53 @@ const Accounts = () => {
           };
           studentList.push(student);
         });
-        console.log(studentList);
-        dispatch(createMultipleLearner(studentList));
-        message.success("Students imported successfully!");
-        dispatch(listAllUsersByType("Learner"));
-        setFile(null);
-        setOpen(false);
+        dispatch(createMultipleLearner(studentList))
+          .unwrap()
+          .then(() => {
+            message.success("Thêm danh sách tài khoản thành công!");
+            setFile(null);
+            setOpen(false);
+            dispatch(listAllUsersByType("Learner"));
+          })
+          .catch(() => {
+            message.error("Thêm danh sách tài khoản thất bại.");
+            setLoading(false);
+          });
       } catch (error) {
         console.error("Error processing file:", error);
         message.error("Failed to process the file. Please check the format.");
       }
     };
     reader.readAsArrayBuffer(file);
+  };
+
+  const handleCreateAccount = async (values) => {
+    setLoading(true);
+
+    const data = {
+      id: uuidv4(),
+      firstName: values.firstName,
+      lastName: values.lastName,
+      gender: values.gender,
+      doB: values.doB.format("YYYY-MM-DD"),
+      userName: values.userName,
+      email: values.email,
+      password: values.password,
+      phoneNumber: values.phoneNumber,
+      discriminator: values.discriminator,
+    };
+    dispatch(register(data))
+      .unwrap()
+      .then(() => {
+        message.success("Đăng ký thành công!");
+        setOpen(false);
+        dispatch(listAllUsersByType(selectedAccountType));
+        setLoading(false);
+      })
+      .catch(() => {
+        message.error("Đăng ký thất bại. Vui lòng thử lại.");
+        setLoading(false);
+      });
   };
 
   const handleDeleteAccount = async () => {
@@ -265,110 +290,26 @@ const Accounts = () => {
       />
       {loading && <Spin size="large" />}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
-      <Modal
-        title="Thêm người học vào lớp"
-        open={open && modalType === "assignToClass"}
-        onOk={handleAssignAccounts}
-        onCancel={() => setOpen(false)}
-        okText="Thêm vào lớp"
-        cancelText="Hủy"
-      >
-        <Form
-          form={form}
-          name="assignToClass"
-          onFinish={handleAssignAccounts}
-          className="space-y-4"
-        >
-          <div className="w-full">
-            <Form.Item
-              name="class"
-              label="Lớp"
-              rules={[{ required: true, message: "Vui lòng chọn lớp!" }]}
-            >
-              <Select
-                allowClear
-                className="w-full"
-                loading={isClassroomLoading}
-                options={classrooms.map((classroom) => ({
-                  value: classroom.id,
-                  label: classroom.tenLop,
-                }))}
-              />
-            </Form.Item>
-          </div>
-        </Form>
-      </Modal>
-      <Modal
-        title="Thêm danh sách tài khoản"
-        open={open && modalType === "importAccount"}
-        onOk={handleModalOk}
-        onCancel={handleModalCancel}
-        okText="Upload"
-        cancelText="Cancel"
-      >
-        <Upload
-          accept=".xlsx,.xls"
-          beforeUpload={(file) => {
-            console.log("Selected file:", file);
-            setFile(file);
-            return false;
-          }}
-        >
-          <Button icon={<UploadOutlined />}>Select File</Button>
-        </Upload>
-      </Modal>
-
-      <Modal
-        title="Tạo tài khoản"
-        open={open && modalType === "createAccount"}
-        onCancel={handleModalCancel}
-        footer={[
-          <Button key="cancel" onClick={() => setOpen(false)}>
-            Hủy
-          </Button>,
-        ]}
-      >
-        <RegisterForm
-          loading={loading}
-          setLoading={setLoading}
-          setOpen={setOpen}
-        />
-      </Modal>
-
-      <Modal
-        title="Xuất dữ liệu"
-        open={open && modalType === "export"}
-        onOk={handleExport}
-        onCancel={() => setOpen(false)}
-        okText="Xuất dữ liệu"
-        cancelText="Hủy"
-      >
-        <Radio.Group
-          onChange={(e) => setExportType(e.target.value)}
-          value={exportType}
-        >
-          <Radio value="pdf">File PDF</Radio>
-          <Radio value="excel">File Excel</Radio>
-        </Radio.Group>
-        <Form.Item label="Nhập tên file">
-          <Input
-            placeholder="Nhập tên file"
-            value={fileName}
-            onChange={(e) => setFileName(e.target.value)}
-          />
-        </Form.Item>
-      </Modal>
-
-      <Modal
-        title="Xóa tài khoản"
-        open={open && modalType === "deleteAccount"}
-        okText="Xóa"
-        cancelText="Hủy"
-        onOk={handleDeleteAccount}
-        onCancel={() => setOpen(false)}
-      >
-        <p>Bạn có chắc chắn muốn xóa những tài khoản này không?</p>
-      </Modal>
+      <AccountsModal
+        open={open}
+        modalType={modalType}
+        handleModalOk={handleModalOk}
+        handleModalCancel={handleModalCancel}
+        handleCreateAccount={handleCreateAccount}
+        handleExport={handleExport}
+        handleDeleteAccount={handleDeleteAccount}
+        handleAssignAccounts={handleAssignAccounts}
+        file={file}
+        setFile={setFile}
+        exportType={exportType}
+        setExportType={setExportType}
+        fileName={fileName}
+        setFileName={setFileName}
+        form={form}
+        classrooms={classrooms}
+        isClassroomLoading={isClassroomLoading}
+        loading={loading}
+      />
     </>
   );
 };

@@ -96,6 +96,18 @@ aside {
 .ant-picker-cell-selected .ant-picker-calendar-date {
   background-color: #fbf5dd !important;
 }
+.breadcrumbtab-title .ant-breadcrumb li:nth-child(3) {
+  color: rgb(18, 72, 116);
+}
+.breadcrumbtab-title .ant-breadcrumb li {
+  font-weight: 500;
+  font-size: 1.25rem;
+}
 .ant-picker-date-panel thead th {
   font-weight: 500 !important;
+}
+@media screen and (min-width: 1280px) {
+  .ant-drawer-content {
+    margin-top: 64px;
+  }
 }

@@ -146,3 +146,21 @@ export const resetPassword = createAsyncThunk(
     }
   }
 );
+
+export const updateRole = createAsyncThunk(
+  "Account/EditRoles",
+  async ({ userId, role }, thunkAPI) => {
+    try {
+      const data = await AuthService.updateRole(userId, role);
+      thunkAPI.dispatch(setMessage("Role updated successfully!"));
+      return data;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update role.";
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);

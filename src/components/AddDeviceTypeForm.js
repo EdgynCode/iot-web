@@ -1,7 +1,10 @@
 import React from "react";
 import { Form, Input, Button, message } from "antd";
 import { useDispatch } from "react-redux";
-import { addNewDeviceType } from "../redux/actions/deviceAction";
+import {
+  addNewDeviceType,
+  getAllDeviceTypes,
+} from "../redux/actions/deviceAction";
 
 const AddDeviceTypeForm = ({ setOpen, setLoading }) => {
   const dispatch = useDispatch();
@@ -22,6 +25,8 @@ const AddDeviceTypeForm = ({ setOpen, setLoading }) => {
       .then(() => {
         message.success("Thêm loại thiết bị thành công!");
         setOpen(false);
+        dispatch(getAllDeviceTypes());
+        setLoading(false);
       })
       .catch(() => {
         message.error("Thêm loại thiết bị thất bại. Vui lòng thử lại.");

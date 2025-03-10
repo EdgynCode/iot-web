@@ -5,7 +5,6 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { clearMessage } from "../redux/slices/message";
 import { login } from "../redux/actions/authAction";
-import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   let navigate = useNavigate();
@@ -42,7 +41,7 @@ const Login = () => {
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-gray-100 to-purple-200">
       <div className="bg-white p-10 rounded-2xl shadow-lg w-96">
         <div className="flex justify-center mb-6">
-          <img src="logo.png" alt="Logo" className="w-16" />
+          <img src="/images/logo.png" alt="Logo" className="w-52" />
         </div>
         <h1 className="text-2xl font-semibold text-center mb-2">Chào mừng!</h1>
         <p className="text-center text-gray-500 mb-6">

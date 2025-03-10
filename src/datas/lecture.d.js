@@ -1,3 +1,5 @@
+import { LessonTab } from "../components/lesson-tab/LessonTab";
+
 export const lectureAction = () => [
   {
     title: "Thêm bài giảng",
@@ -155,7 +157,7 @@ export const lectureFilter = [
   { key: "Grade", label: "Khối", options: gradeMenu },
   { key: "Chapter", label: "Chương", options: chapterMenu },
 ];
-export const columns = (navigate) => [
+export const columns = (onShow, setSelectedLesson) => [
   {
     title: "Chương",
     dataIndex: "topic",
@@ -168,7 +170,8 @@ export const columns = (navigate) => [
     render: (text, record) => (
       <a
         onClick={() => {
-          navigate(`/lesson-detail/${record.key}`, { state: { record } });
+          onShow();
+          setSelectedLesson(record);
         }}
       >
         {text}
@@ -182,7 +185,8 @@ export const columns = (navigate) => [
     render: (text, record) => (
       <a
         onClick={() => {
-          navigate(`/lesson-detail/${record.key}`, { state: { record } });
+          onShow();
+          setSelectedLesson(record);
         }}
       >
         {text}

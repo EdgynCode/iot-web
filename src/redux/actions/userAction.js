@@ -35,3 +35,20 @@ export const deleteUser = createAsyncThunk(
     }
   }
 );
+
+export const getUserDetails = createAsyncThunk(
+  "User/GetUserDetails",
+  async (id, thunkAPI) => {
+    try {
+      const response = await UserService.getUserDetails(id);
+      return response;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to get user details";
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);

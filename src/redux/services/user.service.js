@@ -28,9 +28,25 @@ const deleteUser = async (id) => {
   }
 };
 
+const getUserDetails = async (id) => {
+  try {
+    const response = await axiosInstance.get(
+      `User/GetUserDetails?userid=${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching user detail:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const UserService = {
   listAllUsersByType,
   deleteUser,
+  getUserDetails,
 };
 
 export default UserService;

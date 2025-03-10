@@ -4,6 +4,8 @@ import {
   Lessons,
   Students,
   StudentDetail,
+  UserDetail,
+  EditUserDetail,
   EditStudentDetail,
   Accounts,
   AccountDetail,
@@ -26,6 +28,7 @@ import {
   ScheduleMenuIcon,
   StudentMenuIcon,
 } from "./icon.d";
+import ExperimentDetail from "../pages/experiment-detail";
 
 const home = {
   key: "home",
@@ -71,6 +74,10 @@ const editStudentDetail = {
   key: "edit-student-detail/:id",
   element: <EditStudentDetail />,
 };
+const editUserDetail = {
+  key: "edit-user-detail/:id",
+  element: <EditUserDetail />,
+};
 const students = {
   key: "students",
   element: <Students />,
@@ -86,6 +93,16 @@ const labs = {
   element: <Labs />,
   icon: <PhysicsMenuIcon />,
   title: "Bài thực hành",
+};
+const experimentDetail = {
+  key: "experiment-detail",
+  element: <ExperimentDetail />,
+  icon: <PhysicsMenuIcon />,
+  title: "Chi tiết bài thí nghiệm",
+};
+const userDetail = {
+  key: "user-detail/:id",
+  element: <UserDetail />,
 };
 const devices = {
   key: "devices/:id",
@@ -122,21 +139,21 @@ export const teacherRoute = [
   logout,
   lessonDetail,
   labDetail,
+  experimentDetail,
 ];
 export const superAdminRoute = [
   home,
   lessons,
-  students,
-  studentDetail,
-  editStudentDetail,
+  userDetail,
+  editUserDetail,
   accounts,
   accountDetail,
   editAccountDetail,
   deviceTypes,
   devices,
   logout,
-  lessonDetail,
   classrooms,
+  experimentDetail,
 ];
 export const learnerSidebar = [home, accountDetail, logout];
 export const teacherSidebar = [

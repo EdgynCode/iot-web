@@ -1,3 +1,44 @@
+import { useEffect, useState } from "react";
+import { getClassesByTeacherId } from "../redux/actions/classroomAction";
+import { useDispatch } from "react-redux";
+
+const useClassFilter = () => {
+  const dispatch = useDispatch();
+  const [classMenu, setClassMenu] = useState([]);
+
+  const userItem = localStorage.getItem("user");
+  let userId = null;
+  if (userItem) {
+    const user = JSON.parse(userItem);
+    userId = user.userId;
+  } else {
+    console.log("User item not found in local storage");
+  }
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(getClassesByTeacherId(userId))
+        .unwrap()
+        .then((response) => {
+          if (response && Array.isArray(response.classes)) {
+            const mappedClasses = response.classes.map((classItem) => ({
+              key: classItem.id,
+              label: classItem.tenLop,
+            }));
+            setClassMenu(mappedClasses);
+          } else {
+            console.error("Expected an array but received:", response.classes);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching classes:", error);
+        });
+    }
+  }, [dispatch, userId]);
+
+  return { classMenu };
+};
+
 export const studentAction = () => [
   {
     title: "Thêm danh sách học sinh",
@@ -12,22 +53,9 @@ export const studentAction = () => [
     },
   },
 ];
-export const gradeMenu = [
-  { key: "1", label: "Khối 10" },
-  { key: "2", label: "Khối 11" },
-  { key: "3", label: "Khối 12" },
-  { key: "4", label: "Tự do" },
-];
-export const classMenu = [
-  { key: "1", label: "Lớp 10C1" },
-  { key: "2", label: "Lớp 10C2" },
-  { key: "3", label: "Lớp 10C3" },
-  { key: "4", label: "Lớp 10C4" },
-  { key: "5", label: "Lớp 10C5" },
-];
-export const studentFilter = [
-  { key: "Grade", label: "Khối", options: gradeMenu },
-  { key: "Class", label: "Lớp", options: classMenu },
+
+export const useStudentFilter = () => [
+  { key: "Class", label: "Lớp", options: useClassFilter().classMenu },
 ];
 export const studentColumns = (navigate) => [
   {
@@ -41,10 +69,12 @@ export const studentColumns = (navigate) => [
   },
   {
     title: "Họ tên",
-    dataIndex: "fullName",
+    dataIndex: ["firstName", "lastName"],
     key: "fullName",
-    render: (text, record) => (
-      <a onClick={() => navigate(`/student-detail/${record.id}`)}>{text}</a>
+    render: (record) => (
+      <a onClick={() => navigate(`/student-detail/${record.id}`)}>
+        {record.firstName} {record.lastName}
+      </a>
     ),
   },
   {

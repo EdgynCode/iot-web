@@ -3,7 +3,7 @@ export const basicInfo = (user) => [
   { key: "Mã số", value: user.id },
   { key: "Họ tên", value: user.fullName },
   { key: "Ngày sinh", value: formatDate(user.doB) },
-  { key: "Giới tính", value: user.gender === "Male" ? "Nam" : "Nữ" },
+  { key: "Giới tính", value: user.gender },
 ];
 export const accountInfo = (user) => [
   { key: "Email", value: user.email },
