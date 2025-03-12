@@ -11,6 +11,7 @@ import semesterReducer from "./slices/semesterSlice";
 import lessonReducer from "./slices/lessonSlice";
 import learnerReducer from "./slices/learnerSlice";
 import teacherReducer from "./slices/teacherSlice";
+import groupReducer from "./slices/groupSlice";
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ export const store = configureStore({
     classrooms: classroomReducer,
     semesters: semesterReducer,
     teachers: teacherReducer,
+    groups: groupReducer,
   },
   devTools: true,
 });

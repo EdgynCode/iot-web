@@ -1,5 +1,8 @@
 import dayjs from "dayjs";
-import { now } from "moment";
+import moment, { now } from "moment";
+import "moment/locale/vi";
+
+moment.locale("vi");
 
 export const scheduleAction = () => [
   {
@@ -39,7 +42,13 @@ export const getListData = (value, sessions) => {
       const end = dayjs(session.endTime).isBefore(now);
       listData.push({
         type: end ? "warning" : "success",
-        content: <>Giờ bắt đầu: {session.startTime}</>,
+        content: (
+          <>
+            Giờ bắt đầu: {moment(session.startTime).format("HH:mm")}
+            <br />
+            Giờ kết thúc: {moment(session.endTime).format("HH:mm")}
+          </>
+        ),
       });
     }
   });
