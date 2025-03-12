@@ -22,7 +22,7 @@ services:
     image: counterlogic/iot-back-end-stable
     ports:
       - "8080:8080"   # HTTP
-      - "8081:8081"  # HTTPS
+      - "8081:8081"  # HTTPSgit 
     depends_on:
       - sqlserver
     environment:
@@ -33,9 +33,9 @@ services:
   frontend:
     # container_name: frontend
     image: phongngolam/iot-web-frontend
-    build: 
-      context: ./
-      dockerfile: frontend.dockerfile
+    # build: 
+    #  context: ./
+    #  dockerfile: frontend.dockerfile
     ports:
       - "3000:3000"
     networks:
