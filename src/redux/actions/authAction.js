@@ -149,9 +149,9 @@ export const resetPassword = createAsyncThunk(
 
 export const updateRole = createAsyncThunk(
   "Account/EditRoles",
-  async ({ userId, role }, thunkAPI) => {
+  async ({ username, role }, thunkAPI) => {
     try {
-      const data = await AuthService.updateRole(userId, role);
+      const data = await AuthService.updateRole(username, role);
       thunkAPI.dispatch(setMessage("Role updated successfully!"));
       return data;
     } catch (error) {

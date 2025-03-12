@@ -121,10 +121,10 @@ const resetPassword = async (password, confirmPassword, token, email) => {
   }
 };
 
-const updateRole = async (userId, role) => {
+const updateRole = async (username, role) => {
   try {
     const response = await axiosInstance.put(
-      `Account/EditRoles?userId=${userId}`,
+      `Account/EditRoles?username=${username}`,
       { role }
     );
     return response.data;

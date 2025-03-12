@@ -338,3 +338,25 @@ export const HambugerMenuIcon = () => (
     </g>
   </svg>
 );
+export const AccountsMenuIcon = () => (
+  <svg
+    version="1.1"
+    fill="currentColor"
+    id="Uploaded to svgrepo.com"
+    xmlns="http://www.w3.org/2000/svg"
+    width="16px"
+    height="16px"
+    className={menustyle}
+    viewBox="0 0 64 64"
+  >
+    <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+    <g
+      id="SVGRepo_tracerCarrier"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    ></g>
+    <g id="SVGRepo_iconCarrier">
+      <path d="M32,0C14.355,0,0,14.355,0,32s14.355,32,32,32s32-14.355,32-32S49.645,0,32,0z M32,6c7.732,0,14,6.268,14,14 s-6.268,14-14,14s-14-6.268-14-14S24.268,6,32,6z M32,58c-8.837,0-16.627-4.02-21.688-10.313c0.073-6.627,13.313-10.271,21.688-10.271 s21.615,3.644,21.688,10.271C48.627,53.98,40.837,58,32,58z"></path>
+    </g>
+  </svg>
+);
