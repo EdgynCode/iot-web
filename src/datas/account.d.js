@@ -1,3 +1,12 @@
+import { Select } from "antd";
+import { updateRole } from "../redux/actions/authAction";
+import { useDispatch } from "react-redux";
+const roles = [
+  { key: "Learner", label: "Học sinh" },
+  { key: "Teacher", label: "Giáo viên" },
+  { key: "Admin", label: "Quản trị viên" },
+];
+
 export const accountAction = () => [
   {
     title: "Thêm người học/giáo viên vào lớp",
@@ -15,7 +24,6 @@ export const accountAction = () => [
     title: "Thêm danh sách tài khoản",
     onClick: (setOpen) => {
       setOpen(true);
-      console.log("Importing...");
     },
   },
   {
@@ -34,83 +42,90 @@ export const accountAction = () => [
 const accountTypeMenu = [
   { key: "1", label: "Học sinh", role: "Learner" },
   { key: "2", label: "Giáo viên", role: "Teacher" },
-  { key: "3", label: "Quản trị viên" },
+  { key: "3", label: "Quản trị viên", role: "Admin" },
 ];
 export const accountFilter = [
   { key: "AccountType", label: "Loại tài khoản", options: accountTypeMenu },
 ];
-export const studentColumns = (navigate) => [
-  {
-    title: "Mã số",
-    dataIndex: "id",
-    key: "id",
-    render: (text, record) => (
-      <a onClick={() => navigate(`/user-detail/${record.id}`)}>{text}</a>
-    ),
-  },
-  {
-    title: "Họ tên",
-    dataIndex: "fullName",
-    key: "fullName",
-    render: (text, record) => (
-      <a onClick={() => navigate(`/user-detail/${record.id}`)}>{text}</a>
-    ),
-  },
-  {
-    title: "Giới tính",
-    dataIndex: "gender",
-    key: "gender",
-    filters: [
-      {
-        text: "Nam",
-        value: "Nam",
+export const AccountsColumns = (navigate, selectedAccountType) => {
+  const dispatch = useDispatch();
+  const columns = [
+    {
+      title: "Mã số",
+      dataIndex: "id",
+      key: "id",
+      render: (text, record) => (
+        <a onClick={() => navigate(`/user-detail/${record.id}`)}>{text}</a>
+      ),
+    },
+    {
+      title: "Họ tên",
+      dataIndex: "fullName",
+      key: "fullName",
+      render: (text, record) => (
+        <a onClick={() => navigate(`/user-detail/${record.id}`)}>{text}</a>
+      ),
+    },
+    {
+      title: "Giới tính",
+      dataIndex: "gender",
+      key: "gender",
+      filters: [
+        {
+          text: "Nam",
+          value: "Nam",
+        },
+        {
+          text: "Nữ",
+          value: "Nữ",
+        },
+      ],
+      filterMode: "tree",
+      onFilter: (value, record) => record.gender.includes(value),
+    },
+    {
+      title: "Tên đăng nhập",
+      dataIndex: "userName",
+      key: "userName",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+    },
+    {
+      title: "Phân quyền",
+      dataIndex: "moTa",
+      key: "moTa",
+      render: (record) => {
+        console.log(record);
+        return (
+          <Select
+            defaultValue={selectedAccountType}
+            className="w-[130px]"
+            onChange={(value) => {
+              const userName = record.userName;
+              dispatch(updateRole({ userName, role: [value] })).unwrap();
+            }}
+          >
+            {roles.map((role) => (
+              <Select.Option key={role.key} value={role.key}>
+                {role.label}
+              </Select.Option>
+            ))}
+          </Select>
+        );
       },
-      {
-        text: "Nữ",
-        value: "Nữ",
-      },
-    ],
-    filterMode: "tree",
-    onFilter: (value, record) => record.gender.includes(value),
-  },
-  {
-    title: "Lớp",
-    dataIndex: "nguoiHocLopHocs",
-    key: "nguoiHocLopHocs",
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-  },
-  {
-    title: "Chức vụ",
-    dataIndex: "role",
-    key: "role",
-    filters: [
-      {
-        text: "Lớp trưởng",
-        value: "Lớp trưởng",
-      },
-      {
-        text: "Lớp phó",
-        value: "Lớp phó",
-      },
-      {
-        text: "Học sinh",
-        value: "",
-      },
-    ],
-    filterMode: "tree",
-    onFilter: (value, record) => record.role.includes(value),
-  },
-  {
-    title: "Số điện thoại",
-    dataIndex: "phoneNumber",
-    key: "phoneNumber",
-  },
-];
+    },
+  ];
+
+  return columns;
+};
 export const studentDetailAction = (navigate, id) => [
   {
     title: "Chỉnh sửa thông tin",

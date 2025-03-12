@@ -16,19 +16,19 @@ import {
   LessonDetail,
   LabDetail,
   Classrooms,
+  Schedule,
+  ExperimentDetail,
 } from "../pages";
-import Schedule from "../pages/schedule";
 import {
   BookmarkMenuIcon,
   DeviceMenuIcon,
-  ExamMenuIcon,
+  AccountsMenuIcon,
   HomeMenuIcon,
   PersonalMenuIcon,
   PhysicsMenuIcon,
   ScheduleMenuIcon,
   StudentMenuIcon,
 } from "./icon.d";
-import ExperimentDetail from "../pages/experiment-detail";
 
 const home = {
   key: "home",
@@ -39,7 +39,7 @@ const home = {
 const accounts = {
   key: "accounts",
   element: <Accounts />,
-  icon: <PersonalMenuIcon />,
+  icon: <AccountsMenuIcon />,
   title: "Danh sách tài khoản",
 };
 const accountDetail = {

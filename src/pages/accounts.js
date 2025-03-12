@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import {
   accountAction,
-  studentColumns,
+  AccountsColumns,
   accountFilter,
 } from "../datas/account.d";
 import { useNavigate } from "react-router-dom";
@@ -47,12 +47,20 @@ const Accounts = () => {
 
   const handleAccountTypeChange = (value) => {
     const accountType =
-      value === "1" ? "Learner" : value === "2" ? "Teacher" : "";
+      value === "1"
+        ? "Learner"
+        : value === "2"
+        ? "Teacher"
+        : value === "3"
+        ? "Admin"
+        : "";
     const accountLabel =
       accountType === "Learner"
         ? "Học sinh"
         : accountType === "Teacher"
         ? "Giáo viên"
+        : accountType === "Admin"
+        ? "Quản trị viên"
         : "Loại tài khoản";
     setSelectedAccountType(accountType);
     setSelectedAccountLabel(accountLabel);
@@ -285,7 +293,7 @@ const Accounts = () => {
           })),
         }))}
         data={loading ? [] : studentData}
-        column={studentColumns(navigate)}
+        column={AccountsColumns(navigate, selectedAccountType)}
         onSelectionChange={handleSelectionChange}
       />
       {loading && <Spin size="large" />}
@@ -309,6 +317,7 @@ const Accounts = () => {
         classrooms={classrooms}
         isClassroomLoading={isClassroomLoading}
         loading={loading}
+        setLoading={setLoading}
       />
     </>
   );
