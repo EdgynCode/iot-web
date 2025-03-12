@@ -51,6 +51,7 @@ const RegisterForm = ({ loading, setLoading, setOpen }) => {
         <Select placeholder="Loại người dùng" className="rounded-lg">
           <Option value="Teacher">Người dạy</Option>
           <Option value="Learner">Người học</Option>
+          <Option value="Admin">Quản trị viên</Option>
         </Select>
       </Form.Item>
 
