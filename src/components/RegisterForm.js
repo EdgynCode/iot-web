@@ -29,10 +29,12 @@ const RegisterForm = ({ loading, setLoading, setOpen }) => {
       .unwrap()
       .then(() => {
         message.success("Đăng ký thành công!");
-        setOpen(false);
       })
       .catch(() => {
         message.error("Đăng ký thất bại. Vui lòng thử lại.");
+      })
+      .finally(() => {
+        setOpen(false);
         setLoading(false);
       });
   };

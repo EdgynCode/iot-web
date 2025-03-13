@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Input, Modal, Form, DatePicker, message } from "antd";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import {
   addNewDevice,
@@ -14,6 +14,10 @@ import { useDeviceData } from "../../hooks/useDeviceData";
 import TextArea from "antd/es/input/TextArea";
 import { ListDetail } from "../list-detail/ListDetail";
 import { jwtDecode } from "jwt-decode";
+import {
+  webSocketConnect,
+  webSocketDisconnect,
+} from "../../redux/actions/webSocketActions";
 
 const DeviceTable = () => {
   const { id } = useParams();
@@ -37,6 +41,17 @@ const DeviceTable = () => {
       setIsAdmin(true);
     }
   }, [role]);
+
+  useEffect(() => {
+    // Connect to WebSocket when the component mounts
+    const url = `ws://localhost:5131/ws/ConnectDevice?deviceId=${id}`;
+    dispatch(webSocketConnect(url));
+
+    // Disconnect from WebSocket when the component unmounts
+    return () => {
+      dispatch(webSocketDisconnect());
+    };
+  }, [dispatch, id]);
 
   const handleEditDevice = (data) => {
     setIsEditing(true);
@@ -132,7 +147,10 @@ const DeviceTable = () => {
     }
   };
 
-  const handleConnect = () => {};
+  const handleConnect = (deviceId) => {
+    const url = `ws://localhost:5131/ws/ConnectDevice?deviceId=${deviceId}`;
+    dispatch(webSocketConnect(url));
+  };
 
   const handleActionClick = (action) => {
     switch (action.title) {
@@ -145,6 +163,7 @@ const DeviceTable = () => {
     }
     setOpen(true);
   };
+
   return (
     <>
       <ListDetail
@@ -201,34 +220,21 @@ const DeviceTable = () => {
             <TextArea placeholder="Ghi chú" />
           </Form.Item>
           <Form.Item
-            label="Hạn bảo hành (dd-mm-yyyy)"
             name="thoiGianBaoHanh"
-            rules={[
-              {
-                required: true,
-                message: "Thiết bị phải có hạn bảo hành!",
-              },
-            ]}
+            label="Hạn bảo hành"
+            rules={[{ required: true, message: "Vui lòng nhập hạn bảo hành!" }]}
           >
-            <DatePicker
-              placeholder="DD-MM-YYYY"
-              format={"DD-MM-YYYY"}
-              disabled={isEditing}
-            />
+            <DatePicker placeholder="Hạn bảo hành" />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              {isEditing ? "Sửa thông tin thiết bị" : "Thêm thiết bị"}
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={closeModal}>
-              Hủy
+            <Button type="primary" htmlType="submit" loading={loading}>
+              {isEditing ? "Cập nhật" : "Thêm"}
             </Button>
           </Form.Item>
         </Form>
       </Modal>
-
       <Modal
-        title={"Xóa thiết bị"}
+        title="Xóa thiết bị"
         open={open && modalType === "remove"}
         onOk={handleDeleteConfirm}
         onCancel={closeModal}
