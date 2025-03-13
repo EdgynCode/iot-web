@@ -132,6 +132,8 @@ const DeviceTable = () => {
     }
   };
 
+  const handleConnect = () => {};
+
   const handleActionClick = (action) => {
     switch (action.title) {
       case "Thêm thiết bị":
@@ -152,7 +154,12 @@ const DeviceTable = () => {
           onClick: () => handleActionClick(action),
         }))}
         data={loading ? [] : devices}
-        column={deviceColumns(handleEditDevice, handleDeleteDevice, isAdmin)}
+        column={deviceColumns(
+          handleEditDevice,
+          handleDeleteDevice,
+          handleConnect,
+          isAdmin
+        )}
       />
       <Modal
         title={isEditing ? "Sửa thông tin thiết bị" : "Thêm thông tin thiết bị"}

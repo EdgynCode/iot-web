@@ -102,7 +102,7 @@ export const AccountsColumns = (navigate, selectedAccountType) => {
       title: "Phân quyền",
       dataIndex: "moTa",
       key: "moTa",
-      render: (record) => {
+      render: (text, record) => {
         console.log(record);
         return (
           <Select

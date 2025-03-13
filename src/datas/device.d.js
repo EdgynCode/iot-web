@@ -1,4 +1,4 @@
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, BulbOutlined } from "@ant-design/icons";
 
 export const deviceListAction = () => [
   {
@@ -68,7 +68,7 @@ export const deviceListColumns = (navigate) => [
   },
 ];
 
-export const deviceColumns = (onUpdate, onRemove, isAdmin) => {
+export const deviceColumns = (onUpdate, onRemove, onConnect, isAdmin) => {
   const columns = [
     {
       title: "Số seri",
@@ -119,6 +119,27 @@ export const deviceColumns = (onUpdate, onRemove, isAdmin) => {
             className="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700 ml-2"
           >
             <DeleteOutlined />
+          </button>
+          <button
+            onClick={() => onConnect()}
+            className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700 ml-2"
+          >
+            <BulbOutlined />
+          </button>
+        </span>
+      ),
+    });
+  } else {
+    columns.push({
+      title: "Tác vụ",
+      key: "actions",
+      render: (record) => (
+        <span>
+          <button
+            onClick={() => onConnect()}
+            className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700 ml-2"
+          >
+            <BulbOutlined />
           </button>
         </span>
       ),

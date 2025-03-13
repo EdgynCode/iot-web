@@ -71,7 +71,7 @@ export const studentColumns = (navigate) => [
     title: "Họ tên",
     dataIndex: ["firstName", "lastName"],
     key: "fullName",
-    render: (record) => (
+    render: (text, record) => (
       <a onClick={() => navigate(`/student-detail/${record.id}`)}>
         {record.firstName} {record.lastName}
       </a>
