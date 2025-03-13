@@ -27,9 +27,20 @@ services:
       - sqlserver
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - CONNECTION_STRING=${CONNECTION_STRING}
     networks:
       - productnetwork
     restart: on-failure
+  mqttbridge:
+    container_name: mqtt-bridge-service
+    image: counterlogic/mqtt-bridge-service
+    ports:
+      - "5000:500"
+      - "5001:500"
+    networks:
+      - productnetwork
+    environment:
+      - ASPNETCORE_HTTP_PORTS=500
   frontend:
     # container_name: frontend
     image: phongngolam/iot-web-frontend
@@ -41,7 +52,7 @@ services:
     networks:
       - productnetwork
     environment:
-      - REACT_API_URL=http://backend:8080/api/
+      - REACT_APP_API_URL=http://10.70.5.137:8080/api/    
   mqtt:
     container_name: broker
     image: eclipse-mosquitto
@@ -49,7 +60,6 @@ services:
       - "1883:1883"
     volumes:
     - ./mosquitto/config:/mosquitto/config
-    - ./passwd:/passwd
 networks:
   productnetwork:
 
