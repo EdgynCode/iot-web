@@ -1,6 +1,7 @@
 import React from "react";
 import { useUserData } from "../../hooks/useUserData";
 import InforTab from "./InforTab";
+import { Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { accountInfo, basicInfo } from "../../datas/account-info.d";
 
@@ -9,7 +10,7 @@ const AccountInfo = () => {
   const { user } = useUserData();
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <Spin size="large" />;
   }
 
   return (

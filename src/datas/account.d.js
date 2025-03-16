@@ -51,14 +51,6 @@ export const AccountsColumns = (navigate, selectedAccountType) => {
   const dispatch = useDispatch();
   const columns = [
     {
-      title: "Mã số",
-      dataIndex: "id",
-      key: "id",
-      render: (text, record) => (
-        <a onClick={() => navigate(`/user-detail/${record.id}`)}>{text}</a>
-      ),
-    },
-    {
       title: "Họ tên",
       dataIndex: "fullName",
       key: "fullName",
@@ -87,6 +79,9 @@ export const AccountsColumns = (navigate, selectedAccountType) => {
       title: "Tên đăng nhập",
       dataIndex: "userName",
       key: "userName",
+      render: (text, record) => (
+        <a onClick={() => navigate(`/user-detail/${record.id}`)}>{text}</a>
+      ),
     },
     {
       title: "Email",

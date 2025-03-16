@@ -12,6 +12,8 @@ import lessonReducer from "./slices/lessonSlice";
 import learnerReducer from "./slices/learnerSlice";
 import teacherReducer from "./slices/teacherSlice";
 import groupReducer from "./slices/groupSlice";
+import webSocketReducer from "./slices/webSocketSlice";
+import webSocketMiddleware from "./middleware/webSocketMiddleware";
 
 export const store = configureStore({
   reducer: {
@@ -28,6 +30,9 @@ export const store = configureStore({
     semesters: semesterReducer,
     teachers: teacherReducer,
     groups: groupReducer,
+    webSocket: webSocketReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(webSocketMiddleware),
   devTools: true,
 });
