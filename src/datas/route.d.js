@@ -1,6 +1,5 @@
 import { LogoutOutlined } from "@ant-design/icons";
 import {
-  Home,
   Lessons,
   Students,
   StudentDetail,
@@ -23,19 +22,12 @@ import {
   BookmarkMenuIcon,
   DeviceMenuIcon,
   AccountsMenuIcon,
-  HomeMenuIcon,
   PersonalMenuIcon,
   PhysicsMenuIcon,
   ScheduleMenuIcon,
   StudentMenuIcon,
 } from "./icon.d";
 
-const home = {
-  key: "home",
-  element: <Home />,
-  icon: <HomeMenuIcon />,
-  title: "Trang chủ",
-};
 const accounts = {
   key: "accounts",
   element: <Accounts />,
@@ -123,9 +115,8 @@ const logout = {
 };
 const lessonDetail = { key: "lesson-detail/:id", element: <LessonDetail /> };
 const labDetail = { key: "lab-detail/:id", element: <LabDetail /> };
-export const learnerRoute = [home, accountDetail, editAccountDetail, logout];
+export const learnerRoute = [accountDetail, editAccountDetail, logout];
 export const teacherRoute = [
-  home,
   schedule,
   lessons,
   labs,
@@ -142,7 +133,6 @@ export const teacherRoute = [
   experimentDetail,
 ];
 export const superAdminRoute = [
-  home,
   lessons,
   userDetail,
   editUserDetail,
@@ -155,9 +145,8 @@ export const superAdminRoute = [
   classrooms,
   experimentDetail,
 ];
-export const learnerSidebar = [home, accountDetail, logout];
+export const learnerSidebar = [accountDetail, logout];
 export const teacherSidebar = [
-  home,
   schedule,
   lessons,
   labs,
@@ -167,7 +156,6 @@ export const teacherSidebar = [
   logout,
 ];
 export const superAdminSidebar = [
-  home,
   lessons,
   accounts,
   classrooms,

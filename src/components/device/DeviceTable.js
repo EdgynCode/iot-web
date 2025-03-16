@@ -17,7 +17,7 @@ import { jwtDecode } from "jwt-decode";
 import {
   webSocketConnect,
   webSocketDisconnect,
-} from "../../redux/actions/webSocketActions";
+} from "../../redux/actions/webSocketAction";
 
 const DeviceTable = () => {
   const { id } = useParams();

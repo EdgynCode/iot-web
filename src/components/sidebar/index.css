@@ -83,7 +83,7 @@ hr {
   font-weight: 500;
   font-size: 0.875rem;
   line-height: 1.57;
-  color: rgb(145, 158, 171);
+  color: rgb(18, 72, 116);
 }
 .account-role {
   margin: 0px;
@@ -92,14 +92,14 @@ hr {
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.43;
-  color: rgb(145, 158, 171);
+  color: rgb(18, 72, 116);
 }
 .ant-menu {
   border-inline-end: none !important;
 }
 .ant-menu-item,
 .ant-menu-title-content {
-  color: rgb(145, 158, 171) !important;
+  color: rgb(18, 72, 116) !important;
 }
 :where(.css-dev-only-do-not-override-1n2vyhh).ant-menu-light
   .ant-menu-item-selected {

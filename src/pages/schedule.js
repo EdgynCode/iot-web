@@ -59,21 +59,29 @@ const Schedule = () => {
             );
             return (
               <div key={index} className="p-4 border-b border-gray-200">
-                <Text className="text-lg font-semibold">{`Giờ bắt đầu: ${moment(
-                  session.startTime
-                ).format("HH:mm")}`}</Text>
+                <Text className="text-lg font-semibold">
+                  {`Giờ kết thúc: ${moment(session.startTime).format("HH:mm")}`}
+                </Text>
                 <br />
-                <Text className="text-lg font-semibold">{`Giờ kết thúc: ${moment(
-                  session.endTime
-                ).format("HH:mm")}`}</Text>
+                <Text className="text-lg font-semibold">
+                  {`Giờ kết thúc: ${moment(session.endTime).format("HH:mm")}`}
+                </Text>
                 <br />
-                <Text className="text-lg font-semibold">{`Wi-Fi Hotspot: ${session.wifiHotspot}`}</Text>
+                <Text className="text-lg font-semibold">
+                  {`Wi-Fi Hotspot: ${session.wifiHotspot}`}
+                </Text>
                 <br />
-                <Text className="text-lg font-semibold">{`Mật khẩu Wi-Fi: placeholder`}</Text>
+                <Text className="text-lg font-semibold">
+                  {`Mật khẩu Wi-Fi: placeholder`}
+                </Text>
                 <br />
-                <Text className="text-lg font-semibold">{`Mã buổi học: ${session.id}`}</Text>
+                <Text className="text-lg font-semibold">
+                  {`Mã buổi học: ${session.id.slice(9, 23)}`}
+                </Text>
                 <br />
-                <Text className="text-lg font-semibold">{`Lớp giảng dạy: ${classroom.tenLop}`}</Text>
+                <Text className="text-lg font-semibold">
+                  {`Lớp giảng dạy: ${classroom.tenLop}`}
+                </Text>
               </div>
             );
           })

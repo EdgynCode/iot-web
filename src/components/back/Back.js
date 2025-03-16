@@ -7,7 +7,7 @@ export const Back = () => {
   const navigate = useNavigate();
   return (
     <Col
-      className="hover-effect text-greyText p-4 -my-7 cursor-pointer"
+      className="hover-effect text-[#124874] p-4 -my-7 cursor-pointer"
       onClick={() => navigate(-1)}
     >
       <LeftCircleOutlined className="mr-2" />

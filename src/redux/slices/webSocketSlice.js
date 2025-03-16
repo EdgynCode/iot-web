@@ -3,7 +3,7 @@ import {
   webSocketConnect,
   webSocketDisconnect,
   webSocketMessageReceived,
-} from "../actions/webSocketActions";
+} from "../actions/webSocketAction";
 
 const webSocketReducer = createSlice({
   name: "webSocket",

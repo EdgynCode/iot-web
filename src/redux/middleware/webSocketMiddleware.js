@@ -5,7 +5,7 @@ import {
   webSocketConnect,
   webSocketDisconnect,
   webSocketMessageReceived,
-} from "../actions/webSocketActions";
+} from "../actions/webSocketAction";
 
 const webSocketMiddleware = (store) => (next) => (action) => {
   if (webSocketConnect.match(action)) {

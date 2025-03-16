@@ -31,8 +31,8 @@ export const store = configureStore({
     teachers: teacherReducer,
     groups: groupReducer,
     webSocket: webSocketReducer,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(webSocketMiddleware),
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(webSocketMiddleware),
   devTools: true,
 });
