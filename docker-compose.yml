@@ -1,4 +1,32 @@
 services:
+  frontend:
+    # container_name: frontend
+    image: phongngolam/iot-web-frontend
+    # build: 
+    #  context: ./
+    #  dockerfile: frontend.dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - productnetwork
+    environment:
+      - REACT_APP_API_URL=http://10.70.5.137:8080/api/
+  webapi:
+    # build: 
+    #   context: ./
+    #   dockerfile: backend.dockerfile
+    image: counterlogic/iot-back-end-stable
+    ports:
+      - "8080:8080"   # HTTP
+      - "8081:8081"  # HTTPS
+    depends_on:
+      - sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - CONNECTION_STRING=${CONNECTION_STRING}
+    networks:
+      - productnetwork
+    restart: on-failure
   sqlserver:
     container_name: sqlserver
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -14,23 +42,13 @@ services:
     # restart: always
     networks:
       - productnetwork
-  webapi:
-    # build: 
-    #   context: ./
-    #   dockerfile: backend.dockerfile
-
-    image: counterlogic/iot-back-end-stable
+  mqtt:
+    container_name: broker
+    image: eclipse-mosquitto
     ports:
-      - "8080:8080"   # HTTP
-      - "8081:8081"  # HTTPSgit 
-    depends_on:
-      - sqlserver
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - CONNECTION_STRING=${CONNECTION_STRING}
-    networks:
-      - productnetwork
-    restart: on-failure
+      - "1883:1883"
+    volumes:
+    - ./mosquitto/config:/mosquitto/config
   mqttbridge:
     container_name: mqtt-bridge-service
     image: counterlogic/mqtt-bridge-service
@@ -40,29 +58,9 @@ services:
     networks:
       - productnetwork
     environment:
-      - ASPNETCORE_HTTP_PORTS=500
-  frontend:
-    # container_name: frontend
-    image: phongngolam/iot-web-frontend
-    # build: 
-    #  context: ./
-    #  dockerfile: frontend.dockerfile
-    ports:
-      - "3000:3000"
-    networks:
-      - productnetwork
-    environment:
-      - REACT_APP_API_URL=http://10.70.5.137:8080/api/    
-  mqtt:
-    container_name: broker
-    image: eclipse-mosquitto
-    ports:
-      - "1883:1883"
-    volumes:
-    - ./mosquitto/config:/mosquitto/config
+      - ASPNETCORE_HTTP_PORTS=500 
 networks:
   productnetwork:
-
 volumes:
   sql_data_volume:
 
