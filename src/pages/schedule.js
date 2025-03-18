@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import Selector from "../components/list-detail/selector/Selector";
 import { Badge, Button, Calendar, Drawer, Space, Tabs, Typography } from "antd";
 import { getListData, getMonthData, scheduleAction } from "../datas/schedule.d";
@@ -8,6 +9,7 @@ import dayjs from "dayjs";
 import ScheduleModal from "../components/schedule/ScheduleModal";
 import { useLessonData } from "../hooks/useLessonData";
 import { useClassroomData } from "../hooks/useClassroomData";
+import { useLabData } from "../hooks/useLabData";
 import { useDispatch } from "react-redux";
 import { getGroupsByClassSession } from "../redux/actions/groupAction";
 import moment from "moment";
@@ -19,10 +21,12 @@ const { Text, Title } = Typography;
 
 const Schedule = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(dayjs());
   const { sessions } = useLessonData();
   const { classrooms } = useClassroomData();
+  const { labs } = useLabData();
   const [modalType, setModalType] = useState("");
   const [openDrawer, setOpenDrawer] = useState(false);
   const [groups, setGroups] = useState([]);
@@ -45,6 +49,10 @@ const Schedule = () => {
   }, [selected, sessions, dispatch]);
 
   const classSessionInfo = (value) => {
+    const uuidFormat = (uuid) =>
+      uuid.match(
+        /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/
+      )[0];
     const sessionInfo = sessions.filter((session) =>
       moment(session.startTime).isSame(value.format("YYYY-MM-DD"), "day")
     );
@@ -56,6 +64,9 @@ const Schedule = () => {
           sessionInfo.map((session, index) => {
             const classroom = classrooms.find(
               (classroom) => classroom.id === session.lopHocId
+            );
+            const lab = labs.find(
+              (l) => uuidFormat(session.labIds[0]) === l.id
             );
             return (
               <div key={index} className="p-4 border-b border-gray-200">
@@ -82,6 +93,15 @@ const Schedule = () => {
                 <Text className="text-lg font-semibold">
                   {`Lớp giảng dạy: ${classroom.tenLop}`}
                 </Text>
+                <br />
+                <button
+                  className="text-lg font-semibold"
+                  onClick={() => {
+                    history.push(`/lab-detail/${lab.id}`);
+                  }}
+                >
+                  {`Bài thực hành: ${lab.name}`}
+                </button>
               </div>
             );
           })
