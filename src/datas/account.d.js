@@ -98,7 +98,6 @@ export const AccountsColumns = (navigate, selectedAccountType) => {
       dataIndex: "moTa",
       key: "moTa",
       render: (text, record) => {
-        console.log(record);
         return (
           <Select
             defaultValue={selectedAccountType}

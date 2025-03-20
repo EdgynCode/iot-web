@@ -40,6 +40,7 @@ const Labs = () => {
         message.success("Tạo bài lab thành công!");
         closeModal();
         dispatch(getAllLabs());
+        setLoading(false);
       })
       .catch(() => {
         message.error("Tạo bài lab thất bại.");

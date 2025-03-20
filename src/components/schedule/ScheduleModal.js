@@ -138,10 +138,14 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
                 allowClear
                 className="w-full"
                 loading={isClassroomLoading}
-                options={classrooms.map((classroom) => ({
-                  value: classroom.id,
-                  label: classroom.tenLop,
-                }))}
+                options={
+                  classrooms.length > 0
+                    ? classrooms.map((classroom) => ({
+                        value: classroom.id,
+                        label: classroom.tenLop,
+                      }))
+                    : []
+                }
               />
             </Form.Item>
           </div>

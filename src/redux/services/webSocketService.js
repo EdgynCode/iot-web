@@ -6,7 +6,7 @@ class WebSocketService {
 
   connect(url) {
     this.url = url;
-    this.socket = new WebSocket(url);
+    this.socket = new WebSocket("ws://192.168.0.30:5000/" + url);
 
     this.socket.onopen = () => {
       console.log("WebSocket connection opened");

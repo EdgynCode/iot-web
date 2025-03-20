@@ -31,31 +31,17 @@ export const labFilter = [
 ];
 export const labColumns = (navigate) => [
   {
-    title: "Mã số",
-    dataIndex: "id",
-    key: "labId",
-    render: (text, record) => (
-      <a
-        onClick={() => {
-          navigate(`/lab-detail/${record.id}`, { state: { record } });
-        }}
-      >
-        {text}
-      </a>
-    ),
-  },
-  {
     title: "Tên bài tập",
     dataIndex: "name",
     key: "name",
     render: (text, record) => (
-      <a
+      <button
         onClick={() => {
           navigate(`/lab-detail/${record.id}`, { state: { record } });
         }}
       >
         {text}
-      </a>
+      </button>
     ),
   },
   {
@@ -63,13 +49,13 @@ export const labColumns = (navigate) => [
     dataIndex: "pathImage",
     key: "pathImage",
     render: (text, record) => (
-      <a
+      <button
         onClick={() => {
           navigate(`/lab-detail/${record.id}`, { state: { record } });
         }}
       >
         {text}
-      </a>
+      </button>
     ),
   },
 ];

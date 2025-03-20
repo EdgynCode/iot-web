@@ -7,7 +7,17 @@ import {
 } from "../datas/student.d";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Modal, Upload, Button, Spin, Radio, Input, Form, message } from "antd";
+import {
+  Modal,
+  Upload,
+  Button,
+  Spin,
+  Radio,
+  Input,
+  Form,
+  message,
+  QRCode,
+} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { createMultipleLearner } from "../redux/actions/learnerAction";
 import { listAllUsersByType } from "../redux/actions/userAction";
@@ -28,6 +38,7 @@ const Students = () => {
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedClassLabel, setSelectedClassLabel] = useState("Lớp");
   const [initialFetch, setInitialFetch] = useState(false);
+  const [qrData, setQrData] = useState("");
   const _filters = useStudentFilter();
 
   const learners = useSelector((state) => state.learners.data || {});
@@ -159,6 +170,10 @@ const Students = () => {
       case "Thêm danh sách học sinh":
         setModalType("import");
         break;
+      case "Điểm danh":
+        setModalType("attendance");
+        setQrData("QRData");
+        break;
       default:
         console.log("Invalid action");
     }
@@ -232,6 +247,18 @@ const Students = () => {
             onChange={(e) => setFileName(e.target.value)}
           />
         </Form.Item>
+      </Modal>
+      <Modal
+        title="Điểm danh"
+        open={open && modalType === "attendance"}
+        onCancel={handleModalCancel}
+        footer={null}
+      >
+        <QRCode
+          errorLevel="H"
+          value="https://ant.design/"
+          icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+        />
       </Modal>
     </>
   );

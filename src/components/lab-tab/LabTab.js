@@ -15,8 +15,8 @@ import {
   Space,
   Tabs,
 } from "antd";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import TextArea from "antd/es/input/TextArea";
 import {
   createExperiment,
@@ -26,18 +26,34 @@ import {
 } from "../../redux/actions/experimentAction";
 import "./index.css";
 import formatDate from "../../utils/formatDate";
-// import { LessonTab } from "../lesson-tab/LessonTab";
+import { useExperimentData } from "../../hooks/useExperimentData";
+
 const { Meta } = Card;
 
 export const LabTab = ({ lab, labId }) => {
+  const dispatch = useDispatch();
+  const [form] = Form.useForm();
+  const { experiments } = useExperimentData(labId);
+
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentExperiment, setCurrentExperiment] = useState(null);
   const [modalType, setModalType] = useState("add-edit");
   const [openDrawer, setOpenDrawer] = useState(0);
   const [selectedExperiment, setSelectedExperiment] = useState("");
-  const [form] = Form.useForm();
-  const dispatch = useDispatch();
+
+  const renderReportInfo = () => {
+    return (
+      <a
+        target="_blank"
+        rel="noreferrer"
+        href="https://1drv.ms/b/c/bb3d301ec9838faa/EXYOED_4XfBEiTHi9TrSZ5EBOpM0QSA4k9ZXA1EwXrsXuQ?e=MdQbNj"
+      >
+        Tải mẫu báo cáo tại đây
+      </a>
+    );
+  };
+
   const items = [
     {
       label: `Hướng dẫn`,
@@ -47,22 +63,15 @@ export const LabTab = ({ lab, labId }) => {
     {
       label: `Báo cáo thực hành`,
       key: 2,
-      children: "Nhóm",
+      children: renderReportInfo(),
     },
   ];
-
-  const experimentState = useSelector((state) => state.experiments || {});
-  const { data: experimentData = [] } = experimentState;
 
   const openModal = () => {
     setIsEditing(false);
     setModalType("add-edit");
     setOpen(true);
   };
-
-  useEffect(() => {
-    dispatch(getExperimentsByLabId(labId));
-  }, [dispatch, labId]);
 
   const closeModal = () => {
     setOpen(false);
@@ -153,7 +162,7 @@ export const LabTab = ({ lab, labId }) => {
             <PlusCircleOutlined className="text-[40px] flex mb-2 justify-center w-full" />
             <p className="flex justify-center"> Thêm thí nghiệm </p>
           </Card>
-          {experimentData.map((data, index) => (
+          {experiments.map((data, index) => (
             <Card
               className="w-[300px] rounded-[10px]"
               key={index}
