@@ -5,10 +5,11 @@ import { getAllLabs } from "../redux/actions/labAction";
 export const useLabData = () => {
   const dispatch = useDispatch();
   const labs = useSelector((state) => state.labs.data || {});
+  const loading = useSelector((state) => state.labs.loading);
 
   useEffect(() => {
     dispatch(getAllLabs());
   }, [dispatch]);
 
-  return { labs };
+  return { labs, loading };
 };

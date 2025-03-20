@@ -80,9 +80,9 @@ export const ListDetail = ({
           pagination={false}
         />
         <div className="flex justify-between px-4">
-          <p className="text-xs font-inter text-[#ABACBE]">
-            Hiện <span className="text-black">{showItems.length} </span>
-            trong <span className="text-black">{data.length}</span> kết quả
+          <p className="text-xs font-inter text-black">
+            Hiện <b className="text-black">{showItems.length} </b>
+            trong <b className="text-black">{data.length}</b> kết quả
           </p>
           <Pagination
             pageSize={itemsPerPage}

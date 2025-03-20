@@ -42,16 +42,16 @@ const DeviceTable = () => {
     }
   }, [role]);
 
-  useEffect(() => {
-    // Connect to WebSocket when the component mounts
-    const url = `ws://localhost:5131/ws/ConnectDevice?deviceId=${id}`;
-    dispatch(webSocketConnect(url));
+  // useEffect(() => {
+  //   // Connect to WebSocket when the component mounts
+  //   const url = `onlinedevices`;
+  //   dispatch(webSocketConnect(url));
 
-    // Disconnect from WebSocket when the component unmounts
-    return () => {
-      dispatch(webSocketDisconnect());
-    };
-  }, [dispatch, id]);
+  //   // Disconnect from WebSocket when the component unmounts
+  //   return () => {
+  //     dispatch(webSocketDisconnect());
+  //   };
+  // }, [dispatch, id]);
 
   const handleEditDevice = (data) => {
     setIsEditing(true);
@@ -147,9 +147,9 @@ const DeviceTable = () => {
     }
   };
 
-  const handleConnect = (deviceId) => {
-    const url = `ws://localhost:5131/ws/ConnectDevice?deviceId=${deviceId}`;
-    dispatch(webSocketConnect(url));
+  const handleConnect = () => {
+    // const url = `onlinedevices`;
+    // dispatch(webSocketConnect(url));
   };
 
   const handleActionClick = (action) => {

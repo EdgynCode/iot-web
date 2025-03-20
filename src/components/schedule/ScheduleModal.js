@@ -8,7 +8,7 @@ import {
   getAllClassSessions,
 } from "../../redux/actions/lessonAction";
 import { createGroup } from "../../redux/actions/groupAction";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import moment from "moment";
 import "moment/locale/vi";
 import { v4 as uuidv4 } from "uuid";
@@ -19,10 +19,8 @@ moment.locale("vi");
 
 const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
   const dispatch = useDispatch();
-  const { classrooms } = useClassroomData();
-  const { labs } = useLabData();
-  const isClassroomLoading = useSelector((state) => state.classrooms.loading);
-  const isLabLoading = useSelector((state) => state.labs.loading);
+  const { classrooms, loading: isClassroomLoading } = useClassroomData();
+  const { labs, loading: isLabLoading } = useLabData();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -57,7 +55,7 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
       brokerAddress: "iot.eclipse.org",
       port: 1883,
       clientId: uuidv4(),
-      labIds: form.getFieldValue("lab"), // current output: uuid-labName
+      labIds: form.getFieldValue("lab"),
     };
     dispatch(createClassSession(sessionData))
       .unwrap()
@@ -140,10 +138,14 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
                 allowClear
                 className="w-full"
                 loading={isClassroomLoading}
-                options={classrooms.map((classroom) => ({
-                  value: classroom.id,
-                  label: classroom.tenLop,
-                }))}
+                options={
+                  classrooms.length > 0
+                    ? classrooms.map((classroom) => ({
+                        value: classroom.id,
+                        label: classroom.tenLop,
+                      }))
+                    : []
+                }
               />
             </Form.Item>
           </div>

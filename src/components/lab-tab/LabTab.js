@@ -15,8 +15,8 @@ import {
   Space,
   Tabs,
 } from "antd";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import TextArea from "antd/es/input/TextArea";
 import {
   createExperiment,
@@ -26,48 +26,52 @@ import {
 } from "../../redux/actions/experimentAction";
 import "./index.css";
 import formatDate from "../../utils/formatDate";
-import { LessonTab } from "../lesson-tab/LessonTab";
+import { useExperimentData } from "../../hooks/useExperimentData";
+
 const { Meta } = Card;
 
 export const LabTab = ({ lab, labId }) => {
+  const dispatch = useDispatch();
+  const [form] = Form.useForm();
+  const { experiments } = useExperimentData(labId);
+
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentExperiment, setCurrentExperiment] = useState(null);
   const [modalType, setModalType] = useState("add-edit");
   const [openDrawer, setOpenDrawer] = useState(0);
   const [selectedExperiment, setSelectedExperiment] = useState("");
-  const [form] = Form.useForm();
-  const dispatch = useDispatch();
+
+  const renderReportInfo = () => {
+    return (
+      <a
+        target="_blank"
+        rel="noreferrer"
+        href="https://1drv.ms/b/c/bb3d301ec9838faa/EXYOED_4XfBEiTHi9TrSZ5EBOpM0QSA4k9ZXA1EwXrsXuQ?e=MdQbNj"
+      >
+        Tải mẫu báo cáo tại đây
+      </a>
+    );
+  };
+
   const items = [
     {
-      label: `Thông tin`,
+      label: `Hướng dẫn`,
       key: 1,
       children: "Thông tin",
     },
     {
-      label: `Bài tập`,
+      label: `Báo cáo thực hành`,
       key: 2,
-      children: "Bài tập",
-    },
-    {
-      label: `Tạo nhóm`,
-      key: 3,
-      children: "Nhóm",
+      children: renderReportInfo(),
     },
   ];
-
-  const experimentState = useSelector((state) => state.experiments || {});
-  const { data: experimentData = [] } = experimentState;
 
   const openModal = () => {
     setIsEditing(false);
     setModalType("add-edit");
     setOpen(true);
   };
-
-  useEffect(() => {
-    dispatch(getExperimentsByLabId(labId));
-  }, [dispatch, labId]);
 
   const closeModal = () => {
     setOpen(false);
@@ -147,9 +151,6 @@ export const LabTab = ({ lab, labId }) => {
       });
     setOpen(false);
   };
-  const onShow = () => {
-    setOpenDrawer(true);
-  };
   const onClose = () => {
     setOpenDrawer(false);
   };
@@ -157,14 +158,14 @@ export const LabTab = ({ lab, labId }) => {
     <>
       <div className="flex justify-between gap-5 align-middle ">
         <div className="bg-grey flex w-full gap-5 rounded-[40px] overflow-hidden  py-[2%]">
-          <Card style={{ width: 300, borderRadius: 10 }} onClick={openModal}>
+          <Card className="w-[300px] rounded-[10px]" onClick={openModal}>
             <PlusCircleOutlined className="text-[40px] flex mb-2 justify-center w-full" />
             <p className="flex justify-center"> Thêm thí nghiệm </p>
           </Card>
-          {experimentData.map((data, index) => (
+          {experiments.map((data, index) => (
             <Card
+              className="w-[300px] rounded-[10px]"
               key={index}
-              style={{ width: 300, borderRadius: 10 }}
               actions={[
                 <EditOutlined key="edit" onClick={() => handleEdit(data)} />,
                 <DeleteOutlined
@@ -178,7 +179,7 @@ export const LabTab = ({ lab, labId }) => {
               ]}
               cover={
                 <img
-                  alt="image of experiment"
+                  alt="experiment preview"
                   src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
                 />
               }
@@ -220,7 +221,7 @@ export const LabTab = ({ lab, labId }) => {
             <Button type="primary" htmlType="submit">
               {isEditing ? "Cập nhật" : "Lưu"}
             </Button>
-            <Button style={{ marginLeft: 8 }} onClick={closeModal}>
+            <Button className="ml-2" onClick={closeModal}>
               Hủy
             </Button>
           </Form.Item>

@@ -52,21 +52,18 @@ export const studentAction = () => [
       setOpen(true);
     },
   },
+  {
+    title: "Điểm danh",
+    onClick: (setOpen) => {
+      setOpen(true);
+    },
+  },
 ];
 
 export const useStudentFilter = () => [
   { key: "Class", label: "Lớp", options: useClassFilter().classMenu },
 ];
 export const studentColumns = (navigate) => [
-  {
-    title: "Mã số",
-    dataIndex: "id",
-    key: "id",
-    render: (text, record) => (
-      <a onClick={() => navigate(`/student-detail/${record.id}`)}>{text}</a>
-    ),
-    //sorter: (a, b) => parseInt(a.id, 10) - parseInt(b.id, 10),
-  },
   {
     title: "Họ tên",
     dataIndex: ["firstName", "lastName"],
@@ -95,41 +92,20 @@ export const studentColumns = (navigate) => [
     onFilter: (value, record) => record.gender.includes(value),
   },
   {
-    title: "Lớp",
-    dataIndex: "nguoiHocLopHocs",
-    key: "nguoiHocLopHocs",
-    render: (text) => <a>{text}</a>,
-  },
-  {
     title: "Email",
     dataIndex: "email",
     key: "email",
   },
   {
-    title: "Chức vụ",
-    dataIndex: "role",
-    key: "role",
-    filters: [
-      {
-        text: "Lớp trưởng",
-        value: "Lớp trưởng",
-      },
-      {
-        text: "Lớp phó",
-        value: "Lớp phó",
-      },
-      {
-        text: "Học sinh",
-        value: "",
-      },
-    ],
-    filterMode: "tree",
-    onFilter: (value, record) => record.role.includes(value),
-  },
-  {
     title: "Số điện thoại",
     dataIndex: "phoneNumber",
     key: "phoneNumber",
+  },
+  {
+    title: "Hiện diện",
+    dataIndex: "present",
+    key: "present",
+    render: () => <p>Vắng mặt</p>,
   },
 ];
 export const studentDetailAction = (navigate, id) => [
