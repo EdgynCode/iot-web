@@ -41,12 +41,6 @@ const useClassFilter = () => {
 
 export const studentAction = () => [
   {
-    title: "Thêm danh sách học sinh",
-    onClick: (setOpen) => {
-      setOpen(true);
-    },
-  },
-  {
     title: "Xuất dữ liệu",
     onClick: (setOpen) => {
       setOpen(true);
