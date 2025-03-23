@@ -7,22 +7,8 @@ import {
 } from "../datas/student.d";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  Modal,
-  Upload,
-  Button,
-  Spin,
-  Radio,
-  Input,
-  Form,
-  message,
-  QRCode,
-} from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import { createMultipleLearner } from "../redux/actions/learnerAction";
-import { listAllUsersByType } from "../redux/actions/userAction";
+import { Modal, Spin, Radio, Input, Form, QRCode } from "antd";
 import { getLearnersByClassId } from "../redux/actions/learnerAction";
-import { v4 as uuidv4 } from "uuid";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
@@ -31,7 +17,6 @@ const Students = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const [file, setFile] = useState(null);
   const [modalType, setModalType] = useState("");
   const [exportType, setExportType] = useState("pdf");
   const [fileName, setFileName] = useState("student_data");
@@ -112,63 +97,10 @@ const Students = () => {
     }
   };
 
-  const handleModalOk = () => {
-    if (!file) {
-      message.error("No file selected!");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const studentList = [];
-      try {
-        const workbook = XLSX.read(e.target.result, { type: "array" });
-        const worksheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[worksheetName];
-        const data = XLSX.utils.sheet_to_json(worksheet);
-
-        // Dispatch Redux actions
-        data.forEach((row) => {
-          const student = {
-            id: uuidv4(),
-            firstName: row["FirstName"],
-            lastName: row["LastName"],
-            gender: row["Gender"],
-            doB: row["DoB"],
-            userName: row["Username"],
-            email: row["Email"],
-            password: row["Password"],
-            phoneNumber: row["PhoneNumber"],
-            discriminator: "Learner",
-          };
-          studentList.push(student);
-        });
-        console.log(studentList);
-        dispatch(createMultipleLearner(studentList));
-        message.success("Students imported successfully!");
-        dispatch(listAllUsersByType("Learner"));
-        setFile(null);
-        setOpen(false);
-      } catch (error) {
-        console.error("Error processing file:", error);
-        message.error("Failed to process the file. Please check the format.");
-      }
-    };
-    reader.readAsArrayBuffer(file);
-  };
-
-  const handleModalCancel = () => {
-    setFile(null);
-    setOpen(false);
-  };
-
   const handleActionClick = (action) => {
     switch (action.title) {
       case "Xuất dữ liệu":
         setModalType("export");
-        break;
-      case "Thêm danh sách học sinh":
-        setModalType("import");
         break;
       case "Điểm danh":
         setModalType("attendance");
@@ -205,31 +137,14 @@ const Students = () => {
       />
       {loading && <Spin size="large" />}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
-      <Modal
-        title="Nhập dữ liệu học sinh"
-        open={open && modalType === "import"}
-        onOk={handleModalOk}
-        onCancel={handleModalCancel}
-        okText="Upload"
-        cancelText="Cancel"
-      >
-        <Upload
-          accept=".xlsx,.xls"
-          beforeUpload={(file) => {
-            console.log("Selected file:", file);
-            setFile(file);
-            return false;
-          }}
-        >
-          <Button icon={<UploadOutlined />}>Select File</Button>
-        </Upload>
-      </Modal>
 
       <Modal
         title="Xuất dữ liệu học sinh"
         open={open && modalType === "export"}
         onOk={handleExport}
-        onCancel={handleModalCancel}
+        onCancel={() => {
+          setOpen(false);
+        }}
         okText="Xuất dữ liệu"
         cancelText="Hủy"
       >
@@ -251,7 +166,9 @@ const Students = () => {
       <Modal
         title="Điểm danh"
         open={open && modalType === "attendance"}
-        onCancel={handleModalCancel}
+        onCancel={() => {
+          setOpen(false);
+        }}
         footer={null}
       >
         <QRCode
