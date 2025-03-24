@@ -1,4 +1,5 @@
 import { EditOutlined, DeleteOutlined, BulbOutlined } from "@ant-design/icons";
+import formatDate from "../utils/formatDate";
 
 export const deviceListAction = () => [
   {
@@ -92,13 +93,13 @@ export const deviceColumns = (onUpdate, onRemove, onConnect, isAdmin) => {
       title: "Trạng thái",
       dataIndex: "isTrangThai",
       key: "isTrangThai",
-      render: (text) => <p>{text}</p>,
+      render: (text) => <p>{text ? "Đã kết nối" : "Chưa kết nối"}</p>,
     },
     {
       title: "Hạn bảo hành",
       dataIndex: "thoiGianBaoHanh",
       key: "thoiGianBaoHanh",
-      render: (text) => <p>{text}</p>,
+      render: (text) => <p>{formatDate(text)}</p>,
     },
   ];
 
