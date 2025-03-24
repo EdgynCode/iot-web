@@ -168,10 +168,14 @@ const DeviceTable = () => {
     <>
       <ListDetail
         title="Danh sách thiết bị"
-        actions={deviceAction().map((action) => ({
-          ...action,
-          onClick: () => handleActionClick(action),
-        }))}
+        actions={
+          isAdmin
+            ? deviceAction().map((action) => ({
+                ...action,
+                onClick: () => handleActionClick(action),
+              }))
+            : []
+        }
         data={loading ? [] : devices}
         column={deviceColumns(
           handleEditDevice,

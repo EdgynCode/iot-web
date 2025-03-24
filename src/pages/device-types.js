@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import { deviceListAction, deviceListColumns } from "../datas/device.d";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ import {
   getAllDeviceTypes,
 } from "../redux/actions/deviceAction";
 import { useDeviceTypeData } from "../hooks/useDeviceTypeData";
+import { jwtDecode } from "jwt-decode";
 
 const DeviceTypes = () => {
   const navigate = useNavigate();
@@ -21,6 +22,17 @@ const DeviceTypes = () => {
   const [hasSelected, setHasSelected] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const { deviceTypes: deviceData, error } = useDeviceTypeData();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user")) || null;
+  const decode = user ? jwtDecode(user?.jwtAccessToken) : null;
+  const role = decode ? decode.role : null;
+
+  useEffect(() => {
+    if (role === "SuperAdmin") {
+      setIsAdmin(true);
+    }
+  }, [role]);
 
   const handleActionClick = (action) => {
     switch (action.title) {
@@ -69,10 +81,14 @@ const DeviceTypes = () => {
     <>
       <ListDetail
         title="Danh sách loại thiết bị"
-        actions={deviceListAction().map((action) => ({
-          ...action,
-          onClick: () => handleActionClick(action),
-        }))}
+        actions={
+          isAdmin
+            ? deviceListAction().map((action) => ({
+                ...action,
+                onClick: () => handleActionClick(action),
+              }))
+            : []
+        }
         data={loading ? [] : deviceData}
         column={deviceListColumns(navigate)}
         onSelectionChange={handleSelectionChange}
