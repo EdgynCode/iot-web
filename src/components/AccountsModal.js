@@ -5,6 +5,7 @@ import RegisterForm from "../components/RegisterForm";
 
 const AccountsModal = ({
   open,
+  setOpen,
   modalType,
   handleModalOk,
   handleModalCancel,
@@ -91,6 +92,7 @@ const AccountsModal = ({
           loading={loading}
           setLoading={setLoading}
           onFinish={handleCreateAccount}
+          setOpen={setOpen}
         />
       </Modal>
 

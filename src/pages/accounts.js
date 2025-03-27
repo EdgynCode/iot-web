@@ -300,6 +300,7 @@ const Accounts = () => {
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
       <AccountsModal
         open={open}
+        setOpen={setOpen}
         modalType={modalType}
         handleModalOk={handleModalOk}
         handleModalCancel={handleModalCancel}
