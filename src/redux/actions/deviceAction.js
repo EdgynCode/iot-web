@@ -136,6 +136,22 @@ export const updateDevice = createAsyncThunk(
   }
 );
 
+export const updateDeviceState = createAsyncThunk(
+  "Device/UpdateDevice",
+  async ({ id, isTrangThai }, thunkAPI) => {
+    try {
+      const device = await DeviceService.updateDeviceState(id, isTrangThai);
+      return device;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update device";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const getAllDevices = createAsyncThunk(
   "Device/GetAllDevices",
   async (_, thunkAPI) => {

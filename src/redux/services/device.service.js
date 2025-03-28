@@ -119,6 +119,22 @@ const updateDevice = async (id, tenThietBi, moTa, ghiChu) => {
   }
 };
 
+const updateDeviceState = async (id, isTrangThai) => {
+  try {
+    const response = await axiosInstance.patch("Device/UpdateDeviceType", {
+      id,
+      isTrangThai,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error updating device:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const getAllDevices = async () => {
   try {
     const response = await axiosInstance.get("Device/GetAllDevices");
@@ -153,6 +169,7 @@ const DeviceService = {
   addNewDevice,
   removeDevice,
   updateDevice,
+  updateDeviceState,
   getAllDevices,
   getDevicesByTypeId,
 };
