@@ -1,4 +1,4 @@
-import { EditOutlined, DeleteOutlined, BulbOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, ApiOutlined } from "@ant-design/icons";
 import formatDate from "../utils/formatDate";
 
 export const deviceListAction = () => [
@@ -19,6 +19,12 @@ export const deviceListAction = () => [
 export const deviceAction = () => [
   {
     title: "Thêm thiết bị",
+    onClick: (openModal) => {
+      openModal();
+    },
+  },
+  {
+    title: "Kiểm tra kết nối",
     onClick: (openModal) => {
       openModal();
     },
@@ -125,7 +131,7 @@ export const deviceColumns = (onUpdate, onRemove, onConnect, isAdmin) => {
             onClick={() => onConnect()}
             className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700 ml-2"
           >
-            <BulbOutlined />
+            <ApiOutlined />
           </button>
         </span>
       ),
@@ -140,7 +146,7 @@ export const deviceColumns = (onUpdate, onRemove, onConnect, isAdmin) => {
             onClick={() => onConnect()}
             className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700 ml-2"
           >
-            <BulbOutlined />
+            <ApiOutlined />
           </button>
         </span>
       ),

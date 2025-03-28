@@ -14,6 +14,7 @@ import teacherReducer from "./slices/teacherSlice";
 import groupReducer from "./slices/groupSlice";
 import webSocketReducer from "./slices/webSocketSlice";
 import webSocketMiddleware from "./middleware/webSocketMiddleware";
+import mqttReducer from "./slices/mqttSlice";
 
 export const store = configureStore({
   reducer: {
@@ -31,6 +32,7 @@ export const store = configureStore({
     teachers: teacherReducer,
     groups: groupReducer,
     webSocket: webSocketReducer,
+    mqtt: mqttReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(webSocketMiddleware),

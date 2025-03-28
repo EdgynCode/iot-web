@@ -2,6 +2,7 @@ class WebSocketService {
   constructor() {
     this.socket = null;
     this.url = null;
+    this.messageHandler = null;
   }
 
   connect(url) {
@@ -14,6 +15,9 @@ class WebSocketService {
 
     this.socket.onmessage = (event) => {
       console.log("WebSocket message received:", event.data);
+      if (this.messageHandler) {
+        this.messageHandler(event.data);
+      }
     };
 
     this.socket.onclose = (event) => {
@@ -27,6 +31,10 @@ class WebSocketService {
     this.socket.onerror = (error) => {
       console.error("WebSocket error:", error);
     };
+  }
+
+  setMessageHandler(handler) {
+    this.messageHandler = handler;
   }
 
   sendMessage(message) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Input, Modal, Form, DatePicker, message } from "antd";
+import { Button, Spin, Input, Modal, Form, DatePicker, message } from "antd";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
@@ -7,6 +7,7 @@ import {
   addNewDevice,
   getDevicesByTypeId,
   updateDevice,
+  updateDeviceState,
   removeDevice,
 } from "../../redux/actions/deviceAction";
 import { deviceAction, deviceColumns } from "../../datas/device.d";
@@ -14,10 +15,8 @@ import { useDeviceData } from "../../hooks/useDeviceData";
 import TextArea from "antd/es/input/TextArea";
 import { ListDetail } from "../list-detail/ListDetail";
 import { jwtDecode } from "jwt-decode";
-import {
-  webSocketConnect,
-  webSocketDisconnect,
-} from "../../redux/actions/webSocketAction";
+import webSocketService from "../../redux/services/webSocketService";
+import { connectToBroker } from "../../redux/actions/mqttAction";
 
 const DeviceTable = () => {
   const { id } = useParams();
@@ -41,17 +40,6 @@ const DeviceTable = () => {
       setIsAdmin(true);
     }
   }, [role]);
-
-  // useEffect(() => {
-  //   // Connect to WebSocket when the component mounts
-  //   const url = `onlinedevices`;
-  //   dispatch(webSocketConnect(url));
-
-  //   // Disconnect from WebSocket when the component unmounts
-  //   return () => {
-  //     dispatch(webSocketDisconnect());
-  //   };
-  // }, [dispatch, id]);
 
   const handleEditDevice = (data) => {
     setIsEditing(true);
@@ -148,8 +136,47 @@ const DeviceTable = () => {
   };
 
   const handleConnect = () => {
-    // const url = `onlinedevices`;
-    // dispatch(webSocketConnect(url));
+    webSocketService.setMessageHandler((data) => {
+      const onlineDeviceIds = JSON.parse(data); // Example: ["device1", "device2", "device3"]
+      if (Array.isArray(onlineDeviceIds)) {
+        onlineDeviceIds.forEach((deviceId) => {
+          const matchingDevice = devices.find(
+            (device) => device.id === deviceId
+          );
+          if (matchingDevice) {
+            dispatch(updateDeviceState({ id: deviceId, isTrangThai: true }))
+              .unwrap()
+              .then(() => {
+                message.success(`Thiết bị ${deviceId} đã kết nối!`);
+                dispatch(getDevicesByTypeId(id));
+              })
+              .catch((error) => {
+                console.error(`Failed to update device ${deviceId}:`, error);
+              });
+          }
+        });
+      }
+    });
+
+    webSocketService.connect("onlinedevices");
+  };
+
+  const handleBrokerConnect = () => {
+    const deviceData = {
+      brokerIp: "192.168.0.30",
+      port: 1883,
+      username: "iot",
+      password: "iot@123456",
+    };
+    dispatch(connectToBroker(deviceData))
+      .unwrap()
+      .then(() => {
+        message.success("Kết nối đến broker thành công!");
+      })
+      .catch((error) => {
+        message.error("Kết nối đến broker thất bại.");
+        console.error("Error connecting to broker:", error);
+      });
   };
 
   const handleActionClick = (action) => {
@@ -157,6 +184,10 @@ const DeviceTable = () => {
       case "Thêm thiết bị":
         setModalType("add-edit");
         setIsEditing(false);
+        break;
+      case "Kiểm tra kết nối":
+        setModalType("connect");
+        handleConnect();
         break;
       default:
         console.log("Invalid action");
@@ -180,10 +211,18 @@ const DeviceTable = () => {
         column={deviceColumns(
           handleEditDevice,
           handleDeleteDevice,
-          handleConnect,
+          handleBrokerConnect,
           isAdmin
         )}
       />
+      <Modal
+        title="Đang kiểm tra kết nối"
+        open={open && modalType === "connect"}
+        footer={null}
+        closable={false}
+      >
+        <Spin tip="Đang kết nối..." />
+      </Modal>
       <Modal
         title={isEditing ? "Sửa thông tin thiết bị" : "Thêm thông tin thiết bị"}
         open={open && modalType === "add-edit"}
