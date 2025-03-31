@@ -7,10 +7,12 @@ services:
     #  dockerfile: frontend.dockerfile
     ports:
       - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://webapi:8080/api/
     networks:
       - productnetwork
-    environment:
-      - REACT_APP_API_URL=http://10.70.5.137:8080/api/
+    depends_on:
+      - webapi
   webapi:
     # build: 
     #   context: ./
@@ -30,7 +32,6 @@ services:
   sqlserver:
     container_name: sqlserver
     image: mcr.microsoft.com/mssql/server:2022-latest
-
     environment:
       MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
       ACCEPT_EULA: ${ACCEPT_EULA} 
@@ -55,12 +56,15 @@ services:
     ports:
       - "5000:500"
       - "5001:500"
+    environment:
+      - ASPNETCORE_HTTP_PORTS=500
+    depends_on:
+      - mqtt
     networks:
       - productnetwork
-    environment:
-      - ASPNETCORE_HTTP_PORTS=500 
+
 networks:
   productnetwork:
+    driver: bridge
 volumes:
   sql_data_volume:
-
