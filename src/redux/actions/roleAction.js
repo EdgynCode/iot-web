@@ -23,7 +23,7 @@ export const addRole = createAsyncThunk(
 );
 
 export const addPermission = createAsyncThunk(
-  "Role/AddRole",
+  "Role/AddPermission",
   async ({ name, value, description }, thunkAPI) => {
     try {
       const data = await RoleService.addPermission(name, value, description);
