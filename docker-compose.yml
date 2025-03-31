@@ -50,6 +50,8 @@ services:
       - "1883:1883"
     volumes:
     - ./mosquitto/config:/mosquitto/config
+    networks:
+      - productnetwork
   mqttbridge:
     container_name: mqtt-bridge-service
     image: counterlogic/mqtt-bridge-service
