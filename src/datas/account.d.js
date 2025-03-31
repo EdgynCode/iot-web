@@ -1,6 +1,7 @@
 import { Select } from "antd";
 import { updateRole } from "../redux/actions/authAction";
 import { useDispatch } from "react-redux";
+import { message } from "antd";
 const roles = [
   { key: "Learner", label: "Học sinh" },
   { key: "Teacher", label: "Giáo viên" },
@@ -104,7 +105,15 @@ export const AccountsColumns = (navigate, selectedAccountType) => {
             className="w-[130px]"
             onChange={(value) => {
               const userName = record.userName;
-              dispatch(updateRole({ userName, role: [value] })).unwrap();
+              dispatch(updateRole({ username: userName, role: value }))
+                .unwrap()
+                .then(() => {
+                  message.success("Cập nhật phân quyền thành công!");
+                })
+                .catch((error) => {
+                  message.error("Cập nhật phân quyền thất bại.");
+                  console.error("Error updating user role:", error);
+                });
             }}
           >
             {roles.map((role) => (

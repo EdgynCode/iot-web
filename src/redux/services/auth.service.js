@@ -125,7 +125,7 @@ const updateRole = async (username, role) => {
   try {
     const response = await axiosInstance.put(
       `Account/EditRoles?username=${username}`,
-      { role }
+      [role]
     );
     return response.data;
   } catch (error) {
