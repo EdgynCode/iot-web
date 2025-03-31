@@ -8,7 +8,7 @@ const ForgotPassword = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const onFinish = (values) => {
-    const clientUri = "http://localhost:3000/reset-password";
+    const clientUri = "http://frontend:3000/reset-password";
     dispatch(sendLinkResetPassword({ email: values.email, clientUri }))
       .unwrap()
       .then(() => {

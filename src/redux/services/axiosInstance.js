@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:8080/api/",
+  baseURL: process.env.REACT_APP_API_URL || "http://webapi:8080/api/",
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
@@ -40,7 +40,7 @@ axiosInstance.interceptors.response.use(
         try {
           // Refresh token
           const refreshResponse = await axios.post(
-            "http://localhost:8080/api/Account/RefreshToken",
+            "http://webapi:8080/api/Account/RefreshToken",
             { refreshToken: storedUser.jwtRefreshToken }
           );
 

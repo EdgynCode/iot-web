@@ -28,7 +28,7 @@ const UpdateFormInput = ({ data, onFinish }) => {
     const emailObject = data.find((item) => item.key === "Email");
     const email = emailObject ? emailObject.value : null;
     if (email) {
-      const clientUri = "http://localhost:3000/reset-password";
+      const clientUri = "http://frontend:3000/reset-password";
       dispatch(sendLinkResetPassword({ email: email, clientUri }))
         .unwrap()
         .then(() => {
