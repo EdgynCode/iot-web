@@ -17,6 +17,7 @@ import webSocketMiddleware from "./middleware/webSocketMiddleware";
 import mqttReducer from "./slices/mqttSlice";
 import roleReducer from "./slices/roleSlice";
 import assignmentReducer from "./slices/assignmentSlice";
+import unitReducer from "./slices/unitSlice";
 
 export const store = configureStore({
   reducer: {
@@ -37,6 +38,7 @@ export const store = configureStore({
     mqtt: mqttReducer,
     assignments: assignmentReducer,
     roles: roleReducer,
+    units: unitReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(webSocketMiddleware),
