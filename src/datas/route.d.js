@@ -1,3 +1,4 @@
+
 import { LogoutOutlined } from "@ant-design/icons";
 import {
   Lessons,
@@ -17,6 +18,7 @@ import {
   Classrooms,
   Schedule,
   ExperimentDetail,
+  RoleAndPermission,
 } from "../pages";
 import {
   BookmarkMenuIcon,
@@ -113,6 +115,12 @@ const logout = {
   icon: <LogoutOutlined />,
   title: "Đăng xuất",
 };
+const rolePermission = {
+  key: "role-permission", // key này cũng sẽ là đường dẫn khi gọi navigate("new-tab")
+  icon: <DeviceMenuIcon />,
+  element: <RoleAndPermission />,
+  title: "Role Permission",
+};
 const lessonDetail = { key: "lesson-detail/:id", element: <LessonDetail /> };
 const labDetail = { key: "lab-detail/:id", element: <LabDetail /> };
 export const learnerRoute = [accountDetail, editAccountDetail, logout];
@@ -141,6 +149,7 @@ export const superAdminRoute = [
   editAccountDetail,
   deviceTypes,
   devices,
+  rolePermission,
   logout,
   classrooms,
   experimentDetail,
@@ -161,5 +170,6 @@ export const superAdminSidebar = [
   classrooms,
   deviceTypes,
   accountDetail,
+  rolePermission,
   logout,
 ];
