@@ -108,6 +108,17 @@ const deleteRole = async (id) => {
   }
 };
 
+
+const deletePermission = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`Role/DeletePermission?permissionId=${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting permission:", error.response?.data || error.message);
+    throw error.response?.data || error.message;
+  }
+};
+
 const RoleService = {
   addRole,
   addPermission,
@@ -116,6 +127,7 @@ const RoleService = {
   getAllRoles,
   getAllPermissions,
   deleteRole,
+  deletePermission,
 };
 
 export default RoleService;

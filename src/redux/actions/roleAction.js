@@ -136,3 +136,23 @@ export const deleteRole = createAsyncThunk(
     }
   }
 );
+
+
+export const deletePermission = createAsyncThunk(
+  "Role/DeletePermission",
+  async (id, thunkAPI) => {
+    try {
+      const data = await RoleService.deletePermission(id);
+      thunkAPI.dispatch(setMessage("Permission deleted successfully!"));
+      return data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
