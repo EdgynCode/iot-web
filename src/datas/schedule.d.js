@@ -17,6 +17,12 @@ export const scheduleAction = () => [
       setOpen(true);
     },
   },
+  {
+    title: "Thêm người học vào nhóm",
+    onClick: (setOpen) => {
+      setOpen(true);
+    },
+  },
 ];
 export const getMonthData = (value, sessions) => {
   if (!sessions || sessions.length === 0) return null;
