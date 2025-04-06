@@ -123,23 +123,20 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
 
     const selectedGroup = groups.find((group) => group.id === groupId);
     if (selectedGroup && selectedGroup.members) {
-      const memberIds = selectedGroup.members.map(
-        (member) => member.nguoiHocID
-      );
+      const memberIds = selectedGroup.members.map((member) => member.nguoiHocID);
       setExistingMembers(memberIds);
     } else {
-      setExistingMembers([]);
+      setExistingMembers([]); // Nhóm mới sẽ không có thành viên
     }
 
     setLoadingLearners(true);
     dispatch(getLearnersByClassId(selectedLopHocId))
       .then((response) => {
-        const fetchedLearners = Array.isArray(response.payload)
-          ? response.payload
-          : [];
+        const fetchedLearners = Array.isArray(response.payload) ? response.payload : [];
         const localLearners = getLocalLearners();
 
-        if (localLearners.length === 0) {
+        // Nếu localStorage rỗng hoặc nhóm mới không có thành viên, reset availableLearners
+        if (localLearners.length === 0 || !selectedGroup?.members?.length) {
           const learnerIds = fetchedLearners.map((l) => l.id);
           saveLocalLearners(learnerIds);
           setAvailableLearners(learnerIds);
@@ -184,6 +181,8 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
 
       await dispatch(createClassSession(sessionData)).unwrap();
       message.success("Tạo buổi học thành công!");
+      resetLocalLearners();
+      setAvailableLearners([]);
       setOpen(false);
       dispatch(getAllClassSessions());
     } catch (error) {
@@ -204,11 +203,24 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
 
       await dispatch(createGroup({ sessionId, tenNhom })).unwrap();
       message.success("Tạo nhóm thành công!");
-      setOpen(false);
 
-      if (sessionId) {
-        dispatch(getGroupsByClassSession(sessionId));
-      }
+      // Cập nhật danh sách nhóm và reset availableLearners
+      setLoadingGroups(true);
+      dispatch(getGroupsByClassSession(sessionId))
+        .then((response) => {
+          const fetchedGroups = Array.isArray(response.payload) ? response.payload : [];
+          setGroups(fetchedGroups); // Cập nhật state groups
+          setSelectedSessionId(sessionId); // Đặt sessionId để modal tiếp theo sử dụng
+          resetLocalLearners(); // Reset localStorage
+          setAvailableLearners([]); // Reset state để tải lại toàn bộ học sinh
+        })
+        .catch((error) => {
+          console.error("Error fetching groups:", error);
+          message.error("Không thể tải danh sách nhóm");
+        })
+        .finally(() => setLoadingGroups(false));
+
+      setOpen(false);
     } catch (error) {
       console.error("Error in onFinishCreateGroup:", error);
       message.error("Không thể tạo nhóm. Vui lòng thử lại.");
@@ -545,8 +557,7 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
                 options={filteredLearners.map((learner) => ({
                   value: learner.id,
                   label: `${
-                    learner.firstName + " " + learner.lastName ||
-                    "Không có tên"
+                    learner.firstName + " " + learner.lastName || "Không có tên"
                   } (${learner.maSinhVien || learner.email || "Không có mã/email"})`,
                 }))}
                 notFoundContent={
