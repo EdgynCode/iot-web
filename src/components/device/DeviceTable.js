@@ -16,14 +16,11 @@ import TextArea from "antd/es/input/TextArea";
 import { ListDetail } from "../list-detail/ListDetail";
 import { jwtDecode } from "jwt-decode";
 import webSocketService from "../../redux/services/webSocketService";
-import { connectToBroker } from "../../redux/actions/mqttAction";
 
 const DeviceTable = () => {
   const { id } = useParams();
-  const { devices } = useDeviceData(id);
+  const { devices, loading, error } = useDeviceData(id);
   const dispatch = useDispatch();
-
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentDevice, setCurrentDevice] = useState(null);
@@ -42,6 +39,7 @@ const DeviceTable = () => {
   }, [role]);
 
   const handleEditDevice = (data) => {
+    setModalType("add-edit");
     setIsEditing(true);
     setCurrentDevice(data);
     form.setFieldsValue({
@@ -81,7 +79,6 @@ const DeviceTable = () => {
   };
 
   const handleFormSubmit = async (value) => {
-    setLoading(true);
     form.validateFields();
     if (isEditing && currentDevice) {
       const data = {
@@ -101,11 +98,9 @@ const DeviceTable = () => {
           message.success("Cập nhật thiết bị thành công!");
           closeModal();
           dispatch(getDevicesByTypeId(id));
-          setLoading(false);
         })
         .catch(() => {
           message.error("Cập nhật thiết bị thất bại.");
-          setLoading(false);
         });
       return;
     } else {
@@ -126,32 +121,62 @@ const DeviceTable = () => {
           message.success("Tạo thiết bị thành công!");
           closeModal();
           dispatch(getDevicesByTypeId(id));
-          setLoading(false);
         })
         .catch(() => {
           message.error("Tạo thiết bị thất bại.");
-          setLoading(false);
         });
     }
   };
 
   const handleConnect = () => {
+    let timeoutId;
+
+    // Set a timeout to update all devices to isTrangThai: false if no response is received within 5 seconds
+    timeoutId = setTimeout(() => {
+      devices.forEach((device) => {
+        dispatch(updateDeviceState({ id: device.id, isTrangThai: false }))
+          .unwrap()
+          .then(() => {
+            message.info(
+              `Thiết bị ${device.serialNumber} đã ngắt kết nối do không có phản hồi!`
+            );
+            webSocketService.close();
+            setOpen(false);
+            dispatch(getDevicesByTypeId(id));
+          })
+          .catch((error) => {
+            console.error(
+              `Failed to update device state ${device.serialNumber}:`,
+              error
+            );
+          });
+      });
+    }, 5000);
+
     webSocketService.setMessageHandler((data) => {
-      const onlineDeviceIds = JSON.parse(data); // Example: ["device1", "device2", "device3"]
-      if (Array.isArray(onlineDeviceIds)) {
-        onlineDeviceIds.forEach((deviceId) => {
+      clearTimeout(timeoutId);
+      const onlineDevices = JSON.parse(data);
+      if (Array.isArray(onlineDevices)) {
+        onlineDevices.forEach((serialNumber) => {
           const matchingDevice = devices.find(
-            (device) => device.id === deviceId
+            (device) => device.serialNumber === serialNumber
           );
           if (matchingDevice) {
-            dispatch(updateDeviceState({ id: deviceId, isTrangThai: true }))
+            dispatch(
+              updateDeviceState({ id: matchingDevice.id, isTrangThai: true })
+            )
               .unwrap()
               .then(() => {
-                message.success(`Thiết bị ${deviceId} đã kết nối!`);
+                message.success(`Thiết bị ${serialNumber} đã kết nối!`);
+                webSocketService.close();
+                closeModal();
                 dispatch(getDevicesByTypeId(id));
               })
               .catch((error) => {
-                console.error(`Failed to update device ${deviceId}:`, error);
+                console.error(
+                  `Failed to update device state ${serialNumber}:`,
+                  error
+                );
               });
           }
         });
@@ -159,24 +184,6 @@ const DeviceTable = () => {
     });
 
     webSocketService.connect("onlinedevices");
-  };
-
-  const handleBrokerConnect = () => {
-    const deviceData = {
-      brokerIp: "192.168.0.30",
-      port: 1883,
-      username: "iot",
-      password: "iot@123456",
-    };
-    dispatch(connectToBroker(deviceData))
-      .unwrap()
-      .then(() => {
-        message.success("Kết nối đến broker thành công!");
-      })
-      .catch((error) => {
-        message.error("Kết nối đến broker thất bại.");
-        console.error("Error connecting to broker:", error);
-      });
   };
 
   const handleActionClick = (action) => {
@@ -208,13 +215,10 @@ const DeviceTable = () => {
             : []
         }
         data={loading ? [] : devices}
-        column={deviceColumns(
-          handleEditDevice,
-          handleDeleteDevice,
-          handleBrokerConnect,
-          isAdmin
-        )}
+        column={deviceColumns(handleEditDevice, handleDeleteDevice, isAdmin)}
       />
+      {loading && <Spin size="large" />}
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
       <Modal
         title="Đang kiểm tra kết nối"
         open={open && modalType === "connect"}
@@ -247,14 +251,14 @@ const DeviceTable = () => {
             label="Số seri"
             rules={[{ required: true, message: "Vui lòng nhập số seri!" }]}
           >
-            <Input placeholder="Số seri" disabled={isEditing} />
+            <Input placeholder="Số seri" />
           </Form.Item>
           <Form.Item
             name="maQR"
             label="Mã QR"
             rules={[{ required: true, message: "Vui lòng nhập mã QR!" }]}
           >
-            <Input placeholder="Mã QR" disabled={isEditing} />
+            <Input placeholder="Mã QR" />
           </Form.Item>
           <Form.Item name="moTa" label="Mô tả">
             <TextArea placeholder="Mô tả" />

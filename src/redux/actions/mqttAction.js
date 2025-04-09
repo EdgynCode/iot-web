@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "../slices/message";
 
 export const connectToBroker = createAsyncThunk(
-  "ConfigBroker/Start",
+  "ConfigBroker/Connect",
   async ({ brokerIp, port, username, password }, thunkAPI) => {
     try {
       const data = await MQTTService.connectToBroker(
