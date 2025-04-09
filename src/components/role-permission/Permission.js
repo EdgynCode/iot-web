@@ -1,15 +1,23 @@
-// src/pages/RoleManegement/Permission.js
 import React, { useState, useEffect } from "react";
-import { ListDetail } from "../../components/list-detail/ListDetail";
-import { Button, Modal, Input, message, Spin } from "antd";
-import RoleService from "../../redux/services/role.service";
-
+import { ListDetail } from "../list-detail/ListDetail";
+import { Modal, Input, message, Spin } from "antd";
+import { useDispatch } from "react-redux";
+import { usePermissionData } from "../../hooks/usePermissionData";
+import {
+  permissionListAction,
+  permissionColumns,
+} from "../../datas/permission.d";
+import {
+  addPermission,
+  deletePermission,
+  getAllPermissions,
+  updatePermission,
+} from "../../redux/actions/permissionAction";
 
 const Permission = () => {
+  const dispatch = useDispatch();
   // State quản lý danh sách quyền
-  const [permissions, setPermissions] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { permissions, loading, error } = usePermissionData();
 
   // State cho Modal Thêm Quyền
   const [showAddModal, setShowAddModal] = useState(false);
@@ -22,72 +30,11 @@ const Permission = () => {
   const [editPermissionId, setEditPermissionId] = useState("");
   const [editPermissionName, setEditPermissionName] = useState("");
   const [editPermissionValue, setEditPermissionValue] = useState("");
-  const [editPermissionDescription, setEditPermissionDescription] = useState("");
+  const [editPermissionDescription, setEditPermissionDescription] =
+    useState("");
 
   // State cho multi-selection (chọn nhiều dòng để xóa)
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  useEffect(() => {
-    fetchPermissions();
-  }, []);
-
-  const fetchPermissions = () => {
-    setLoading(true);
-    RoleService.getAllPermissions()
-      .then((data) => {
-        setPermissions(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
-        setLoading(false);
-      });
-  };
-
-  // Định nghĩa các cột cho bảng quyền
-  const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "Tên Quyền",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Giá trị",
-      dataIndex: "value",
-      key: "value",
-    },
-    {
-      title: "Mô tả",
-      dataIndex: "description",
-      key: "description",
-    },
-    {
-      title: "Hành động",
-      key: "action",
-      render: (_, record) => (
-        <>
-          <Button type="link" onClick={() => handleEditPermission(record)}>
-            Sửa
-          </Button>
-          {/* Nếu cần, bạn có thể giữ nút xóa từng dòng. Tuy nhiên, ở đây chúng ta ưu tiên xóa nhiều dòng từ top-bar */}
-          {/* <Button type="link" danger onClick={() => handleDeletePermission(record)}>
-            Xóa
-          </Button> */}
-        </>
-      ),
-    },
-  ];
-
-  // Action hiển thị ở đầu bảng: Thêm và Xóa Quyền
-  const permissionListAction = () => [
-    { title: "Thêm Quyền" },
-    { title: "Xóa Quyền" },
-  ];
 
   // Xử lý khi nhấn vào từng action trên top-bar
   const handleActionClick = (action) => {
@@ -110,14 +57,17 @@ const Permission = () => {
     Modal.confirm({
       title: "Xác nhận xóa",
       content: "Bạn có chắc chắn muốn xóa các quyền đã chọn không?",
+      // chưa sử dụng được xóa quyền
       onOk: async () => {
         try {
-          for (const key of selectedRowKeys) {
-            await RoleService.deletePermission(key);
-          }
+          const deletePromises = selectedRowKeys.map((key) =>
+            dispatch(deletePermission(key)).unwrap()
+          );
+          await Promise.all(deletePromises);
+
           message.success("Xóa quyền thành công!");
           setSelectedRowKeys([]);
-          fetchPermissions();
+          dispatch(getAllPermissions());
         } catch (err) {
           message.error("Xóa quyền thất bại: " + err);
         }
@@ -140,11 +90,18 @@ const Permission = () => {
       message.error("Vui lòng nhập đầy đủ thông tin");
       return;
     }
-    RoleService.addPermission(newPermissionName, newPermissionValue, newPermissionDescription)
+    dispatch(
+      addPermission({
+        name: newPermissionName,
+        value: newPermissionValue,
+        description: newPermissionDescription,
+      })
+    )
+      .unwrap()
       .then(() => {
         message.success("Thêm quyền thành công");
         setShowAddModal(false);
-        fetchPermissions();
+        dispatch(getAllPermissions());
       })
       .catch((err) => {
         message.error("Thêm quyền thất bại: " + err);
@@ -157,11 +114,18 @@ const Permission = () => {
       message.error("Vui lòng nhập đầy đủ thông tin");
       return;
     }
-    RoleService.updatePermission(editPermissionId, editPermissionName, editPermissionValue)
+    dispatch(
+      updatePermission({
+        id: editPermissionId,
+        name: editPermissionName,
+        value: editPermissionValue,
+      })
+    )
+      .unwrap()
       .then(() => {
         message.success("Cập nhật quyền thành công");
         setShowEditModal(false);
-        fetchPermissions();
+        dispatch(getAllPermissions());
       })
       .catch((err) => {
         message.error("Cập nhật quyền thất bại: " + err);
@@ -177,9 +141,7 @@ const Permission = () => {
   }, []);
 
   return (
-    <div style={{ marginTop: "20px" }}>
-      {loading && <Spin size="large" />}
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
+    <>
       <ListDetail
         title="Danh sách Quyền"
         actions={permissionListAction().map((action) => ({
@@ -188,9 +150,11 @@ const Permission = () => {
         }))}
         filters={[]}
         data={permissions}
-        column={columns}
+        column={permissionColumns(handleEditPermission)}
         onSelectionChange={(keys) => setSelectedRowKeys(keys)}
       />
+      {loading && <Spin size="large" />}
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
       {/* Modal Thêm Quyền */}
       <Modal
@@ -201,7 +165,7 @@ const Permission = () => {
         okText="Thêm"
         cancelText="Hủy"
       >
-        <div style={{ marginBottom: "10px" }}>
+        <div className="mb-3">
           <label>Tên Quyền: </label>
           <Input
             value={newPermissionName}
@@ -209,7 +173,7 @@ const Permission = () => {
             placeholder="Nhập tên quyền"
           />
         </div>
-        <div style={{ marginBottom: "10px" }}>
+        <div className="mb-3">
           <label>Giá trị: </label>
           <Input
             value={newPermissionValue}
@@ -236,11 +200,11 @@ const Permission = () => {
         okText="Lưu"
         cancelText="Hủy"
       >
-        <div style={{ marginBottom: "10px" }}>
+        <div className="mb-3">
           <label>ID: </label>
           <Input value={editPermissionId} disabled />
         </div>
-        <div style={{ marginBottom: "10px" }}>
+        <div className="mb-3">
           <label>Tên Quyền: </label>
           <Input
             value={editPermissionName}
@@ -248,7 +212,7 @@ const Permission = () => {
             placeholder="Nhập tên quyền"
           />
         </div>
-        <div style={{ marginBottom: "10px" }}>
+        <div className="mb-3">
           <label>Giá trị: </label>
           <Input
             value={editPermissionValue}
@@ -256,7 +220,7 @@ const Permission = () => {
             placeholder="Nhập giá trị quyền"
           />
         </div>
-        <div>
+        <div className="mb-3">
           <label>Mô tả: </label>
           <Input
             value={editPermissionDescription}
@@ -265,7 +229,7 @@ const Permission = () => {
           />
         </div>
       </Modal>
-    </div>
+    </>
   );
 };
 

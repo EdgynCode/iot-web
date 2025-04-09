@@ -1,16 +1,20 @@
-// src/pages/RoleManegement/Role.js
 import React, { useState, useEffect } from "react";
-import { ListDetail } from "../../components/list-detail/ListDetail";
+import { ListDetail } from "../list-detail/ListDetail";
 import { Button, Drawer, Space, Tabs, Modal, Input, message, Spin } from "antd";
-import RoleService from "../../redux/services/role.service";
-import Permission from "./Permission"; // Component Permission cùng thư mục
+import { roleListAction, roleColumns } from "../../datas/role.d";
+import { useRoleData } from "../../hooks/useRoleData";
+import { useDispatch } from "react-redux";
+import {
+  getAllRoles,
+  addRole,
+  updateRole,
+  deleteRole,
+} from "../../redux/actions/roleAction";
+import { v4 as uuidv4 } from "uuid";
 
 const Role = () => {
-  // Danh sách role
-  const [roles, setRoles] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
+  const dispatch = useDispatch();
+  const { roles, loading, error } = useRoleData();
   // Drawer hiển thị chi tiết Role
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedRole] = useState(null);
@@ -29,60 +33,6 @@ const Role = () => {
 
   // Các dòng được chọn (để xóa nhiều)
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  useEffect(() => {
-    fetchRoles();
-  }, []);
-
-  const fetchRoles = () => {
-    setLoading(true);
-    RoleService.getAllRoles()
-      .then((data) => {
-        setRoles(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
-        setLoading(false);
-      });
-  };
-
-  // ===================== CẤU HÌNH BẢNG & HÀNH ĐỘNG =====================
-  // Cột bảng (giữ lại nút Xem, Sửa; bỏ nút Xóa để xóa nhiều dòng bằng action)
-  const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "Vai trò",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Hành động",
-      key: "action",
-      render: (_, record) => (
-        <>
-          <Button type="link" onClick={() => handleEditRole(record)}>
-            Sửa
-          </Button>
-          {/* Xóa row-level có thể bỏ, vì đã có xóa nhiều ở top-bar */}
-        </>
-      ),
-    },
-  ];
-
-  // Hai nút “Thêm Role” và “Xóa Role” ở top-bar
-  const roleListAction = () => [
-    {
-      title: "Thêm Role",
-    },
-    {
-      title: "Xóa Role",
-    },
-  ];
 
   // Khi click vào mỗi action
   const handleActionClick = (action) => {
@@ -106,14 +56,16 @@ const Role = () => {
       message.warning("Vui lòng nhập tên role");
       return;
     }
-    try {
-      await RoleService.addRole(undefined, newRoleName);
-      message.success("Thêm role thành công");
-      setOpenModal(false);
-      fetchRoles();
-    } catch (err) {
-      message.error("Thêm role thất bại: " + err);
-    }
+    dispatch(addRole({ id: uuidv4(), name: newRoleName }))
+      .unwrap()
+      .then(() => {
+        message.success("Thêm role mới thành công!");
+        setOpenModal(false);
+        dispatch(getAllRoles());
+      })
+      .catch(() => {
+        message.error("Thêm role mới thất bại.");
+      });
   };
 
   // ===================== XÓA ROLE (NHIỀU DÒNG) =====================
@@ -123,15 +75,17 @@ const Role = () => {
       return;
     }
     try {
-      for (const key of selectedRowKeys) {
-        await RoleService.deleteRole(key);
-      }
-      message.success("Xóa Role thành công!");
+      const deletePromises = selectedRowKeys.map((key) =>
+        dispatch(deleteRole(key)).unwrap()
+      );
+      await Promise.all(deletePromises);
+
+      message.success("Xóa role thành công!");
       setSelectedRowKeys([]);
       setOpenModal(false);
-      fetchRoles();
-    } catch (err) {
-      message.error("Xóa role thất bại: " + err);
+      dispatch(getAllRoles());
+    } catch (error) {
+      message.error("Có lỗi xảy ra khi xóa role.");
     }
   };
 
@@ -146,14 +100,16 @@ const Role = () => {
       message.error("Vui lòng nhập đầy đủ thông tin");
       return;
     }
-    try {
-      await RoleService.updateRole(editRoleId, editRoleName);
-      message.success("Cập nhật role thành công");
-      setShowEditModal(false);
-      fetchRoles();
-    } catch (err) {
-      message.error("Cập nhật role thất bại: " + err);
-    }
+    dispatch(updateRole({ id: editRoleId, name: editRoleName }))
+      .unwrap()
+      .then(() => {
+        message.success("Cập nhật role thành công");
+        setShowEditModal(false);
+        dispatch(getAllRoles());
+      })
+      .catch((err) => {
+        message.error("Cập nhật role thất bại: " + err);
+      });
   };
 
   // ===================== XEM CHI TIẾT ROLE =====================
@@ -197,24 +153,20 @@ const Role = () => {
     }
   }, []);
 
-  // ===================== GIAO DIỆN TAB "VAI TRÒ" =====================
-  const roleManagementContent = (
-    <div style={{ marginTop: "20px" }}>
-      {loading && <Spin size="large" />}
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
-
+  return (
+    <>
       <ListDetail
         title="Danh sách Role"
         actions={roleListAction().map((action) => ({
           ...action,
           onClick: () => handleActionClick(action),
         }))}
-        filters={[]}
         data={roles}
-        column={columns}
+        column={roleColumns(handleEditRole)}
         onSelectionChange={onSelectionChange}
       />
-
+      {loading && <Spin size="large" />}
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
       {/* Drawer chi tiết Role */}
       <Drawer
         title={
@@ -244,7 +196,7 @@ const Role = () => {
         okText="Lưu"
         cancelText="Hủy"
       >
-        <div style={{ marginBottom: "10px" }}>
+        <div className="mb-3">
           <label>ID: </label>
           <Input value={editRoleId} disabled />
         </div>
@@ -270,7 +222,7 @@ const Role = () => {
       >
         {modalType === "addRole" ? (
           // Form thêm Role
-          <div>
+          <div className="mb-3">
             <label>Tên Role: </label>
             <Input
               value={newRoleName}
@@ -283,37 +235,7 @@ const Role = () => {
           <p>Bạn có chắc chắn muốn xóa Role đã chọn không?</p>
         )}
       </Modal>
-    </div>
-  );
-
-  // ===================== TAB CHÍNH: VAI TRÒ / QUYỀN HẠN =====================
-  const [activeTab, setActiveTab] = useState("Vai trò");
-  const tabItems = [
-    {
-      key: "Vai trò",
-      label: "Vai trò",
-      children: roleManagementContent,
-    },
-    {
-      key: "Quyền hạn",
-      label: "Quyền hạn",
-      children: (
-        <div style={{ marginTop: "20px" }}>
-          <Permission />
-        </div>
-      ),
-    },
-  ];
-
-  return (
-    <div style={{ padding: "20px" }}>
-      <Tabs
-        activeKey={activeTab}
-        onChange={(key) => setActiveTab(key)}
-        items={tabItems}
-        type="card"
-      />
-    </div>
+    </>
   );
 };
 

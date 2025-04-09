@@ -1,4 +1,3 @@
-import RoleAndPermission from "../pages/RoleManegement/Role";
 import { LogoutOutlined } from "@ant-design/icons";
 import {
   Lessons,
@@ -18,6 +17,7 @@ import {
   Classrooms,
   Schedule,
   ExperimentDetail,
+  RolePermission,
 } from "../pages";
 import {
   BookmarkMenuIcon,
@@ -117,7 +117,7 @@ const logout = {
 const rolePermission = {
   key: "role-permission", // key này cũng sẽ là đường dẫn khi gọi navigate("new-tab")
   icon: <DeviceMenuIcon />,
-  element: <RoleAndPermission />,
+  element: <RolePermission />,
   title: "Quản lý quyền",
 };
 const lessonDetail = { key: "lesson-detail/:id", element: <LessonDetail /> };
@@ -164,11 +164,10 @@ export const teacherSidebar = [
   logout,
 ];
 export const superAdminSidebar = [
-  lessons,
+  rolePermission,
   accounts,
   classrooms,
   deviceTypes,
   accountDetail,
-  rolePermission,
   logout,
 ];
