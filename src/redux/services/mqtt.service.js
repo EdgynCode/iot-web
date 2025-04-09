@@ -2,7 +2,7 @@ import mqttInstance from "./mqttInstance";
 
 const connectToBroker = async (brokerIp, port, username, password) => {
   try {
-    const response = await mqttInstance.post("ConfigBroker/Start", {
+    const response = await mqttInstance.post("ConfigBroker/Connect", {
       brokerIp,
       port,
       username,

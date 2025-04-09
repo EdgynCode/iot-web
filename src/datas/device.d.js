@@ -75,7 +75,7 @@ export const deviceListColumns = (navigate) => [
   },
 ];
 
-export const deviceColumns = (onUpdate, onRemove, onConnect, isAdmin) => {
+export const deviceColumns = (onUpdate, onRemove, isAdmin) => {
   const columns = [
     {
       title: "Số seri",
@@ -127,31 +127,32 @@ export const deviceColumns = (onUpdate, onRemove, onConnect, isAdmin) => {
           >
             <DeleteOutlined />
           </button>
-          <button
+          {/* <button
             onClick={() => onConnect()}
             className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700 ml-2"
           >
             <ApiOutlined />
-          </button>
-        </span>
-      ),
-    });
-  } else {
-    columns.push({
-      title: "Tác vụ",
-      key: "actions",
-      render: (record) => (
-        <span>
-          <button
-            onClick={() => onConnect()}
-            className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700 ml-2"
-          >
-            <ApiOutlined />
-          </button>
+          </button> */}
         </span>
       ),
     });
   }
+  // } else {
+  //   columns.push({
+  //     title: "Tác vụ",
+  //     key: "actions",
+  //     render: (record) => (
+  //       <span>
+  //         <button
+  //           onClick={() => onConnect()}
+  //           className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700 ml-2"
+  //         >
+  //           <ApiOutlined />
+  //         </button>
+  //       </span>
+  //     ),
+  //   });
+  // }
 
   return columns;
 };
