@@ -20,4 +20,5 @@ export { default as LabDetail } from "./lab-detail";
 export { default as Schedule } from "./schedule";
 export { default as Classrooms } from "./classrooms";
 export { default as ExperimentDetail } from "./experiment-detail";
+export { default as Assignments } from "./assignments";
 export { default as RolePermission } from "./role-permission";

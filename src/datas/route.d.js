@@ -18,6 +18,7 @@ import {
   Schedule,
   ExperimentDetail,
   RolePermission,
+  Assignments,
 } from "../pages";
 import {
   BookmarkMenuIcon,
@@ -27,6 +28,7 @@ import {
   PhysicsMenuIcon,
   ScheduleMenuIcon,
   StudentMenuIcon,
+  AssignmentMenuIcon,
 } from "./icon.d";
 
 const accounts = {
@@ -40,6 +42,12 @@ const accountDetail = {
   element: <AccountDetail />,
   icon: <PersonalMenuIcon />,
   title: "Thông tin tài khoản",
+};
+const assignments = {
+  key: "assignments",
+  element: <Assignments />,
+  icon: <AssignmentMenuIcon />,
+  title: "Bài tập",
 };
 const classrooms = {
   key: "classrooms",
@@ -122,10 +130,16 @@ const rolePermission = {
 };
 const lessonDetail = { key: "lesson-detail/:id", element: <LessonDetail /> };
 const labDetail = { key: "lab-detail/:id", element: <LabDetail /> };
-export const learnerRoute = [accountDetail, editAccountDetail, logout];
+export const learnerRoute = [
+  assignments,
+  accountDetail,
+  editAccountDetail,
+  logout,
+];
 export const teacherRoute = [
   schedule,
   lessons,
+  assignments,
   labs,
   deviceTypes,
   devices,
@@ -140,7 +154,6 @@ export const teacherRoute = [
   experimentDetail,
 ];
 export const superAdminRoute = [
-  lessons,
   userDetail,
   editUserDetail,
   accounts,
@@ -153,10 +166,11 @@ export const superAdminRoute = [
   classrooms,
   experimentDetail,
 ];
-export const learnerSidebar = [accountDetail, logout];
+export const learnerSidebar = [assignments, accountDetail, logout];
 export const teacherSidebar = [
   schedule,
   lessons,
+  assignments,
   labs,
   deviceTypes,
   students,
