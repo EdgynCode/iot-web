@@ -166,6 +166,9 @@ const Schedule = () => {
       case "Tạo nhóm":
         setModalType("createGroup");
         break;
+      case "Thêm người học vào nhóm":
+        setModalType("addLearnerToGroup");
+        break;
       default:
         console.log("Invalid action");
     }

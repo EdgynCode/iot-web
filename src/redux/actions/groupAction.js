@@ -2,6 +2,7 @@ import GroupService from "../services/group.service";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "../slices/message";
 
+// Tạo nhóm
 export const createGroup = createAsyncThunk(
   "Group/CreateGroup",
   async ({ tenNhom, sessionId }, thunkAPI) => {
@@ -21,6 +22,7 @@ export const createGroup = createAsyncThunk(
   }
 );
 
+// Lấy danh sách nhóm theo buổi học
 export const getGroupsByClassSession = createAsyncThunk(
   "Group/GetGroupsByClassSession",
   async (sessionId, thunkAPI) => {
@@ -40,12 +42,33 @@ export const getGroupsByClassSession = createAsyncThunk(
   }
 );
 
+// Xóa nhóm
 export const removeGroup = createAsyncThunk(
   "Group/RemoveGroup",
   async (groupId, thunkAPI) => {
     try {
       const data = await GroupService.removeGroup(groupId);
       thunkAPI.dispatch(setMessage("Group removed successfully!"));
+      return data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Thêm người học vào nhóm
+export const addLearnersToGroup = createAsyncThunk(
+  "Group/AddLearnersToGroup",
+  async ({ groupId, members }, thunkAPI) => {
+    try {
+      const data = await GroupService.addLearnersToGroup(groupId, members);
+      thunkAPI.dispatch(setMessage("Thêm người học vào nhóm thành công!"));
       return data;
     } catch (error) {
       const message =
