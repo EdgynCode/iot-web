@@ -53,49 +53,55 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
   const [existingMembers, setExistingMembers] = useState([]);
 
   useEffect(() => {
-    if (open && selected) {
-      form.setFieldsValue({
-        date: selected,
-        time: selected,
-      });
-    }
-  }, [open, selected, form]);
+    if (open) {
+      if (selected) {
+        form.setFieldsValue({
+          date: selected,
+          time: selected,
+        });
+      }
 
-  useEffect(() => {
-    if (open && modalType === "addLearnerToGroup") {
-      const localLearners = getLocalLearners();
-      setAvailableLearners(localLearners);
-    }
-  }, [open, modalType]);
+      if (modalType === "addLearnerToGroup") {
+        const localLearners = getLocalLearners();
+        setAvailableLearners(localLearners);
 
-  useEffect(() => {
-    if (selectedSessionId && modalType === "addLearnerToGroup") {
-      const selectedSession = sessionData.find(
-        (session) => session.id === selectedSessionId
-      );
+        if (selectedSessionId) {
+          const selectedSession = sessionData.find(
+            (session) => session.id === selectedSessionId
+          );
 
-      if (selectedSession) {
-        setSelectedLopHocId(selectedSession.lopHocId);
+          if (selectedSession) {
+            setSelectedLopHocId(selectedSession.lopHocId);
 
-        setLoadingGroups(true);
-        dispatch(getGroupsByClassSession(selectedSessionId))
-          .then((response) => {
-            const fetchedGroups = Array.isArray(response.payload)
-              ? response.payload
-              : [];
-            setGroups(fetchedGroups);
-          })
-          .catch((error) => {
-            console.error("Error fetching groups:", error);
-            message.error("Không thể tải danh sách nhóm");
-            setGroups([]);
-          })
-          .finally(() => setLoadingGroups(false));
-      } else {
-        message.error("Không tìm thấy thông tin buổi học");
+            setLoadingGroups(true);
+            dispatch(getGroupsByClassSession(selectedSessionId))
+              .then((response) => {
+                const fetchedGroups = Array.isArray(response.payload)
+                  ? response.payload
+                  : [];
+                setGroups(fetchedGroups);
+              })
+              .catch((error) => {
+                console.error("Error fetching groups:", error);
+                message.error("Không thể tải danh sách nhóm");
+                setGroups([]);
+              })
+              .finally(() => setLoadingGroups(false));
+          } else {
+            message.error("Không tìm thấy thông tin buổi học");
+          }
+        }
       }
     }
-  }, [selectedSessionId, modalType, sessionData, dispatch]);
+  }, [
+    open,
+    selected,
+    modalType,
+    selectedSessionId,
+    sessionData,
+    form,
+    dispatch,
+  ]);
 
   const handleSessionChange = (value) => {
     setSelectedSessionId(value);
