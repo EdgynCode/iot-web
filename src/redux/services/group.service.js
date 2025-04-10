@@ -16,6 +16,7 @@ const createGroup = async (tenNhom, sessionId) => {
   }
 };
 
+// Lấy danh sách nhóm theo class session
 const getGroupsByClassSession = async (sessionId) => {
   try {
     const response = await axiosInstance.get(
@@ -30,7 +31,7 @@ const getGroupsByClassSession = async (sessionId) => {
     throw error.response?.data || error.message;
   }
 };
-
+// Xoá nhóm
 const removeGroup = async (groupId) => {
   try {
     const response = await axiosInstance.delete(
@@ -46,10 +47,28 @@ const removeGroup = async (groupId) => {
   }
 };
 
+// Thêm người học vào nhóm
+const addLearnersToGroup = async (groupId, memberList) => {
+  try {
+    const response = await axiosInstance.post(
+      `Group/AddLearnersToGroup?groupId=${groupId}`,
+      memberList
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error adding students to group:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const GroupService = {
   createGroup,
   getGroupsByClassSession,
   removeGroup,
+  addLearnersToGroup,
 };
 
 export default GroupService;
