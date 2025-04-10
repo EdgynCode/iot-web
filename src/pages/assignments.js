@@ -1,14 +1,28 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { DatePicker, Form, Modal, Select, Button, message, Input, Upload, Spin } from "antd";
+import {
+  DatePicker,
+  Form,
+  Modal,
+  Select,
+  Button,
+  message,
+  Input,
+  Upload,
+  Spin,
+} from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { UploadOutlined } from "@ant-design/icons";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import { assignmentAction, assignmentColumns } from "../datas/assignment.d";
 import { useAssignmentData } from "../hooks/useAssignmentData";
 import { useClassroomData } from "../hooks/useClassroomData";
-import { createAssignment, getAllAssignments, removeAssignment } from "../redux/actions/assignmentAction";
+import {
+  createAssignment,
+  getAllAssignments,
+  removeAssignment,
+} from "../redux/actions/assignmentAction";
 import moment from "moment";
 import "moment/locale/vi";
 
@@ -33,13 +47,17 @@ const Assignments = () => {
     const formData = new FormData();
     formData.append("title", form.getFieldValue("title"));
     formData.append("description", form.getFieldValue("description"));
-    formData.append("dueDate", moment(form.getFieldValue("dueDate")).format("YYYY-MM-DD"));
+    formData.append(
+      "dueDate",
+      moment(form.getFieldValue("dueDate")).format("YYYY-MM-DD")
+    );
     formData.append("lopHocId", form.getFieldValue("class"));
     if (file) {
       formData.append("formFile", file);
     }
 
-    dispatch(createAssignment(formData)).unwrap()
+    dispatch(createAssignment(formData))
+      .unwrap()
       .then(() => {
         message.success("Tạo bài tập thành công");
         setOpen(false);
@@ -135,7 +153,9 @@ const Assignments = () => {
           </Form.Item>
           <Form.Item
             name="description"
-            rules={[{ required: true, message: "Hướng dẫn bài tập là bắt buộc" }]}
+            rules={[
+              { required: true, message: "Hướng dẫn bài tập là bắt buộc" },
+            ]}
           >
             <TextArea placeholder="Hướng dẫn" />
           </Form.Item>
@@ -156,7 +176,6 @@ const Assignments = () => {
               <Form.Item name="formFile">
                 <Upload
                   accept=".pdf"
-                  fileList={[file]}
                   beforeUpload={(file) => {
                     setFile(file);
                     return false;
