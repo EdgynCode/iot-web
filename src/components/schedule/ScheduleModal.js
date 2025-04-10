@@ -19,24 +19,13 @@ import "moment/locale/vi";
 import { v4 as uuidv4 } from "uuid";
 import Input from "antd/es/input/Input";
 import "./index.css";
+import {
+  getLocalLearners,
+  saveLocalLearners,
+  resetLocalLearners,
+} from "../../utils/localStorageHelper";
 
 moment.locale("vi");
-
-// LocalStorage helper functions
-const LOCAL_STORAGE_KEY = "availableLearners";
-
-const getLocalLearners = () => {
-  const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-  return stored ? JSON.parse(stored) : [];
-};
-
-const saveLocalLearners = (learners) => {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(learners));
-};
-
-const resetLocalLearners = () => {
-  localStorage.removeItem(LOCAL_STORAGE_KEY);
-};
 
 const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
   const dispatch = useDispatch();
