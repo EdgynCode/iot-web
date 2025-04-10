@@ -62,26 +62,6 @@ export const removeGroup = createAsyncThunk(
   }
 );
 
-// Lấy danh sách người học theo buổi học
-export const fetchStudentsByClassSession = createAsyncThunk(
-  "Students/FetchStudentsByClassSession",
-  async (sessionId, thunkAPI) => {
-    try {
-      const data = await GroupService.getStudentsByClassSession(sessionId);
-      thunkAPI.dispatch(setMessage("Students data fetched successfully!"));
-      return data;
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 // Thêm người học vào nhóm
 export const addLearnersToGroup = createAsyncThunk(
   "Group/AddLearnersToGroup",
@@ -101,4 +81,3 @@ export const addLearnersToGroup = createAsyncThunk(
     }
   }
 );
-
