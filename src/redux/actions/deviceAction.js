@@ -117,13 +117,33 @@ export const removeDevice = createAsyncThunk(
 
 export const updateDevice = createAsyncThunk(
   "Device/UpdateDevice",
-  async ({ id, tenThietBi, moTa, ghiChu }, thunkAPI) => {
+  async (
+    {
+      id,
+      tenThietBi,
+      donViId,
+      serialNumber,
+      maQR,
+      moTa,
+      ghiChu,
+      isTrangThai,
+      loaiThietBiID,
+      thoiGianBaoHanh,
+    },
+    thunkAPI
+  ) => {
     try {
       const device = await DeviceService.updateDevice(
         id,
         tenThietBi,
+        donViId,
+        serialNumber,
+        maQR,
         moTa,
-        ghiChu
+        ghiChu,
+        isTrangThai,
+        loaiThietBiID,
+        thoiGianBaoHanh
       );
       return device;
     } catch (error) {

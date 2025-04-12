@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { ListDetail } from "../list-detail/ListDetail";
-import { Button, Drawer, Space, Tabs, Modal, Input, message, Spin } from "antd";
+import {
+  Button,
+  Drawer,
+  Space,
+  Tabs,
+  Modal,
+  Input,
+  message,
+  Spin,
+  Form,
+} from "antd";
 import { roleListAction, roleColumns } from "../../datas/role.d";
 import { useRoleData } from "../../hooks/useRoleData";
 import { useDispatch } from "react-redux";
@@ -15,12 +25,10 @@ import { v4 as uuidv4 } from "uuid";
 const Role = () => {
   const dispatch = useDispatch();
   const { roles, loading, error } = useRoleData();
+
   // Drawer hiển thị chi tiết Role
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedRole] = useState(null);
-
-  // State cho form Thêm Role
-  const [newRoleName, setNewRoleName] = useState("");
 
   // Modal chính (dùng chung cho Thêm/Xóa)
   const [openModal, setOpenModal] = useState(false);
@@ -29,7 +37,9 @@ const Role = () => {
   // State cho Modal Sửa Role
   const [showEditModal, setShowEditModal] = useState(false);
   const [editRoleId, setEditRoleId] = useState("");
-  const [editRoleName, setEditRoleName] = useState("");
+
+  const [addForm] = Form.useForm();
+  const [editForm] = Form.useForm();
 
   // Các dòng được chọn (để xóa nhiều)
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -39,7 +49,7 @@ const Role = () => {
     switch (action.title) {
       case "Thêm Role":
         setModalType("addRole");
-        setNewRoleName("");
+        addForm.resetFields();
         break;
       case "Xóa Role":
         setModalType("deleteRole");
@@ -52,19 +62,22 @@ const Role = () => {
 
   // ===================== THÊM ROLE =====================
   const handleAddRoleSubmit = async () => {
-    if (!newRoleName) {
-      message.warning("Vui lòng nhập tên role");
-      return;
-    }
-    dispatch(addRole({ id: uuidv4(), name: newRoleName }))
-      .unwrap()
-      .then(() => {
-        message.success("Thêm role mới thành công!");
-        setOpenModal(false);
-        dispatch(getAllRoles());
+    addForm
+      .validateFields()
+      .then((values) => {
+        dispatch(addRole({ id: uuidv4(), ...values }))
+          .unwrap()
+          .then(() => {
+            message.success("Thêm role mới thành công!");
+            setOpenModal(false);
+            dispatch(getAllRoles());
+          })
+          .catch(() => {
+            message.error("Thêm role mới thất bại.");
+          });
       })
       .catch(() => {
-        message.error("Thêm role mới thất bại.");
+        message.error("Vui lòng nhập đầy đủ thông tin");
       });
   };
 
@@ -92,29 +105,28 @@ const Role = () => {
   // ===================== SỬA ROLE =====================
   const handleEditRole = (record) => {
     setEditRoleId(record.id);
-    setEditRoleName(record.name);
+    editForm.setFieldsValue({ name: record.name });
     setShowEditModal(true);
   };
-  const handleEditRoleSubmit = async () => {
-    if (!editRoleId || !editRoleName) {
-      message.error("Vui lòng nhập đầy đủ thông tin");
-      return;
-    }
-    dispatch(updateRole({ id: editRoleId, name: editRoleName }))
-      .unwrap()
-      .then(() => {
-        message.success("Cập nhật role thành công");
-        setShowEditModal(false);
-        dispatch(getAllRoles());
-      })
-      .catch((err) => {
-        message.error("Cập nhật role thất bại: " + err);
-      });
-  };
 
-  // ===================== XEM CHI TIẾT ROLE =====================
-  const onCloseDrawer = () => {
-    setOpenDrawer(false);
+  const handleEditRoleSubmit = async () => {
+    editForm
+      .validateFields()
+      .then((values) => {
+        dispatch(updateRole({ id: editRoleId, ...values }))
+          .unwrap()
+          .then(() => {
+            message.success("Cập nhật role thành công");
+            setShowEditModal(false);
+            dispatch(getAllRoles());
+          })
+          .catch((err) => {
+            message.error("Cập nhật role thất bại: " + err);
+          });
+      })
+      .catch(() => {
+        message.error("Vui lòng nhập đầy đủ thông tin");
+      });
   };
 
   // ===================== SELECTION (CHỌN NHIỀU) =====================
@@ -176,11 +188,11 @@ const Role = () => {
         }
         placement="right"
         size="large"
-        onClose={onCloseDrawer}
+        onClose={() => setOpenDrawer(false)}
         open={openDrawer}
         extra={
           <Space>
-            <Button onClick={onCloseDrawer}>Đóng</Button>
+            <Button onClick={() => setOpenDrawer(false)}>Đóng</Button>
           </Space>
         }
       >
@@ -196,18 +208,18 @@ const Role = () => {
         okText="Lưu"
         cancelText="Hủy"
       >
-        <div className="mb-3">
-          <label>ID: </label>
-          <Input value={editRoleId} disabled />
-        </div>
-        <div>
-          <label>Tên Role: </label>
-          <Input
-            value={editRoleName}
-            onChange={(e) => setEditRoleName(e.target.value)}
-            placeholder="Nhập tên role"
-          />
-        </div>
+        <Form form={editForm} layout="vertical">
+          <Form.Item label="ID">
+            <Input value={editRoleId} disabled />
+          </Form.Item>
+          <Form.Item
+            label="Tên Role"
+            name="name"
+            rules={[{ required: true, message: "Vui lòng nhập tên role" }]}
+          >
+            <Input placeholder="Nhập tên role" />
+          </Form.Item>
+        </Form>
       </Modal>
 
       {/* Modal dùng chung cho Thêm / Xóa Role */}
@@ -221,17 +233,16 @@ const Role = () => {
         cancelText="Hủy"
       >
         {modalType === "addRole" ? (
-          // Form thêm Role
-          <div className="mb-3">
-            <label>Tên Role: </label>
-            <Input
-              value={newRoleName}
-              onChange={(e) => setNewRoleName(e.target.value)}
-              placeholder="Nhập tên role"
-            />
-          </div>
+          <Form form={addForm} layout="vertical">
+            <Form.Item
+              label="Tên Role"
+              name="name"
+              rules={[{ required: true, message: "Vui lòng nhập tên role" }]}
+            >
+              <Input placeholder="Nhập tên role" />
+            </Form.Item>
+          </Form>
         ) : (
-          // Nội dung xác nhận xóa Role
           <p>Bạn có chắc chắn muốn xóa Role đã chọn không?</p>
         )}
       </Modal>

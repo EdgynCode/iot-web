@@ -101,13 +101,30 @@ const removeDevice = async (deviceId) => {
   }
 };
 
-const updateDevice = async (id, tenThietBi, moTa, ghiChu) => {
+const updateDevice = async (
+  id,
+  tenThietBi,
+  donViId,
+  serialNumber,
+  maQR,
+  moTa,
+  ghiChu,
+  isTrangThai,
+  loaiThietBiID,
+  thoiGianBaoHanh
+) => {
   try {
     const response = await axiosInstance.patch("Device/UpdateDeviceType", {
       id,
       tenThietBi,
+      donViId,
+      serialNumber,
+      maQR,
       moTa,
       ghiChu,
+      isTrangThai,
+      loaiThietBiID,
+      thoiGianBaoHanh,
     });
     return response.data;
   } catch (error) {

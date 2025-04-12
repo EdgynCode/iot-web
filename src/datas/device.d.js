@@ -1,4 +1,8 @@
-import { EditOutlined, DeleteOutlined, ApiOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 import formatDate from "../utils/formatDate";
 
 export const deviceListAction = () => [
@@ -16,38 +20,28 @@ export const deviceListAction = () => [
   },
 ];
 
-export const deviceAction = () => [
-  {
-    title: "Thêm thiết bị",
-    onClick: (openModal) => {
-      openModal();
+export const deviceAction = (isAdmin) => {
+  const actions = [
+    {
+      title: "Kiểm tra kết nối",
+      onClick: (openModal) => {
+        openModal();
+      },
     },
-  },
-  {
-    title: "Kiểm tra kết nối",
-    onClick: (openModal) => {
-      openModal();
-    },
-  },
-];
+  ];
 
-export const gradeMenu = [
-  { key: "1", label: "Khối 10" },
-  { key: "2", label: "Khối 11" },
-  { key: "3", label: "Khối 12" },
-  { key: "4", label: "Tự do" },
-];
-export const classMenu = [
-  { key: "1", label: "Lớp 10C1" },
-  { key: "2", label: "Lớp 10C2" },
-  { key: "3", label: "Lớp 10C3" },
-  { key: "4", label: "Lớp 10C4" },
-  { key: "5", label: "Lớp 10C5" },
-];
-export const deviceFilter = [
-  { key: "Grade", label: "Khối", options: gradeMenu },
-  { key: "Class", label: "Lớp", options: classMenu },
-];
+  if (isAdmin) {
+    actions.push({
+      title: "Thêm thiết bị",
+      onClick: (openModal) => {
+        openModal();
+      },
+    });
+  }
+
+  return actions;
+};
+
 export const deviceListColumns = (navigate) => [
   {
     title: "Tên loại thiết bị",
@@ -75,7 +69,19 @@ export const deviceListColumns = (navigate) => [
   },
 ];
 
-export const deviceColumns = (onUpdate, onRemove, isAdmin) => {
+export const deviceColumns = (onUpdate, onRemove, onConfig, isAdmin) => {
+  const buttons = [
+    {
+      render: (record) => (
+        <button
+          onClick={() => onConfig(record.serialNumber)}
+          className="bg-gray-500 text-white font-bold py-2 px-4 rounded hover:bg-gray-700"
+        >
+          <SettingOutlined />
+        </button>
+      ),
+    },
+  ];
   const columns = [
     {
       title: "Số seri",
@@ -107,52 +113,41 @@ export const deviceColumns = (onUpdate, onRemove, isAdmin) => {
       key: "thoiGianBaoHanh",
       render: (text) => <p>{formatDate(text)}</p>,
     },
-  ];
-
-  if (isAdmin) {
-    columns.push({
+    {
       title: "Tác vụ",
       key: "actions",
       render: (record) => (
         <span>
-          <button
-            onClick={() => onUpdate(record)}
-            className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700"
-          >
-            <EditOutlined />
-          </button>
-          <button
-            onClick={() => onRemove(record.id)}
-            className="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700 ml-2"
-          >
-            <DeleteOutlined />
-          </button>
-          {/* <button
-            onClick={() => onConnect()}
-            className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700 ml-2"
-          >
-            <ApiOutlined />
-          </button> */}
+          {buttons.map((button, index) => (
+            <span key={index}>{button.render(record)}</span>
+          ))}
         </span>
+      ),
+    },
+  ];
+
+  if (isAdmin) {
+    buttons.push({
+      render: (record) => (
+        <button
+          onClick={() => onUpdate(record)}
+          className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 ml-2"
+        >
+          <EditOutlined />
+        </button>
+      ),
+    });
+    buttons.push({
+      render: (record) => (
+        <button
+          onClick={() => onRemove(record.id)}
+          className="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700 ml-2"
+        >
+          <DeleteOutlined />
+        </button>
       ),
     });
   }
-  // } else {
-  //   columns.push({
-  //     title: "Tác vụ",
-  //     key: "actions",
-  //     render: (record) => (
-  //       <span>
-  //         <button
-  //           onClick={() => onConnect()}
-  //           className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700 ml-2"
-  //         >
-  //           <ApiOutlined />
-  //         </button>
-  //       </span>
-  //     ),
-  //   });
-  // }
 
   return columns;
 };
