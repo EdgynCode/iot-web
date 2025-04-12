@@ -28,14 +28,12 @@ const RolePermission = () => {
   ];
 
   return (
-    <div className="p-5">
-      <Tabs
-        activeKey={activeTab}
-        onChange={(key) => setActiveTab(key)}
-        items={tabItems}
-        type="card"
-      />
-    </div>
+    <Tabs
+      activeKey={activeTab}
+      onChange={(key) => setActiveTab(key)}
+      items={tabItems}
+      type="card"
+    />
   );
 };
 

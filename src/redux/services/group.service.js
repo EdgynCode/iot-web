@@ -16,7 +16,6 @@ const createGroup = async (tenNhom, sessionId) => {
   }
 };
 
-// Lấy danh sách nhóm theo class session
 const getGroupsByClassSession = async (sessionId) => {
   try {
     const response = await axiosInstance.get(
@@ -31,7 +30,7 @@ const getGroupsByClassSession = async (sessionId) => {
     throw error.response?.data || error.message;
   }
 };
-// Xoá nhóm
+
 const removeGroup = async (groupId) => {
   try {
     const response = await axiosInstance.delete(
@@ -64,7 +63,6 @@ const addLearnersToGroup = async (groupId, memberList) => {
   }
 };
 
-
 const GroupService = {
   createGroup,
   getGroupsByClassSession,
@@ -73,4 +71,3 @@ const GroupService = {
 };
 
 export default GroupService;
-

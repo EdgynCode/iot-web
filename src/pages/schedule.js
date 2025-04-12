@@ -49,13 +49,17 @@ const Schedule = () => {
   }, [selected, sessions, dispatch]);
 
   const classSessionInfo = (value) => {
-    const uuidFormat = (uuid) =>
-      uuid.match(
+    const uuidFormat = (labId) => {
+      const [uuidPart, labName] = labId.split("|");
+      const uuid = uuidPart.match(
         /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/
       )[0];
+      return { uuid, labName };
+    };
     const sessionInfo = sessions.filter((session) =>
       moment(session.startTime).isSame(value.format("YYYY-MM-DD"), "day")
     );
+
     return (
       <>
         <Title level={2}>{`Buổi học ngày ${value.format("DD/MM/YYYY")}`}</Title>
@@ -68,9 +72,10 @@ const Schedule = () => {
                     (classroom) => classroom.id === session.lopHocId
                   )
                 : null;
+            const { uuid, labName } = uuidFormat(session.labIds[0]);
             const lab =
               session.labIds.length > 0
-                ? labs.find((l) => uuidFormat(session.labIds[0]) === l.id)
+                ? labs.find((l) => uuid === l.id)
                 : null;
             return (
               <div key={index} className="p-4 border-b border-gray-200">
@@ -101,12 +106,12 @@ const Schedule = () => {
                 <button
                   className="text-lg text-[#124874] font-semibold"
                   onClick={(record) => {
-                    navigate(`/lab-detail/${lab.id}`, {
+                    navigate(`/lab-detail/${uuid}`, {
                       state: { record: lab },
                     });
                   }}
                 >
-                  {`Bài thực hành: ${lab.name}`}
+                  {`Bài thực hành: ${labName}`}
                 </button>
               </div>
             );

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { connectToBroker } from "../actions/mqttAction";
+import { connectToBroker, brokerConfig } from "../actions/mqttAction";
 
 const initialState = {
   connected: false,
@@ -29,6 +29,18 @@ const mqttSlice = createSlice({
         state.loading = false;
       })
       .addCase(connectToBroker.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      })
+      .addCase(brokerConfig.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(brokerConfig.fulfilled, (state, action) => {
+        state.brokerDetails = action.payload;
+        state.loading = false;
+      })
+      .addCase(brokerConfig.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
       });

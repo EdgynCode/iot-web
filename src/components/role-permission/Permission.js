@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ListDetail } from "../list-detail/ListDetail";
-import { Modal, Input, message, Spin } from "antd";
+import { Modal, Input, message, Spin, Form } from "antd";
 import { useDispatch } from "react-redux";
 import { usePermissionData } from "../../hooks/usePermissionData";
 import {
@@ -16,39 +16,26 @@ import {
 
 const Permission = () => {
   const dispatch = useDispatch();
-  // State quản lý danh sách quyền
   const { permissions, loading, error } = usePermissionData();
 
-  // State cho Modal Thêm Quyền
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newPermissionName, setNewPermissionName] = useState("");
-  const [newPermissionValue, setNewPermissionValue] = useState("");
-  const [newPermissionDescription, setNewPermissionDescription] = useState("");
-
-  // State cho Modal Sửa Quyền
   const [showEditModal, setShowEditModal] = useState(false);
   const [editPermissionId, setEditPermissionId] = useState("");
-  const [editPermissionName, setEditPermissionName] = useState("");
-  const [editPermissionValue, setEditPermissionValue] = useState("");
-  const [editPermissionDescription, setEditPermissionDescription] =
-    useState("");
 
-  // State cho multi-selection (chọn nhiều dòng để xóa)
+  const [addForm] = Form.useForm();
+  const [editForm] = Form.useForm();
+
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  // Xử lý khi nhấn vào từng action trên top-bar
   const handleActionClick = (action) => {
     if (action.title === "Thêm Quyền") {
-      setNewPermissionName("");
-      setNewPermissionValue("");
-      setNewPermissionDescription("");
+      addForm.resetFields();
       setShowAddModal(true);
     } else if (action.title === "Xóa Quyền") {
       handleDeleteSelectedPermissions();
     }
   };
 
-  // Xử lý xóa nhiều dòng quyền được chọn
   const handleDeleteSelectedPermissions = () => {
     if (selectedRowKeys.length === 0) {
       message.warning("Chọn ít nhất 1 quyền để xóa.");
@@ -57,7 +44,6 @@ const Permission = () => {
     Modal.confirm({
       title: "Xác nhận xóa",
       content: "Bạn có chắc chắn muốn xóa các quyền đã chọn không?",
-      // chưa sử dụng được xóa quyền
       onOk: async () => {
         try {
           const deletePromises = selectedRowKeys.map((key) =>
@@ -75,64 +61,61 @@ const Permission = () => {
     });
   };
 
-  // Xử lý mở modal sửa quyền
   const handleEditPermission = (record) => {
     setEditPermissionId(record.id);
-    setEditPermissionName(record.name);
-    setEditPermissionValue(record.value);
-    setEditPermissionDescription(record.description);
+    editForm.setFieldsValue({
+      name: record.name,
+      value: record.value,
+      description: record.description,
+    });
     setShowEditModal(true);
   };
 
-  // Xử lý submit thêm quyền
   const handleAddPermissionSubmit = () => {
-    if (!newPermissionName || !newPermissionValue) {
-      message.error("Vui lòng nhập đầy đủ thông tin");
-      return;
-    }
-    dispatch(
-      addPermission({
-        name: newPermissionName,
-        value: newPermissionValue,
-        description: newPermissionDescription,
+    addForm
+      .validateFields()
+      .then((values) => {
+        dispatch(addPermission(values))
+          .unwrap()
+          .then(() => {
+            message.success("Thêm quyền thành công");
+            setShowAddModal(false);
+            dispatch(getAllPermissions());
+          })
+          .catch((err) => {
+            message.error("Thêm quyền thất bại: " + err);
+          });
       })
-    )
-      .unwrap()
-      .then(() => {
-        message.success("Thêm quyền thành công");
-        setShowAddModal(false);
-        dispatch(getAllPermissions());
-      })
-      .catch((err) => {
-        message.error("Thêm quyền thất bại: " + err);
+      .catch(() => {
+        message.error("Vui lòng nhập đầy đủ thông tin");
       });
   };
 
-  // Xử lý submit sửa quyền
   const handleEditPermissionSubmit = () => {
-    if (!editPermissionId || !editPermissionName || !editPermissionValue) {
-      message.error("Vui lòng nhập đầy đủ thông tin");
-      return;
-    }
-    dispatch(
-      updatePermission({
-        id: editPermissionId,
-        name: editPermissionName,
-        value: editPermissionValue,
+    editForm
+      .validateFields()
+      .then((values) => {
+        dispatch(
+          updatePermission({
+            id: editPermissionId,
+            ...values,
+          })
+        )
+          .unwrap()
+          .then(() => {
+            message.success("Cập nhật quyền thành công");
+            setShowEditModal(false);
+            dispatch(getAllPermissions());
+          })
+          .catch((err) => {
+            message.error("Cập nhật quyền thất bại: " + err);
+          });
       })
-    )
-      .unwrap()
-      .then(() => {
-        message.success("Cập nhật quyền thành công");
-        setShowEditModal(false);
-        dispatch(getAllPermissions());
-      })
-      .catch((err) => {
-        message.error("Cập nhật quyền thất bại: " + err);
+      .catch(() => {
+        message.error("Vui lòng nhập đầy đủ thông tin");
       });
   };
 
-  // Override placeholder cho ô tìm kiếm trong ListDetail (nếu cần)
   useEffect(() => {
     const searchInput = document.querySelector(".tab-header input");
     if (searchInput) {
@@ -165,30 +148,25 @@ const Permission = () => {
         okText="Thêm"
         cancelText="Hủy"
       >
-        <div className="mb-3">
-          <label>Tên Quyền: </label>
-          <Input
-            value={newPermissionName}
-            onChange={(e) => setNewPermissionName(e.target.value)}
-            placeholder="Nhập tên quyền"
-          />
-        </div>
-        <div className="mb-3">
-          <label>Giá trị: </label>
-          <Input
-            value={newPermissionValue}
-            onChange={(e) => setNewPermissionValue(e.target.value)}
-            placeholder="Nhập giá trị quyền"
-          />
-        </div>
-        <div>
-          <label>Mô tả: </label>
-          <Input
-            value={newPermissionDescription}
-            onChange={(e) => setNewPermissionDescription(e.target.value)}
-            placeholder="Nhập mô tả"
-          />
-        </div>
+        <Form form={addForm} layout="vertical">
+          <Form.Item
+            label="Tên Quyền"
+            name="name"
+            rules={[{ required: true, message: "Vui lòng nhập tên quyền" }]}
+          >
+            <Input placeholder="Nhập tên quyền" />
+          </Form.Item>
+          <Form.Item
+            label="Giá trị"
+            name="value"
+            rules={[{ required: true, message: "Vui lòng nhập giá trị quyền" }]}
+          >
+            <Input placeholder="Nhập giá trị quyền" />
+          </Form.Item>
+          <Form.Item label="Mô tả" name="description">
+            <Input placeholder="Nhập mô tả" />
+          </Form.Item>
+        </Form>
       </Modal>
 
       {/* Modal Sửa Quyền */}
@@ -200,34 +178,28 @@ const Permission = () => {
         okText="Lưu"
         cancelText="Hủy"
       >
-        <div className="mb-3">
-          <label>ID: </label>
-          <Input value={editPermissionId} disabled />
-        </div>
-        <div className="mb-3">
-          <label>Tên Quyền: </label>
-          <Input
-            value={editPermissionName}
-            onChange={(e) => setEditPermissionName(e.target.value)}
-            placeholder="Nhập tên quyền"
-          />
-        </div>
-        <div className="mb-3">
-          <label>Giá trị: </label>
-          <Input
-            value={editPermissionValue}
-            onChange={(e) => setEditPermissionValue(e.target.value)}
-            placeholder="Nhập giá trị quyền"
-          />
-        </div>
-        <div className="mb-3">
-          <label>Mô tả: </label>
-          <Input
-            value={editPermissionDescription}
-            onChange={(e) => setEditPermissionDescription(e.target.value)}
-            placeholder="Nhập mô tả"
-          />
-        </div>
+        <Form form={editForm} layout="vertical">
+          <Form.Item label="ID">
+            <Input value={editPermissionId} disabled />
+          </Form.Item>
+          <Form.Item
+            label="Tên Quyền"
+            name="name"
+            rules={[{ required: true, message: "Vui lòng nhập tên quyền" }]}
+          >
+            <Input placeholder="Nhập tên quyền" />
+          </Form.Item>
+          <Form.Item
+            label="Giá trị"
+            name="value"
+            rules={[{ required: true, message: "Vui lòng nhập giá trị quyền" }]}
+          >
+            <Input placeholder="Nhập giá trị quyền" />
+          </Form.Item>
+          <Form.Item label="Mô tả" name="description">
+            <Input placeholder="Nhập mô tả" />
+          </Form.Item>
+        </Form>
       </Modal>
     </>
   );
