@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Spin, Input, Modal, Form, DatePicker, message } from "antd";
+import { Spin, Input, Modal, Form, DatePicker, message } from "antd";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
@@ -26,7 +26,8 @@ const DeviceTable = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentDevice, setCurrentDevice] = useState(null);
   const [modalType, setModalType] = useState("add-edit");
-  const [form] = Form.useForm();
+  const [formAddEdit] = Form.useForm();
+  const [formConfig] = Form.useForm();
   const [isAdmin, setIsAdmin] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user")) || null;
@@ -43,7 +44,7 @@ const DeviceTable = () => {
     setModalType("add-edit");
     setIsEditing(true);
     setCurrentDevice(data);
-    form.setFieldsValue({
+    formAddEdit.setFieldsValue({
       tenThietBi: data.tenThietBi,
       serialNumber: data.serialNumber,
       maQR: data.maQR,
@@ -63,7 +64,7 @@ const DeviceTable = () => {
   const handleConfig = (deviceNumber) => {
     setModalType("config");
     setCurrentDevice(deviceNumber);
-    form.resetFields();
+    formConfig.resetFields();
     setIsEditing(false);
     setOpen(true);
   };
@@ -72,10 +73,10 @@ const DeviceTable = () => {
     const deviceConfig = {
       deviceNumber: currentDevice,
       name: "SET_CONFIG",
-      packetNumber: form.getFieldValue("packetNumber"),
+      packetNumber: formConfig.getFieldValue("packetNumber"),
       data: {
-        samplingDuration: form.getFieldValue("samplingDuration"),
-        samplingRate: form.getFieldValue("samplingRate"),
+        samplingDuration: formConfig.getFieldValue("samplingDuration"),
+        samplingRate: formConfig.getFieldValue("samplingRate"),
       },
     };
     dispatch(brokerConfig(deviceConfig))
@@ -89,7 +90,6 @@ const DeviceTable = () => {
         message.error("Điều chỉnh thông số thiết bị thất bại.");
         console.error("Error configuring device:", error);
       });
-    setOpen(false);
   };
 
   const handleDeleteConfirm = async () => {
@@ -103,19 +103,19 @@ const DeviceTable = () => {
         message.error("Xóa thiết bị thất bại.");
         console.error("Error deleting device:", error);
       });
-    setOpen(false);
   };
 
   const closeModal = () => {
     setOpen(false);
-    form.resetFields();
     setModalType("");
     setCurrentDevice(null);
     setIsEditing(false);
+    formAddEdit.resetFields();
+    formConfig.resetFields();
   };
 
   const handleFormSubmit = async (value) => {
-    form.validateFields();
+    formAddEdit.validateFields();
     const data = {
       tenThietBi: value.tenThietBi,
       serialNumber: value.serialNumber,
@@ -262,10 +262,11 @@ const DeviceTable = () => {
         open={open && modalType === "add-edit"}
         okText={isEditing ? "Cập nhật" : "Thêm"}
         cancelText={"Hủy"}
+        onOk={() => formAddEdit.submit()}
         onCancel={closeModal}
       >
         <Form
-          form={form}
+          form={formAddEdit}
           layout="vertical"
           labelCol={{ style: { width: "250px" } }}
           onFinish={handleFormSubmit}
@@ -320,11 +321,11 @@ const DeviceTable = () => {
         open={open && modalType === "config"}
         okText={"Thiết lập"}
         cancelText={"Hủy"}
-        onOk={handleConfigConfirm}
+        onOk={() => formConfig.submit()}
         onCancel={closeModal}
       >
         <Form
-          form={form}
+          form={formConfig}
           layout="vertical"
           labelCol={{ style: { width: "250px" } }}
           onFinish={handleConfigConfirm}
