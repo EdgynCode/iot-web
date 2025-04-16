@@ -11,7 +11,7 @@ import {
   getAllDeviceTypes,
 } from "../redux/actions/deviceAction";
 import { useDeviceTypeData } from "../hooks/useDeviceTypeData";
-import { jwtDecode } from "jwt-decode";
+import { getUserRole } from "../utils/getUserRole";
 
 const DeviceTypes = () => {
   const navigate = useNavigate();
@@ -24,9 +24,7 @@ const DeviceTypes = () => {
   const { deviceTypes: deviceData, error } = useDeviceTypeData();
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("user")) || null;
-  const decode = user ? jwtDecode(user?.jwtAccessToken) : null;
-  const role = decode ? decode.role : null;
+  const role = getUserRole();
 
   useEffect(() => {
     if (role === "SuperAdmin") {
