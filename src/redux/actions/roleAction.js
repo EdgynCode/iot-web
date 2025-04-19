@@ -78,3 +78,22 @@ export const deleteRole = createAsyncThunk(
     }
   }
 );
+
+export const getRolesByUserId = createAsyncThunk(
+  "Role/GetRolesByUserId",
+  async (userId, thunkAPI) => {
+    try {
+      const data = await RoleService.getRolesByUserId(userId);
+      thunkAPI.dispatch(setMessage("Roles fetched successfully!"));
+      return data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);

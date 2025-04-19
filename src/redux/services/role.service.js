@@ -60,11 +60,27 @@ const deleteRole = async (id) => {
   }
 };
 
+const getRolesByUserId = async (userId) => {
+  try {
+    const response = await axiosInstance.get(
+      `Role/GetRolesByUserId?userId=${userId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching account role:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const RoleService = {
   addRole,
   updateRole,
   getAllRoles,
   deleteRole,
+  getRolesByUserId,
 };
 
 export default RoleService;
