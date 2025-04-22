@@ -23,7 +23,6 @@ const AccountsModal = ({
   classrooms,
   isClassroomLoading,
   loading,
-  setLoading,
 }) => {
   return (
     <>
@@ -90,7 +89,6 @@ const AccountsModal = ({
       >
         <RegisterForm
           loading={loading}
-          setLoading={setLoading}
           onFinish={handleCreateAccount}
           setOpen={setOpen}
         />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import {
   accountAction,
@@ -6,7 +6,7 @@ import {
   accountFilter,
 } from "../datas/account.d";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Spin, Form, message } from "antd";
 import {
   createMultipleLearner,
@@ -16,6 +16,7 @@ import { assignTeachersToClass } from "../redux/actions/teacherAction";
 import { listAllUsersByType, deleteUser } from "../redux/actions/userAction";
 import { register } from "../redux/actions/authAction";
 import { useClassroomData } from "../hooks/useClassroomData";
+import { useAccountData } from "../hooks/useAccountData";
 import { v4 as uuidv4 } from "uuid";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
@@ -25,7 +26,6 @@ import AccountsModal from "../components/AccountsModal";
 const Accounts = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [modalType, setModalType] = useState("");
@@ -36,14 +36,11 @@ const Accounts = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [form] = Form.useForm();
 
-  const { classrooms } = useClassroomData();
-  const studentsState = useSelector((state) => state.students || {});
-  const isClassroomLoading = useSelector((state) => state.classrooms.loading);
-  const { data: studentData = [], error = null } = studentsState;
-
-  useEffect(() => {
-    dispatch(listAllUsersByType(selectedAccountType));
-  }, [dispatch, selectedAccountType, form]);
+  const { classrooms, loading: isClassroomLoading } = useClassroomData();
+  const { accounts, loading, error } = useAccountData(
+    selectedAccountType,
+    form
+  );
 
   const handleAccountTypeChange = (value) => {
     const accountType =
@@ -87,22 +84,22 @@ const Accounts = () => {
               "Phone Number",
             ],
           ],
-          body: studentData.map((student) => [
-            student.firstName,
-            student.lastName,
-            student.gender,
-            student.doB,
-            student.userName,
-            student.email,
-            student.phoneNumber,
+          body: accounts.map((account) => [
+            account.firstName,
+            account.lastName,
+            account.gender,
+            account.doB,
+            account.userName,
+            account.email,
+            account.phoneNumber,
           ]),
         });
         doc.save(`${formattedFileName}.pdf`);
         break;
       case "excel":
-        const worksheet = XLSX.utils.json_to_sheet(studentData);
+        const worksheet = XLSX.utils.json_to_sheet(accounts);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Accounts");
         XLSX.writeFile(workbook, `${formattedFileName}.xlsx`);
         break;
       default:
@@ -151,7 +148,6 @@ const Accounts = () => {
           })
           .catch(() => {
             message.error("Thêm danh sách tài khoản thất bại.");
-            setLoading(false);
           });
       } catch (error) {
         console.error("Error processing file:", error);
@@ -162,8 +158,6 @@ const Accounts = () => {
   };
 
   const handleCreateAccount = async (values) => {
-    setLoading(true);
-
     const data = {
       id: uuidv4(),
       firstName: values.firstName,
@@ -182,11 +176,9 @@ const Accounts = () => {
         message.success("Đăng ký thành công!");
         setOpen(false);
         dispatch(listAllUsersByType(selectedAccountType));
-        setLoading(false);
       })
       .catch(() => {
         message.error("Đăng ký thất bại. Vui lòng thử lại.");
-        setLoading(false);
       });
   };
 
@@ -286,7 +278,7 @@ const Accounts = () => {
             onClick: () => handleAccountTypeChange(option.key),
           })),
         }))}
-        data={loading ? [] : studentData}
+        data={loading ? [] : accounts}
         column={AccountsColumns(navigate, selectedAccountType)}
         onSelectionChange={handleSelectionChange}
       />
@@ -312,7 +304,6 @@ const Accounts = () => {
         classrooms={classrooms}
         isClassroomLoading={isClassroomLoading}
         loading={loading}
-        setLoading={setLoading}
       />
     </>
   );

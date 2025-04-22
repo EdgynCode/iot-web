@@ -59,7 +59,7 @@ const logout = async () => {
       },
     });
 
-    localStorage.removeItem("user"); // Xóa thông tin user
+    localStorage.clear(); // Clear toàn bộ items
     return response.data;
   } catch (error) {
     console.error("Logout error:", error.response?.data || error.message);

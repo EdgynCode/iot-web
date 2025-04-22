@@ -4,7 +4,7 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
-const RegisterForm = ({ loading, setLoading, setOpen, onFinish }) => {
+const RegisterForm = ({ loading, setOpen, onFinish }) => {
   return (
     <Form
       name="register"
