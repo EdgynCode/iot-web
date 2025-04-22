@@ -24,6 +24,8 @@ const Students = () => {
   const [selectedClassLabel, setSelectedClassLabel] = useState("Lớp");
   const [initialFetch, setInitialFetch] = useState(false);
   const [qrData, setQrData] = useState("");
+  const [countdown, setCountdown] = useState(300);
+  const [randomCode, setRandomCode] = useState("");
   const _filters = useStudentFilter();
 
   const learners = useSelector((state) => state.learners.data || {});
@@ -48,6 +50,30 @@ const Students = () => {
       return () => clearTimeout(timeoutId);
     }
   }, [_filters, selectedClass, dispatch, initialFetch]);
+
+  useEffect(() => {
+    let timer;
+    if (open && modalType === "attendance") {
+      setRandomCode(Math.floor(100000 + Math.random() * 900000).toString());
+      setCountdown(300);
+      timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [open, modalType]);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
 
   const handleClassChange = (value) => {
     setSelectedClass(value);
@@ -171,11 +197,17 @@ const Students = () => {
         }}
         footer={null}
       >
-        <QRCode
-          errorLevel="H"
-          value="https://ant.design/"
-          icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-        />
+        <div className="flex flex-col items-center text-center">
+          <QRCode
+            errorLevel="H"
+            value="https://ant.design/"
+            icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+          />
+          <p>Thời gian còn lại: {formatTime(countdown)}</p>
+          <p>
+            Mã điểm danh: <strong>{randomCode}</strong>
+          </p>
+        </div>
       </Modal>
     </>
   );

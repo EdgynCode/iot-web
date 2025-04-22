@@ -115,7 +115,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
 
       {/* Logout confirmation modal */}
       <Modal
-        title="Confirm Logout"
+        title="Xác nhận đăng xuất"
         open={isModalVisible}
         confirmLoading={loading}
         onOk={handleConfirmLogout}

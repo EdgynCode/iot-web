@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import { Modal, Button, Spin, Input, Form, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
@@ -19,7 +18,6 @@ import { useClassroomData } from "../hooks/useClassroomData";
 import { getLearnersByClassId } from "../redux/actions/learnerAction";
 
 const Classrooms = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
@@ -29,7 +27,7 @@ const Classrooms = () => {
   const [selectedYear, setSelectedYear] = useState("Năm học");
   const [selectedSemester, setSelectedSemester] = useState("Học kì");
 
-  const { classrooms: classroomData, loading, error } = useClassroomData();
+  const { classrooms, loading, error } = useClassroomData();
 
   const handleSelectionChange = (keys) => {
     setSelectedRowKeys(keys);
@@ -154,8 +152,8 @@ const Classrooms = () => {
             },
           })),
         }))}
-        data={loading ? [] : classroomData}
-        column={classroomColumns(navigate)}
+        data={loading ? [] : classrooms}
+        column={classroomColumns()}
         onSelectionChange={handleSelectionChange}
       />
       {loading && <Spin size="large" />}
