@@ -1,10 +1,11 @@
 import axiosInstance from "./axiosInstance";
 
-const addRole = async (id, name) => {
+const addPermission = async (name, value, description) => {
   try {
-    const response = await axiosInstance.post(`Role/AddRole`, {
-      id,
+    const response = await axiosInstance.post(`Role/AddPermission`, {
       name,
+      value,
+      description,
     });
     return response.data;
   } catch (error) {
@@ -16,55 +17,56 @@ const addRole = async (id, name) => {
   }
 };
 
-const updateRole = async (id, name) => {
+const updatePermission = async (id, name, value) => {
   try {
-    const response = await axiosInstance.patch(`Role/UpdateRole`, {
+    const response = await axiosInstance.patch(`Role/UpdatePermission`, {
       id,
       name,
+      value,
     });
     return response.data;
   } catch (error) {
     console.error(
-      "Error updating role:",
+      "Error updating permission:",
       error.response?.data || error.message
     );
     throw error.response?.data || error.message;
   }
 };
 
-const getAllRoles = async () => {
+const getAllPermissions = async () => {
   try {
-    const response = await axiosInstance.get(`Role/GetAllRoles`);
+    const response = await axiosInstance.get(`Role/GetAllPermissions`);
     return response.data;
   } catch (error) {
     console.error(
-      "Error fetching role data:",
+      "Error fetching permission data:",
       error.response?.data || error.message
     );
     throw error.response?.data || error.message;
   }
 };
 
-const deleteRole = async (id) => {
+const deletePermission = async (id) => {
   try {
     const response = await axiosInstance.delete(
-      `Role/DeleteRole?roleIdOrName=${id}`
+      `Role/DeletePermission?permissionId=${id}`
     );
     return response.data;
   } catch (error) {
     console.error(
-      "Error deleting role:",
+      "Error deleting permission:",
       error.response?.data || error.message
     );
     throw error.response?.data || error.message;
   }
 };
 
-const RoleService = {
-  addRole,
-  updateRole,
-  getAllRoles,
-  deleteRole,
+const PermissionService = {
+  addPermission,
+  updatePermission,
+  getAllPermissions,
+  deletePermission,
 };
 
-export default RoleService;
+export default PermissionService;

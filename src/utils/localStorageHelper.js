@@ -1,5 +1,3 @@
-
-
 const LOCAL_STORAGE_KEY = "availableLearners";
 
 export const getLocalLearners = () => {

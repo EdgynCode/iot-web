@@ -25,9 +25,6 @@ const Login = () => {
       .unwrap()
       .then(() => {
         message.success("Đăng nhập thành công!");
-        // const user = JSON.parse(localStorage.getItem("user")) || null;
-        // const decode = user ? jwtDecode(user?.jwtAccessToken) : null;
-        // const role = decode ? decode.role : null;
         navigate(`/account-detail`);
         window.location.reload();
       })

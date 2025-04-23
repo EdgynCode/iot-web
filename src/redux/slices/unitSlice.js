@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllRoles } from "../actions/roleAction";
+import { getAllUnits } from "../actions/unitAction";
 
 const initialState = {
   data: [],
@@ -7,25 +7,25 @@ const initialState = {
   error: null,
 };
 
-const roleReducer = createSlice({
-  name: "roles",
+const unitReducer = createSlice({
+  name: "units",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getAllRoles.pending, (state) => {
+      .addCase(getAllUnits.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getAllRoles.fulfilled, (state, action) => {
+      .addCase(getAllUnits.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
       })
-      .addCase(getAllRoles.rejected, (state, action) => {
+      .addCase(getAllUnits.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
-const { reducer } = roleReducer;
+const { reducer } = unitReducer;
 export default reducer;

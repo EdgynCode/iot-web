@@ -215,35 +215,29 @@ const Accounts = () => {
     const classId = form.getFieldValue("class");
 
     if (selectedRowKeys.length === 0) {
-      message.warning("Chọn ít nhất 1 người học để thêm vào lớp.");
+      message.warning("Chọn ít nhất 1 tài khoản để thêm vào lớp.");
       return;
     }
 
-    switch (selectedAccountType) {
-      case "Learner":
-        dispatch(assignLearnerToClass({ learners: selectedRowKeys, classId }))
-          .unwrap()
-          .then(() => {
-            message.success("Thêm người học thành công!");
-            setOpen(false);
-          })
-          .catch(() => {
-            message.error("Thêm người học thất bại. Vui lòng thử lại.");
-          });
-        break;
-      case "Teacher":
-        dispatch(assignTeachersToClass({ teachers: selectedRowKeys, classId }))
-          .unwrap()
-          .then(() => {
-            message.success("Thêm giáo viên thành công!");
-            setOpen(false);
-          })
-          .catch(() => {
-            message.error("Thêm giáo viên thất bại. Vui lòng thử lại.");
-          });
-        break;
-      default:
-        console.log("Invalid account type");
+    const accountActions = {
+      Learner: () =>
+        dispatch(assignLearnerToClass({ learners: selectedRowKeys, classId })),
+      Teacher: () =>
+        dispatch(assignTeachersToClass({ teachers: selectedRowKeys, classId })),
+    };
+
+    const action = accountActions[selectedAccountType];
+
+    if (action) {
+      try {
+        await action().unwrap();
+        message.success(`Thêm ${selectedAccountType} thành công!`);
+        setOpen(false);
+      } catch {
+        message.error(`Lỗi xảy ra khi thêm ${selectedAccountType}.`);
+      }
+    } else {
+      console.log("Invalid account type");
     }
   };
 

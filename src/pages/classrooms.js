@@ -28,9 +28,8 @@ const Classrooms = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedYear, setSelectedYear] = useState("Năm học");
   const [selectedSemester, setSelectedSemester] = useState("Học kì");
-  const [loading, setLoading] = useState(false);
 
-  const { classrooms: classroomData, error } = useClassroomData();
+  const { classrooms: classroomData, loading, error } = useClassroomData();
 
   const handleSelectionChange = (keys) => {
     setSelectedRowKeys(keys);
@@ -67,7 +66,6 @@ const Classrooms = () => {
   };
 
   const handleAddClassroomSubmit = async (values) => {
-    setLoading(true);
     dispatch(addNewClassroom(values.tenLop))
       .unwrap()
       .then(() => {
@@ -75,11 +73,9 @@ const Classrooms = () => {
         setOpen(false);
         dispatch(getAllClassrooms());
         form.resetFields();
-        setLoading(false);
       })
       .catch(() => {
         message.error("Tạo lớp học thất bại.");
-        setLoading(false);
       });
   };
 
@@ -109,8 +105,6 @@ const Classrooms = () => {
   };
 
   const handleAddSemesterSubmit = async (values) => {
-    setLoading(true);
-
     const data = {
       tenHocKy: values.tenHocKy,
       nameHoc: values.nameHoc,
@@ -125,7 +119,6 @@ const Classrooms = () => {
       })
       .catch(() => {
         message.error("Tạo học kì thất bại.");
-        setLoading(false);
       });
   };
 
@@ -148,10 +141,15 @@ const Classrooms = () => {
           options: filter.options.map((option) => ({
             ...option,
             onClick: () => {
-              if (filter.key === "Year") {
-                handleYearChange(option.key);
-              } else if (filter.key === "Semester") {
-                handleSemesterChange(option.key);
+              switch (filter.key) {
+                case "Year":
+                  handleYearChange(option.key);
+                  break;
+                case "Semester":
+                  handleSemesterChange(option.key);
+                  break;
+                default:
+                  console.warn("Unhandled filter key:", filter.key);
               }
             },
           })),

@@ -81,38 +81,35 @@ export const LabTab = ({ lab, labId }) => {
   };
 
   const handleFormSubmit = async (value) => {
-    form.validateFields();
-    const data = {
-      tenThiNghiem: value.tenThiNghiem,
-      moTaThiNghiem: value.moTaThiNghiem,
-      pathImage: value.pathImage,
-      ghiChu: value.ghiChu,
-      labId: lab.id,
-    };
+    try {
+      await form.validateFields();
+      const data = {
+        tenThiNghiem: value.tenThiNghiem,
+        moTaThiNghiem: value.moTaThiNghiem,
+        pathImage: value.pathImage,
+        ghiChu: value.ghiChu,
+        labId: lab.id,
+      };
 
-    if (isEditing && currentExperiment) {
-      dispatch(updateExperiment({ ...data, id: currentExperiment.id }))
-        .unwrap()
-        .then(() => {
-          message.success("Cập nhật bài thí nghiệm thành công!");
-          closeModal();
-          dispatch(getExperimentsByLabId(labId));
-        })
-        .catch(() => {
-          message.error("Cập nhật bài thí nghiệm thất bại.");
-        });
-    } else {
-      dispatch(createExperiment(data))
-        .unwrap()
-        .then(() => {
-          console.log("Submitted values:", value);
-          message.success("Tạo bài thí nghiệm thành công!");
-          closeModal();
-          dispatch(getExperimentsByLabId(labId));
-        })
-        .catch(() => {
-          message.error("Tạo bài thí nghiệm thất bại.");
-        });
+      const action =
+        isEditing && currentExperiment
+          ? updateExperiment({ ...data, id: currentExperiment.id })
+          : createExperiment(data);
+
+      await dispatch(action).unwrap();
+      message.success(
+        isEditing
+          ? "Cập nhật bài thí nghiệm thành công!"
+          : "Tạo bài thí nghiệm thành công!"
+      );
+      closeModal();
+      dispatch(getExperimentsByLabId(labId));
+    } catch (error) {
+      message.error(
+        isEditing
+          ? "Cập nhật bài thí nghiệm thất bại."
+          : "Tạo bài thí nghiệm thất bại."
+      );
     }
   };
 

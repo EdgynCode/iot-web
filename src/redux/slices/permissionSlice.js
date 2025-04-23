@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllRoles } from "../actions/roleAction";
+import { getAllPermissions } from "../actions/permissionAction";
 
 const initialState = {
   data: [],
@@ -7,25 +7,25 @@ const initialState = {
   error: null,
 };
 
-const roleReducer = createSlice({
-  name: "roles",
+const permissionReducer = createSlice({
+  name: "permissions",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getAllRoles.pending, (state) => {
+      .addCase(getAllPermissions.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getAllRoles.fulfilled, (state, action) => {
+      .addCase(getAllPermissions.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
       })
-      .addCase(getAllRoles.rejected, (state, action) => {
+      .addCase(getAllPermissions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
-const { reducer } = roleReducer;
+const { reducer } = permissionReducer;
 export default reducer;

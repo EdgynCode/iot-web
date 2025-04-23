@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Spin, Input, Modal, Form, DatePicker, message } from "antd";
+import { Spin, Input, Modal, Form, DatePicker, message } from "antd";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
@@ -10,25 +10,24 @@ import {
   updateDeviceState,
   removeDevice,
 } from "../../redux/actions/deviceAction";
+import { brokerConfig } from "../../redux/actions/mqttAction";
 import { deviceAction, deviceColumns } from "../../datas/device.d";
 import { useDeviceData } from "../../hooks/useDeviceData";
 import TextArea from "antd/es/input/TextArea";
 import { ListDetail } from "../list-detail/ListDetail";
 import { jwtDecode } from "jwt-decode";
 import webSocketService from "../../redux/services/webSocketService";
-import { connectToBroker } from "../../redux/actions/mqttAction";
 
 const DeviceTable = () => {
   const { id } = useParams();
-  const { devices } = useDeviceData(id);
+  const { devices, loading, error } = useDeviceData(id);
   const dispatch = useDispatch();
-
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentDevice, setCurrentDevice] = useState(null);
   const [modalType, setModalType] = useState("add-edit");
-  const [form] = Form.useForm();
+  const [formAddEdit] = Form.useForm();
+  const [formConfig] = Form.useForm();
   const [isAdmin, setIsAdmin] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user")) || null;
@@ -41,10 +40,11 @@ const DeviceTable = () => {
     }
   }, [role]);
 
-  const handleEditDevice = (data) => {
+  const handleEdit = (data) => {
+    setModalType("add-edit");
     setIsEditing(true);
     setCurrentDevice(data);
-    form.setFieldsValue({
+    formAddEdit.setFieldsValue({
       tenThietBi: data.tenThietBi,
       serialNumber: data.serialNumber,
       maQR: data.maQR,
@@ -55,10 +55,41 @@ const DeviceTable = () => {
     setOpen(true);
   };
 
-  const handleDeleteDevice = (deviceId) => {
+  const handleDelete = (deviceId) => {
     setModalType("remove");
     setCurrentDevice(deviceId);
     setOpen(true);
+  };
+
+  const handleConfig = (deviceNumber) => {
+    setModalType("config");
+    setCurrentDevice(deviceNumber);
+    formConfig.resetFields();
+    setIsEditing(false);
+    setOpen(true);
+  };
+
+  const handleConfigConfirm = () => {
+    const deviceConfig = {
+      deviceNumber: currentDevice,
+      name: "SET_CONFIG",
+      packetNumber: formConfig.getFieldValue("packetNumber"),
+      data: {
+        samplingDuration: formConfig.getFieldValue("samplingDuration"),
+        samplingRate: formConfig.getFieldValue("samplingRate"),
+      },
+    };
+    dispatch(brokerConfig(deviceConfig))
+      .then(() => {
+        message.success("Điều chỉnh thông số thiết bị thành công!");
+        dispatch(getDevicesByTypeId(id));
+        closeModal();
+        setCurrentDevice(null);
+      })
+      .catch((error) => {
+        message.error("Điều chỉnh thông số thiết bị thất bại.");
+        console.error("Error configuring device:", error);
+      });
   };
 
   const handleDeleteConfirm = async () => {
@@ -72,86 +103,114 @@ const DeviceTable = () => {
         message.error("Xóa thiết bị thất bại.");
         console.error("Error deleting device:", error);
       });
-    setOpen(false);
   };
 
   const closeModal = () => {
     setOpen(false);
-    form.resetFields();
+    setModalType("");
+    setCurrentDevice(null);
+    setIsEditing(false);
+    formAddEdit.resetFields();
+    formConfig.resetFields();
   };
 
   const handleFormSubmit = async (value) => {
-    setLoading(true);
-    form.validateFields();
+    formAddEdit.validateFields();
+    const data = {
+      tenThietBi: value.tenThietBi,
+      serialNumber: value.serialNumber,
+      maQR: value.maQR,
+      moTa: value.moTa,
+      ghiChu: value.ghiChu,
+      loaiThietBiID: id,
+      thoiGianBaoHanh: value.thoiGianBaoHanh,
+    };
     if (isEditing && currentDevice) {
-      const data = {
-        id: currentDevice.id,
-        tenThietBi: value.tenThietBi,
-        serialNumber: value.serialNumber,
-        maQR: value.maQR,
-        moTa: value.moTa,
-        ghiChu: value.ghiChu,
-        isTrangThai: true,
-        loaiThietBiID: id,
-        thoiGianBaoHanh: value.thoiGianBaoHanh,
-      };
-      dispatch(updateDevice(data))
+      dispatch(
+        updateDevice({
+          ...data,
+          id: currentDevice.id,
+        })
+      )
         .unwrap()
         .then(() => {
           message.success("Cập nhật thiết bị thành công!");
           closeModal();
           dispatch(getDevicesByTypeId(id));
-          setLoading(false);
         })
         .catch(() => {
           message.error("Cập nhật thiết bị thất bại.");
-          setLoading(false);
         });
       return;
     } else {
-      const data = {
-        tenThietBi: value.tenThietBi,
-        donViId: "123",
-        serialNumber: value.serialNumber,
-        maQR: value.maQR,
-        moTa: value.moTa,
-        ghiChu: value.ghiChu,
-        isTrangThai: true,
-        loaiThietBiID: id,
-        thoiGianBaoHanh: value.thoiGianBaoHanh,
-      };
-      dispatch(addNewDevice(data))
+      dispatch(
+        addNewDevice({
+          ...data,
+          donViId: "123",
+          isTrangThai: false,
+        })
+      )
         .unwrap()
         .then(() => {
           message.success("Tạo thiết bị thành công!");
           closeModal();
           dispatch(getDevicesByTypeId(id));
-          setLoading(false);
         })
         .catch(() => {
           message.error("Tạo thiết bị thất bại.");
-          setLoading(false);
         });
     }
   };
 
   const handleConnect = () => {
+    let timeoutId;
+
+    // Set a timeout to update all devices to isTrangThai: false if no response is received within 5 seconds
+    timeoutId = setTimeout(() => {
+      devices.forEach((device) => {
+        dispatch(updateDeviceState({ id: device.id, isTrangThai: false }))
+          .unwrap()
+          .then(() => {
+            message.info(
+              `Thiết bị ${device.serialNumber} đã ngắt kết nối do không có phản hồi!`
+            );
+            webSocketService.close();
+            setOpen(false);
+            dispatch(getDevicesByTypeId(id));
+          })
+          .catch((error) => {
+            console.error(
+              `Failed to update device state ${device.serialNumber}:`,
+              error
+            );
+          });
+      });
+    }, 5000);
+
     webSocketService.setMessageHandler((data) => {
-      const onlineDeviceIds = JSON.parse(data); // Example: ["device1", "device2", "device3"]
-      if (Array.isArray(onlineDeviceIds)) {
-        onlineDeviceIds.forEach((deviceId) => {
+      clearTimeout(timeoutId);
+      const onlineDevices = JSON.parse(data);
+      if (Array.isArray(onlineDevices)) {
+        onlineDevices.forEach((serialNumber) => {
           const matchingDevice = devices.find(
-            (device) => device.id === deviceId
+            (device) => device.serialNumber === serialNumber
           );
           if (matchingDevice) {
-            dispatch(updateDeviceState({ id: deviceId, isTrangThai: true }))
+            dispatch(
+              updateDeviceState({ id: matchingDevice.id, isTrangThai: true })
+            )
               .unwrap()
               .then(() => {
-                message.success(`Thiết bị ${deviceId} đã kết nối!`);
+                message.success(`Thiết bị ${serialNumber} đã kết nối!`);
+                webSocketService.close();
+                closeModal();
                 dispatch(getDevicesByTypeId(id));
               })
               .catch((error) => {
-                console.error(`Failed to update device ${deviceId}:`, error);
+                console.error(
+                  `Failed to update device state ${serialNumber}:`,
+                  error
+                );
               });
           }
         });
@@ -159,24 +218,6 @@ const DeviceTable = () => {
     });
 
     webSocketService.connect("onlinedevices");
-  };
-
-  const handleBrokerConnect = () => {
-    const deviceData = {
-      brokerIp: "192.168.0.30",
-      port: 1883,
-      username: "iot",
-      password: "iot@123456",
-    };
-    dispatch(connectToBroker(deviceData))
-      .unwrap()
-      .then(() => {
-        message.success("Kết nối đến broker thành công!");
-      })
-      .catch((error) => {
-        message.error("Kết nối đến broker thất bại.");
-        console.error("Error connecting to broker:", error);
-      });
   };
 
   const handleActionClick = (action) => {
@@ -199,22 +240,15 @@ const DeviceTable = () => {
     <>
       <ListDetail
         title="Danh sách thiết bị"
-        actions={
-          isAdmin
-            ? deviceAction().map((action) => ({
-                ...action,
-                onClick: () => handleActionClick(action),
-              }))
-            : []
-        }
+        actions={deviceAction(isAdmin).map((action) => ({
+          ...action,
+          onClick: () => handleActionClick(action),
+        }))}
         data={loading ? [] : devices}
-        column={deviceColumns(
-          handleEditDevice,
-          handleDeleteDevice,
-          handleBrokerConnect,
-          isAdmin
-        )}
+        column={deviceColumns(handleEdit, handleDelete, handleConfig, isAdmin)}
       />
+      {loading && <Spin size="large" />}
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
       <Modal
         title="Đang kiểm tra kết nối"
         open={open && modalType === "connect"}
@@ -226,11 +260,13 @@ const DeviceTable = () => {
       <Modal
         title={isEditing ? "Sửa thông tin thiết bị" : "Thêm thông tin thiết bị"}
         open={open && modalType === "add-edit"}
+        okText={isEditing ? "Cập nhật" : "Thêm"}
+        cancelText={"Hủy"}
+        onOk={() => formAddEdit.submit()}
         onCancel={closeModal}
-        footer={null}
       >
         <Form
-          form={form}
+          form={formAddEdit}
           layout="vertical"
           labelCol={{ style: { width: "250px" } }}
           onFinish={handleFormSubmit}
@@ -247,14 +283,14 @@ const DeviceTable = () => {
             label="Số seri"
             rules={[{ required: true, message: "Vui lòng nhập số seri!" }]}
           >
-            <Input placeholder="Số seri" disabled={isEditing} />
+            <Input placeholder="Số seri" />
           </Form.Item>
           <Form.Item
             name="maQR"
             label="Mã QR"
             rules={[{ required: true, message: "Vui lòng nhập mã QR!" }]}
           >
-            <Input placeholder="Mã QR" disabled={isEditing} />
+            <Input placeholder="Mã QR" />
           </Form.Item>
           <Form.Item name="moTa" label="Mô tả">
             <TextArea placeholder="Mô tả" />
@@ -269,11 +305,6 @@ const DeviceTable = () => {
           >
             <DatePicker placeholder="Hạn bảo hành" />
           </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading}>
-              {isEditing ? "Cập nhật" : "Thêm"}
-            </Button>
-          </Form.Item>
         </Form>
       </Modal>
       <Modal
@@ -283,6 +314,53 @@ const DeviceTable = () => {
         onCancel={closeModal}
       >
         <p>Bạn có chắc chắn muốn xóa thiết bị này không?</p>
+      </Modal>
+      {/* Config modal blocking update modal action */}
+      <Modal
+        title="Cài đặt thông số thiết bị"
+        open={open && modalType === "config"}
+        okText={"Thiết lập"}
+        cancelText={"Hủy"}
+        onOk={() => formConfig.submit()}
+        onCancel={closeModal}
+      >
+        <Form
+          form={formConfig}
+          layout="vertical"
+          labelCol={{ style: { width: "250px" } }}
+          onFinish={handleConfigConfirm}
+        >
+          <Form.Item
+            name="packetNumber"
+            label="Số mẫu"
+            rules={[
+              { required: true, message: "Vui lòng nhập vào số lượng mẫu!" },
+            ]}
+          >
+            <Input placeholder="Số mẫu" />
+          </Form.Item>
+          <Form.Item
+            name="samplingDuration"
+            label="Thời gian lấy mẫu"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập vào thời gian lấy mẫu!",
+              },
+            ]}
+          >
+            <Input placeholder="Thời gian lấy mẫu" />
+          </Form.Item>
+          <Form.Item
+            name="samplingRate"
+            label="Tốc độ lấy mẫu"
+            rules={[
+              { required: true, message: "Vui lòng nhập vào tốc độ lấy mẫu!" },
+            ]}
+          >
+            <Input placeholder="Tốc độ lấy mẫu" />
+          </Form.Item>
+        </Form>
       </Modal>
     </>
   );

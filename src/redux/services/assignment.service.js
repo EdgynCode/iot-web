@@ -1,20 +1,16 @@
 import axiosInstance from "./axiosInstance";
 
-const createAssignment = async (
-  title,
-  description,
-  dueDate,
-  formFile,
-  lopHocId
-) => {
+const createAssignment = async (formData) => {
   try {
-    const response = await axiosInstance.post(`Assignment/CreateAssignment`, {
-      title,
-      description,
-      dueDate,
-      formFile,
-      lopHocId,
-    });
+    const response = await axiosInstance.post(
+      "Assignment/CreateAssignment",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error(

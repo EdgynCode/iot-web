@@ -15,8 +15,7 @@ const Labs = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
-  const { labs: labData, error } = useLabData();
+  const { labs: labData, loading, error } = useLabData();
 
   const closeModal = () => {
     setOpen(false);
@@ -29,7 +28,6 @@ const Labs = () => {
 
   const handleFormSubmit = async (value) => {
     form.validateFields();
-    setLoading(true);
     const data = {
       name: value.name,
       pathImage: value.pathImage,
@@ -40,11 +38,9 @@ const Labs = () => {
         message.success("Tạo bài lab thành công!");
         closeModal();
         dispatch(getAllLabs());
-        setLoading(false);
       })
       .catch(() => {
         message.error("Tạo bài lab thất bại.");
-        setLoading(false);
       });
   };
 

@@ -4,15 +4,9 @@ import { setMessage } from "../slices/message";
 
 export const createAssignment = createAsyncThunk(
   "Assignment/CreateAssignment",
-  async ({ title, description, dueDate, formFile, lopHocId }, thunkAPI) => {
+  async (formData, thunkAPI) => {
     try {
-      const data = await AssignmentService.createAssignment(
-        title,
-        description,
-        dueDate,
-        formFile,
-        lopHocId
-      );
+      const data = await AssignmentService.createAssignment(formData);
       thunkAPI.dispatch(setMessage("New assignment created successfully!"));
       return data;
     } catch (error) {
