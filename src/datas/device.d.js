@@ -3,7 +3,7 @@ import {
   DeleteOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import formatDate from "../utils/formatDate";
+import { formatDate } from "../utils/formatDate";
 
 export const deviceListAction = () => [
   {

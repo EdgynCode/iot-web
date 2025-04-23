@@ -15,7 +15,7 @@ import { deviceAction, deviceColumns } from "../../datas/device.d";
 import { useDeviceData } from "../../hooks/useDeviceData";
 import TextArea from "antd/es/input/TextArea";
 import { ListDetail } from "../list-detail/ListDetail";
-import { jwtDecode } from "jwt-decode";
+import { getUserRole } from "../../utils/getUserRole";
 import webSocketService from "../../redux/services/webSocketService";
 
 const DeviceTable = () => {
@@ -30,9 +30,7 @@ const DeviceTable = () => {
   const [formConfig] = Form.useForm();
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("user")) || null;
-  const decode = user ? jwtDecode(user?.jwtAccessToken) : null;
-  const role = decode ? decode.role : null;
+  const role = getUserRole();
 
   useEffect(() => {
     if (role === "SuperAdmin") {

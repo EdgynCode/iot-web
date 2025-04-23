@@ -1,4 +1,4 @@
-import formatDate from "../utils/formatDate";
+import { formatDate } from "../utils/formatDate";
 export const basicInfo = (user) => [
   { key: "Họ tên", value: user.fullName },
   { key: "Ngày sinh", value: formatDate(user.doB) },

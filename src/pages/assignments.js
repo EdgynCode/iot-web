@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import {
   DatePicker,
+  TimePicker,
   Form,
   Modal,
   Select,
@@ -15,7 +15,7 @@ import {
 import TextArea from "antd/es/input/TextArea";
 import { UploadOutlined } from "@ant-design/icons";
 import { ListDetail } from "../components/list-detail/ListDetail";
-import { assignmentAction, assignmentColumns } from "../datas/assignment.d";
+import { assignmentAction, AssignmentColumns } from "../datas/assignment.d";
 import { useAssignmentData } from "../hooks/useAssignmentData";
 import { useClassroomData } from "../hooks/useClassroomData";
 import {
@@ -29,7 +29,6 @@ import "moment/locale/vi";
 moment.locale("vi");
 
 const Assignments = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [modalType, setModalType] = useState("");
@@ -49,8 +48,13 @@ const Assignments = () => {
     formData.append("description", form.getFieldValue("description"));
     formData.append(
       "dueDate",
-      moment(form.getFieldValue("dueDate")).format("YYYY-MM-DD")
+      moment(
+        form.getFieldValue("dueDate-date").format("YYYY-MM-DD") +
+          "T" +
+          form.getFieldValue("dueDate-time").format("HH:mm")
+      ).format("YYYY-MM-DDTHH:mm:ss")
     );
+
     formData.append("lopHocId", form.getFieldValue("class"));
     if (file) {
       formData.append("formFile", file);
@@ -110,7 +114,7 @@ const Assignments = () => {
           onClick: () => handleActionClick(action),
         }))}
         data={loading ? [] : assignments}
-        column={assignmentColumns(navigate)}
+        column={AssignmentColumns()}
         onSelectionChange={handleSelectionChange}
       />
       {loading && <Spin size="large" />}
@@ -132,12 +136,14 @@ const Assignments = () => {
         >
           <Form.Item
             name="title"
+            label="Tên bài tập"
             rules={[{ required: true, message: "Vui lòng nhập tên bài tập!" }]}
           >
             <Input placeholder="Tên bài tập" />
           </Form.Item>
           <Form.Item
             name="class"
+            label="Lớp"
             rules={[{ required: true, message: "Vui lòng chọn lớp!" }]}
           >
             <Select
@@ -145,14 +151,22 @@ const Assignments = () => {
               allowClear
               className="w-full"
               loading={isClassroomLoading}
-              options={classrooms.map((classroom) => ({
-                value: classroom.id,
-                label: classroom.tenLop,
-              }))}
+              options={
+                classrooms
+                  ? classrooms.map((classroom) => ({
+                      value: classroom.id,
+                      label: classroom.tenLop,
+                    }))
+                  : []
+              }
+              notFoundContent={
+                !isClassroomLoading && !classrooms ? "Không có lớp nào" : null
+              }
             />
           </Form.Item>
           <Form.Item
             name="description"
+            label="Hướng dẫn"
             rules={[
               { required: true, message: "Hướng dẫn bài tập là bắt buộc" },
             ]}
@@ -162,29 +176,42 @@ const Assignments = () => {
           <div className="flex gap-6">
             <div className="w-full">
               <Form.Item
-                name="dueDate"
+                label="Hạn chót"
+                name="dueDate-time"
+                rules={[{ required: true, message: "Vui lòng chọn thời gian" }]}
+              >
+                <TimePicker
+                  className="w-full"
+                  format="HH:mm"
+                  placeholder="Chọn thời gian"
+                />
+              </Form.Item>
+            </div>
+            <div className="w-full">
+              <Form.Item
+                name="dueDate-date"
                 rules={[{ required: true, message: "Vui lòng chọn ngày!" }]}
               >
                 <DatePicker
-                  placeholder="Hạn chót"
+                  placeholder="Chọn ngày"
                   className="w-full"
                   format={"DD-MM-YYYY"}
                 />
               </Form.Item>
             </div>
-            <div className="w-full">
-              <Form.Item name="formFile">
-                <Upload
-                  accept=".pdf"
-                  beforeUpload={(file) => {
-                    setFile(file);
-                    return false;
-                  }}
-                >
-                  <Button icon={<UploadOutlined />}>Tải File hướng dẫn</Button>
-                </Upload>
-              </Form.Item>
-            </div>
+          </div>
+          <div className="w-full">
+            <Form.Item name="formFile">
+              <Upload
+                accept=".pdf"
+                beforeUpload={(file) => {
+                  setFile(file);
+                  return false;
+                }}
+              >
+                <Button icon={<UploadOutlined />}>Tải File hướng dẫn</Button>
+              </Upload>
+            </Form.Item>
           </div>
         </Form>
       </Modal>
