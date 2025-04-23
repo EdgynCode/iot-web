@@ -89,9 +89,9 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
               ></img>
             </a>
             <div className="account-info">
-              <h6 className="account-name">{decode.unique_name}</h6>
-              <h6 className="account-number">{decode.email}</h6>
-              <p className="account-role">{decode.role}</p>
+              <h6 className="account-name">{decode?.unique_name || "N/A"}</h6>
+              <h6 className="account-number">{decode?.email || "N/A"}</h6>
+              <p className="account-role">{decode?.role || "N/A"}</p>
             </div>
           </div>
         </div>

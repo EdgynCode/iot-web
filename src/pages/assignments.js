@@ -151,10 +151,17 @@ const Assignments = () => {
               allowClear
               className="w-full"
               loading={isClassroomLoading}
-              options={classrooms.map((classroom) => ({
-                value: classroom.id,
-                label: classroom.tenLop,
-              }))}
+              options={
+                classrooms
+                  ? classrooms.map((classroom) => ({
+                      value: classroom.id,
+                      label: classroom.tenLop,
+                    }))
+                  : []
+              }
+              notFoundContent={
+                !isClassroomLoading && !classrooms ? "Không có lớp nào" : null
+              }
             />
           </Form.Item>
           <Form.Item

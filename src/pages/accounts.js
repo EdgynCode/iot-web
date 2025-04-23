@@ -18,9 +18,7 @@ import { register } from "../redux/actions/authAction";
 import { useClassroomData } from "../hooks/useClassroomData";
 import { useAccountData } from "../hooks/useAccountData";
 import { v4 as uuidv4 } from "uuid";
-import * as XLSX from "xlsx";
-import { jsPDF } from "jspdf";
-import "jspdf-autotable";
+import ExcelJS from "exceljs";
 import AccountsModal from "../components/AccountsModal";
 
 const Accounts = () => {
@@ -68,39 +66,31 @@ const Accounts = () => {
   };
 
   const handleExport = async () => {
-    const formattedFileName = `${fileName}`;
     switch (exportType) {
-      case "pdf":
-        const doc = new jsPDF();
-        doc.autoTable({
-          head: [
-            [
-              "First Name",
-              "Last Name",
-              "Gender",
-              "Date of Birth",
-              "Username",
-              "Email",
-              "Phone Number",
-            ],
-          ],
-          body: accounts.map((account) => [
-            account.firstName,
-            account.lastName,
-            account.gender,
-            account.doB,
-            account.userName,
-            account.email,
-            account.phoneNumber,
-          ]),
-        });
-        doc.save(`${formattedFileName}.pdf`);
-        break;
       case "excel":
-        const worksheet = XLSX.utils.json_to_sheet(accounts);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Accounts");
-        XLSX.writeFile(workbook, `${formattedFileName}.xlsx`);
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Accounts");
+
+        // Add headers
+        worksheet.columns = Object.keys(accounts[0]).map((key) => ({
+          header: key,
+          key: key,
+        }));
+
+        // Add rows
+        accounts.forEach((account) => {
+          worksheet.addRow(account);
+        });
+
+        // Save as Excel file
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `${fileName}.xlsx`;
+        link.click();
         break;
       default:
         console.log("Invalid selection");
@@ -114,26 +104,25 @@ const Accounts = () => {
     }
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       const studentList = [];
       try {
-        const workbook = XLSX.read(e.target.result, { type: "array" });
-        const worksheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[worksheetName];
-        const data = XLSX.utils.sheet_to_json(worksheet);
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(e.target.result);
+        const worksheet = workbook.worksheets[0];
 
-        // Dispatch Redux actions
-        data.forEach((row) => {
+        worksheet.eachRow((row, rowIndex) => {
+          if (rowIndex === 1) return;
           const student = {
             id: uuidv4(),
-            firstName: row["FirstName"],
-            lastName: row["LastName"],
-            gender: row["Gender"],
-            doB: row["DoB"],
-            userName: row["Username"],
-            email: row["Email"],
-            password: row["Password"],
-            phoneNumber: row["PhoneNumber"],
+            firstName: row.getCell(1).value,
+            lastName: row.getCell(2).value,
+            gender: row.getCell(3).value,
+            doB: row.getCell(4).value,
+            userName: row.getCell(5).value,
+            email: row.getCell(6).value,
+            password: row.getCell(7).value,
+            phoneNumber: row.getCell(8).value,
             discriminator: "Learner",
           };
           studentList.push(student);
