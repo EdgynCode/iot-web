@@ -43,10 +43,26 @@ const getUserDetails = async (id) => {
   }
 };
 
+const getUsersByRole = async (id) => {
+  try {
+    const response = await axiosInstance.get(
+      `User/GetUsersByRole?roleid=${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching user data:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const UserService = {
   listAllUsersByType,
   deleteUser,
   getUserDetails,
+  getUsersByRole,
 };
 
 export default UserService;

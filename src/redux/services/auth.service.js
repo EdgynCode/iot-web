@@ -59,7 +59,8 @@ const logout = async () => {
       },
     });
 
-    localStorage.clear(); // Clear toàn bộ items
+    localStorage.clear();
+    window.location.reload();
     return response.data;
   } catch (error) {
     console.error("Logout error:", error.response?.data || error.message);

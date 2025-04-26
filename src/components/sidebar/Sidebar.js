@@ -37,10 +37,8 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
     dispatch(logout())
       .unwrap()
       .then(() => {
-        localStorage.removeItem("isLoggedIn");
         message.success("Đăng xuất thành công");
         navigate("/login");
-        window.location.reload();
       })
       .catch(() => {
         message.error("Đăng xuất thất bại. Vui lòng thử lại.");

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getUserDetails } from "../actions/userAction";
+import { getUserDetails, getUsersByRole } from "../actions/userAction";
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")) || null,
@@ -14,11 +14,11 @@ const userSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
-      localStorage.setItem("user", JSON.stringify(action.payload)); // Lưu user vào localStorage
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     logoutUser: (state) => {
       state.user = null;
-      localStorage.removeItem("user"); // Xóa thông tin người dùng khỏi localStorage khi logout
+      localStorage.clear();
     },
   },
   extraReducers: (builder) => {
@@ -31,6 +31,17 @@ const userSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(getUserDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getUsersByRole.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getUsersByRole.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(getUsersByRole.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

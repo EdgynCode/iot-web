@@ -4,7 +4,9 @@ import { Form, Input, Button, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { clearMessage } from "../redux/slices/message";
-import { login } from "../redux/actions/authAction";
+import { getCurrentUser, login } from "../redux/actions/authAction";
+import { getPermissionsByRole } from "../redux/actions/permissionAction";
+import { getUserRole } from "../utils/getUserRole";
 
 const Login = () => {
   let navigate = useNavigate();
@@ -23,7 +25,16 @@ const Login = () => {
 
     dispatch(login({ userName, password }))
       .unwrap()
-      .then(() => {
+      .then(async () => {
+        const userRole = getUserRole();
+        const permissions = await dispatch(
+          getPermissionsByRole(userRole)
+        ).unwrap();
+        const permissionsMap = permissions.reduce((acc, permission) => {
+          acc[permission.name] = permission.value === "1";
+          return acc;
+        }, {});
+        localStorage.setItem("permissions", JSON.stringify(permissionsMap));
         message.success("Đăng nhập thành công!");
         navigate(`/account-detail`);
         window.location.reload();

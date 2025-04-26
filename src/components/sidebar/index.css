@@ -101,13 +101,13 @@ hr {
 .ant-menu-title-content {
   color: rgb(18, 72, 116) !important;
 }
-:where(.css-dev-only-do-not-override-1fuzsln).ant-menu-light
+:where(.css-dev-only-do-not-override-13iorj1).ant-menu-light
   .ant-menu-item-selected {
   background-color: rgb(18, 72, 116) !important;
   color: white !important;
   font-size: 0.875rem;
 }
-:where(.css-dev-only-do-not-override-1fuzsln).ant-menu-light
+:where(.css-dev-only-do-not-override-13iorj1).ant-menu-light
   .ant-menu-item-selected
   > .ant-menu-title-content {
   color: white !important;

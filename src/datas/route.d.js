@@ -130,6 +130,10 @@ const rolePermission = {
 };
 const lessonDetail = { key: "lesson-detail/:id", element: <LessonDetail /> };
 const labDetail = { key: "lab-detail/:id", element: <LabDetail /> };
+
+const user = JSON.parse(localStorage.getItem("user"));
+const permissions = JSON.parse(localStorage.getItem("permissions"));
+
 export const learnerRoute = [
   assignments,
   accountDetail,
@@ -166,22 +170,30 @@ export const superAdminRoute = [
   classrooms,
   experimentDetail,
 ];
-export const learnerSidebar = [assignments, accountDetail, logout];
-export const teacherSidebar = [
-  schedule,
-  lessons,
-  assignments,
-  labs,
-  deviceTypes,
-  students,
-  accountDetail,
-  logout,
-];
-export const superAdminSidebar = [
-  rolePermission,
-  accounts,
-  classrooms,
-  deviceTypes,
-  accountDetail,
-  logout,
-];
+export const learnerSidebar = user
+  ? [assignments, accountDetail, logout].filter(
+      (item) => item && permissions[item.key] !== false
+    )
+  : [];
+export const teacherSidebar = user
+  ? [
+      schedule,
+      lessons,
+      assignments,
+      labs,
+      deviceTypes,
+      students,
+      accountDetail,
+      logout,
+    ].filter((item) => item && permissions[item.key] !== false)
+  : [];
+export const superAdminSidebar = user
+  ? [
+      rolePermission,
+      accounts,
+      classrooms,
+      deviceTypes,
+      accountDetail,
+      logout,
+    ].filter((item) => item && permissions[item.key] !== false)
+  : [];

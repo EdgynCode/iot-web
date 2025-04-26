@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 // ===================== CẤU HÌNH BẢNG & HÀNH ĐỘNG =====================
 // Cột bảng (giữ lại nút Xem, Sửa; bỏ nút Xóa để xóa nhiều dòng bằng action)
 
@@ -12,21 +12,43 @@ export const roleListAction = () => [
   },
 ];
 
-export const roleColumns = (handleEditRole) => [
+export const roleColumns = (handleEditRole, handleAddPermission) => [
   {
     title: "Vai trò",
     dataIndex: "name",
     key: "name",
   },
   {
+    title: "Quyền hạn",
+    dataIndex: "permissions",
+    key: "permissions",
+    render: (permissions) => (
+      <ul>
+        {permissions.map((permission, index) => (
+          <li key={index}>{permission.name}</li>
+        ))}
+      </ul>
+    ),
+  },
+  {
     title: "Tác vụ",
     key: "action",
     render: (_, record) => (
       <>
-        <Button type="link" onClick={() => handleEditRole(record)}>
-          Sửa
-        </Button>
-        {/* Xóa row-level có thể bỏ, vì đã có xóa nhiều ở top-bar */}
+        <button
+          className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 ml-2"
+          type="link"
+          onClick={() => handleAddPermission(record.name)}
+        >
+          <PlusOutlined />
+        </button>
+        <button
+          className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 ml-2"
+          type="link"
+          onClick={() => handleEditRole(record)}
+        >
+          <EditOutlined />
+        </button>
       </>
     ),
   },
