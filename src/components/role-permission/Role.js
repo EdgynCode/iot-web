@@ -10,6 +10,7 @@ import {
   message,
   Spin,
   Form,
+  Select,
 } from "antd";
 import { roleListAction, roleColumns } from "../../datas/role.d";
 import { useRoleData } from "../../hooks/useRoleData";
@@ -21,6 +22,9 @@ import {
   deleteRole,
 } from "../../redux/actions/roleAction";
 import { v4 as uuidv4 } from "uuid";
+import { usePermissionData } from "../../hooks/usePermissionData";
+import { getUserRole } from "../../utils/getUserRole";
+import { addPermissionsToRole } from "../../redux/actions/permissionAction";
 
 const Role = () => {
   const dispatch = useDispatch();
@@ -38,11 +42,18 @@ const Role = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editRoleId, setEditRoleId] = useState("");
 
+  // State cho Modal thêm quyền
+  const [roleName, setRoleName] = useState("");
+  const [showAddPerModal, setShowAddPerModal] = useState(false);
+
+  const [addPerForm] = Form.useForm();
   const [addForm] = Form.useForm();
   const [editForm] = Form.useForm();
 
   // Các dòng được chọn (để xóa nhiều)
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const { permissions, loading: isPerLoading } = usePermissionData();
 
   // Khi click vào mỗi action
   const handleActionClick = (action) => {
@@ -129,6 +140,38 @@ const Role = () => {
       });
   };
 
+  // ===================== THÊM PERMISSION VÀO ROLE =====================
+  const handleAddPermission = async (roleName) => {
+    setModalType("addPermission");
+    setShowAddPerModal(true);
+    addPerForm.setFieldsValue({ roleName });
+    setRoleName(roleName);
+  };
+
+  const handleAddPermissionSubmit = async () => {
+    try {
+      const selectedValues = addPerForm.getFieldValue("permissions");
+      const selectedPermissions = selectedValues.map((value) =>
+        permissions.find((per) => per.name === value)
+      );
+
+      const data = {
+        permissions: selectedPermissions.map((per) => ({
+          name: per.name,
+          value: per.value,
+        })),
+        roleName: roleName,
+      };
+      dispatch(addPermissionsToRole(data)).unwrap();
+      message.success("Thêm phân quyền thành công!");
+      dispatch(getAllRoles());
+      setShowAddPerModal(false);
+    } catch (error) {
+      console.error("Lỗi khi thêm phân quyền:", error);
+      message.error("Không thể thêm phân quyền. Vui lòng thử lại.");
+    }
+  };
+
   // ===================== SELECTION (CHỌN NHIỀU) =====================
   const onSelectionChange = (keys) => {
     setSelectedRowKeys(keys);
@@ -174,7 +217,7 @@ const Role = () => {
           onClick: () => handleActionClick(action),
         }))}
         data={roles}
-        column={roleColumns(handleEditRole)}
+        column={roleColumns(handleEditRole, handleAddPermission)}
         onSelectionChange={onSelectionChange}
       />
       {loading && <Spin size="large" />}
@@ -245,6 +288,43 @@ const Role = () => {
         ) : (
           <p>Bạn có chắc chắn muốn xóa Role đã chọn không?</p>
         )}
+      </Modal>
+
+      {/* Modal dùng cho Thêm Quyền vào Role */}
+      <Modal
+        title="Thêm quyền"
+        open={showAddPerModal && modalType === "addPermission"}
+        onCancel={() => setShowAddPerModal(false)}
+        onOk={handleAddPermissionSubmit}
+        okText={"Thêm quyền"}
+        cancelText="Hủy"
+      >
+        <Form
+          form={addPerForm}
+          name="addPermission"
+          onFinish={handleAddPermissionSubmit}
+          layout="vertical"
+        >
+          <Form.Item label="Tên Role" name="roleName">
+            <Input disabled />
+          </Form.Item>
+          <Form.Item name="permissions" label="Phân quyền">
+            <Select
+              mode="multiple"
+              allowClear
+              className="w-full"
+              loading={isPerLoading}
+              options={permissions.map((per) => ({
+                value: per.name,
+                label: per.name,
+                data: { name: per.name, value: per.value },
+              }))}
+              notFoundContent={
+                isPerLoading ? "Đang tải..." : "Không có phân quyền"
+              }
+            />
+          </Form.Item>
+        </Form>
       </Modal>
     </>
   );

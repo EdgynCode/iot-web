@@ -13,6 +13,9 @@ function App() {
   const decode = user ? jwtDecode(user?.jwtAccessToken) : null;
   const role = decode ? decode.role : null;
 
+  // Get permissions from localStorage
+  const permissions = JSON.parse(localStorage.getItem("permissions")) || {};
+
   return (
     <Router>
       <Routes>
@@ -34,13 +37,15 @@ function App() {
                     : role === "Teacher"
                     ? teacherRoute
                     : learnerRoute
-                  ).map((route) => (
-                    <Route
-                      key={`${role}/${route.key}`}
-                      path={route.key}
-                      element={route.element}
-                    />
-                  ))}
+                  )
+                    .filter((route) => permissions[route.key] !== false)
+                    .map((route) => (
+                      <Route
+                        key={`${role}/${route.key}`}
+                        path={route.key}
+                        element={route.element}
+                      />
+                    ))}
                 </Route>
                 <Route path="*" element={<NotFound />} />
               </Route>
