@@ -29,17 +29,14 @@ const getLocalLearners = (sessionId) => {
   const stored = localStorage.getItem(getLocalStorageKey(sessionId));
   return stored ? JSON.parse(stored) : [];
 };
-
 const saveLocalLearners = (learners, sessionId) => {
   console.log("Lưu vào localStorage:", learners, "cho sessionId:", sessionId);
   localStorage.setItem(getLocalStorageKey(sessionId), JSON.stringify(learners));
 };
-
 const resetLocalLearners = (sessionId) => {
   console.log("Reset localStorage cho key:", getLocalStorageKey(sessionId));
   localStorage.removeItem(getLocalStorageKey(sessionId));
 };
-
 const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
   const dispatch = useDispatch();
   const { classrooms, loading: isClassroomLoading } = useClassroomData();
@@ -568,8 +565,8 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
                     ? "Đang tải..."
                     : filteredLearners.length === 0
                     ? existingMembers.length > 0 && learners.length > 0
-                      ? "Tất cả học sinh đã được thêm vào nhóm"
-                      : "Không có học sinh trong lớp này"
+                    ? "Tất cả học sinh đã được thêm vào nhóm"
+                    : "Không có học sinh trong lớp này"
                     : "Không tìm thấy học sinh"
                 }
                 filterOption={(input, option) =>
