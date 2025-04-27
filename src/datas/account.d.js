@@ -48,7 +48,7 @@ const accountTypeMenu = [
 export const accountFilter = [
   { key: "AccountType", label: "Loại tài khoản", options: accountTypeMenu },
 ];
-export const AccountsColumns = (navigate, selectedAccountType) => {
+export const AccountsColumns = (navigate) => {
   const dispatch = useDispatch();
   const columns = [
     {
@@ -63,6 +63,11 @@ export const AccountsColumns = (navigate, selectedAccountType) => {
           </a>
         );
       },
+    },
+    {
+      title: "Lớp",
+      dataIndex: "className",
+      key: "className",
     },
     {
       title: "Giới tính",

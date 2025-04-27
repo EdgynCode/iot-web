@@ -142,7 +142,6 @@ export const learnerRoute = [
 ];
 export const teacherRoute = [
   schedule,
-  lessons,
   assignments,
   labs,
   deviceTypes,
@@ -178,7 +177,6 @@ export const learnerSidebar = user
 export const teacherSidebar = user
   ? [
       schedule,
-      lessons,
       assignments,
       labs,
       deviceTypes,
