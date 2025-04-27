@@ -2,25 +2,26 @@ services:
   frontend:
     # container_name: frontend
     image: phongngolam/iot-web-frontend
-    # build: 
+    # build:
     #  context: ./
     #  dockerfile: frontend.dockerfile
     ports:
       - "3000:3000"
     environment:
       - REACT_APP_API_URL=http://10.0.0.170:8080/api/
+      - REACT_SOCKET_URL=http://10.0.0.170:5000/
     networks:
       - productnetwork
     depends_on:
       - webapi
   webapi:
-    # build: 
+    # build:
     #   context: ./
     #   dockerfile: backend.dockerfile
     image: counterlogic/iot-back-end-stable
     ports:
-      - "8080:8080"   # HTTP
-      - "8081:8081"  # HTTPS
+      - "8081:8080" # HTTP
+      - "8082:8081" # HTTPS
     depends_on:
       - sqlserver
     environment:
@@ -34,7 +35,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
-      ACCEPT_EULA: ${ACCEPT_EULA} 
+      ACCEPT_EULA: ${ACCEPT_EULA}
       MSSQL_PID: ${MSSQL_PID}
     ports:
       - "${MSSQL_TCP_PORT}:${MSSQL_TCP_PORT}"
@@ -49,12 +50,12 @@ services:
     ports:
       - "1883:1883"
     volumes:
-    - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/config:/mosquitto/config
     networks:
       - productnetwork
   mqttbridge:
     container_name: mqtt-bridge-service
-    image: counterlogic/mqtt-bridge-service
+    image: counterlogic/mqtt-bridge-service:preview
     ports:
       - "5000:500"
       - "5001:500"
