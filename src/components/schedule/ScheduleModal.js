@@ -51,10 +51,10 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
       }
 
       if (modalType === "addLearnerToGroup") {
-        const localLearners = getLocalLearners();
-        setAvailableLearners(localLearners);
+        const localLearners = getLocalLearners(selectedSessionId);
+        setAvailableLearners(localLearners.length > 0 ? localLearners : []);
 
-        if (selectedSessionId) {
+        if (selectedSessionId && modalType === "addLearnerToGroup") {
           const selectedSession = sessionData.find(
             (session) => session.id === selectedSessionId
           );
@@ -132,7 +132,7 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
         const fetchedLearners = Array.isArray(response.payload)
           ? response.payload
           : [];
-        const localLearners = getLocalLearners();
+        const localLearners = getLocalLearners(selectedSessionId);
 
         // Nếu localStorage rỗng hoặc nhóm mới không có thành viên, reset availableLearners
         if (localLearners.length === 0 || !selectedGroup?.members?.length) {
@@ -203,17 +203,16 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
       await dispatch(createGroup({ sessionId, tenNhom })).unwrap();
       message.success("Tạo nhóm thành công!");
 
-      // Cập nhật danh sách nhóm và reset availableLearners
       setLoadingGroups(true);
       dispatch(getGroupsByClassSession(sessionId))
         .then((response) => {
           const fetchedGroups = Array.isArray(response.payload)
             ? response.payload
             : [];
-          setGroups(fetchedGroups); // Cập nhật state groups
-          setSelectedSessionId(sessionId); // Đặt sessionId để modal tiếp theo sử dụng
-          resetLocalLearners(); // Reset localStorage
-          setAvailableLearners([]); // Reset state để tải lại toàn bộ học sinh
+          setGroups(fetchedGroups);
+          setSelectedSessionId(sessionId);
+          resetLocalLearners(sessionId);
+          setAvailableLearners([]);
         })
         .catch((error) => {
           console.error("Lỗi tải dữ liệu danh sách nhóm:", error);
