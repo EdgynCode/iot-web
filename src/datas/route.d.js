@@ -19,6 +19,7 @@ import {
   ExperimentDetail,
   RolePermission,
   Assignments,
+  ResetPassword,
 } from "../pages";
 import {
   BookmarkMenuIcon,
@@ -131,6 +132,10 @@ const rolePermission = {
 const lessonDetail = { key: "lesson-detail/:id", element: <LessonDetail /> };
 const labDetail = { key: "lab-detail/:id", element: <LabDetail /> };
 
+const resetPassword = {
+  key: "reset-password",
+  element: <ResetPassword />,
+};
 const user = JSON.parse(localStorage.getItem("user"));
 const permissions = JSON.parse(localStorage.getItem("permissions"));
 
@@ -139,6 +144,7 @@ export const learnerRoute = [
   accountDetail,
   editAccountDetail,
   logout,
+  resetPassword,
 ];
 export const teacherRoute = [
   schedule,
@@ -155,6 +161,7 @@ export const teacherRoute = [
   lessonDetail,
   labDetail,
   experimentDetail,
+  resetPassword,
 ];
 export const superAdminRoute = [
   userDetail,
@@ -168,6 +175,7 @@ export const superAdminRoute = [
   logout,
   classrooms,
   experimentDetail,
+  resetPassword,
 ];
 export const learnerSidebar = user
   ? [assignments, accountDetail, logout].filter(

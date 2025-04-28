@@ -44,7 +44,7 @@ const ResetPassword = () => {
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-gray-100 to-purple-200">
       <div className="bg-white p-10 rounded-2xl shadow-lg w-96">
         <div className="flex justify-center mb-6">
-          <img src="logo.png" alt="Logo" className="w-16" />
+          <img src="/images/logo.png" alt="Logo" className="w-52" />
         </div>
         <h1 className="text-2xl font-semibold text-center mb-5">
           Đặt lại mật khẩu
