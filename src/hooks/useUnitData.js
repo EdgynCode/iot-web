@@ -1,8 +1,6 @@
-// hooks/useUnitData.js
-
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { getAllUnits } from "../redux/actions/unitAction"; // <-- phải tồn tại
+import { getAllUnits } from "../redux/actions/unitAction";
 
 export const useUnitData = () => {
   const dispatch = useDispatch();

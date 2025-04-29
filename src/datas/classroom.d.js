@@ -12,7 +12,7 @@
 
 //   return { years, semesters, loading };
 // };
-
+import { formatDate } from "../utils/formatDate";
 export const classroomAction = () => [
   {
     key: 1,
@@ -71,7 +71,7 @@ export const gradeFilter = [
 //     { key: "Semester", label: "Học kì", options: semesters },
 //   ];
 // };
-export const classroomColumns = (navigate) => [
+export const classroomColumns = () => [
   {
     title: "Tên lớp",
     dataIndex: "tenLop",
@@ -82,12 +82,12 @@ export const classroomColumns = (navigate) => [
     title: "Ngày tạo",
     dataIndex: "ngayTao",
     key: "ngayTao",
-    render: (text) => <p>{text}</p>,
+    render: (text) => <p>{formatDate(text)}</p>,
   },
   {
     title: "Ngày thay đổi",
     dataIndex: "ngayThayDoi",
     key: "ngayThayDoi",
-    render: (text) => <p>{text}</p>,
+    render: (text) => <p>{formatDate(text)}</p>,
   },
 ];

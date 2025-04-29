@@ -19,7 +19,8 @@ import {
   ExperimentDetail,
   RolePermission,
   Assignments,
-  Units
+  ResetPassword,
+  Units,
 } from "../pages";
 import {
   BookmarkMenuIcon,
@@ -130,22 +131,30 @@ const rolePermission = {
   title: "Quản lý quyền",
 };
 const units = {
-  key: "units", // key này cũng sẽ là đường dẫn khi gọi navigate("new-tab")
+  key: "units",
   icon: <DeviceMenuIcon />,
   element: <Units />,
   title: "Quản lý đơn vị",
-}
+};
 const lessonDetail = { key: "lesson-detail/:id", element: <LessonDetail /> };
 const labDetail = { key: "lab-detail/:id", element: <LabDetail /> };
+
+const resetPassword = {
+  key: "reset-password",
+  element: <ResetPassword />,
+};
+const user = JSON.parse(localStorage.getItem("user"));
+const permissions = JSON.parse(localStorage.getItem("permissions"));
+
 export const learnerRoute = [
   assignments,
   accountDetail,
   editAccountDetail,
   logout,
+  resetPassword,
 ];
 export const teacherRoute = [
   schedule,
-  lessons,
   assignments,
   labs,
   deviceTypes,
@@ -159,6 +168,7 @@ export const teacherRoute = [
   lessonDetail,
   labDetail,
   experimentDetail,
+  resetPassword,
 ];
 export const superAdminRoute = [
   userDetail,
@@ -172,25 +182,33 @@ export const superAdminRoute = [
   logout,
   classrooms,
   experimentDetail,
-  units
-];
-export const learnerSidebar = [assignments, accountDetail, logout];
-export const teacherSidebar = [
-  schedule,
-  lessons,
-  assignments,
-  labs,
-  deviceTypes,
-  students,
-  accountDetail,
-  logout,
-];
-export const superAdminSidebar = [
-  rolePermission,
-  accounts,
+  resetPassword,
   units,
-  classrooms,
-  deviceTypes,
-  accountDetail,
-  logout,
 ];
+export const learnerSidebar = user
+  ? [assignments, accountDetail, logout].filter(
+      (item) => item && permissions[item.key] !== false
+    )
+  : [];
+export const teacherSidebar = user
+  ? [
+      schedule,
+      assignments,
+      labs,
+      deviceTypes,
+      students,
+      accountDetail,
+      logout,
+    ].filter((item) => item && permissions[item.key] !== false)
+  : [];
+export const superAdminSidebar = user
+  ? [
+      rolePermission,
+      units,
+      accounts,
+      classrooms,
+      deviceTypes,
+      accountDetail,
+      logout,
+    ].filter((item) => item && permissions[item.key] !== false)
+  : [];

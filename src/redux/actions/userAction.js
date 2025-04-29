@@ -52,3 +52,20 @@ export const getUserDetails = createAsyncThunk(
     }
   }
 );
+
+export const getUsersByRole = createAsyncThunk(
+  "User/GetUsersByRole",
+  async (id, thunkAPI) => {
+    try {
+      const response = await UserService.getUsersByRole(id);
+      return response;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to get user data";
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);

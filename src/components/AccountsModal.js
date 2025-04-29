@@ -23,7 +23,6 @@ const AccountsModal = ({
   classrooms,
   isClassroomLoading,
   loading,
-  setLoading,
 }) => {
   return (
     <>
@@ -90,7 +89,6 @@ const AccountsModal = ({
       >
         <RegisterForm
           loading={loading}
-          setLoading={setLoading}
           onFinish={handleCreateAccount}
           setOpen={setOpen}
         />
@@ -108,7 +106,6 @@ const AccountsModal = ({
           onChange={(e) => setExportType(e.target.value)}
           value={exportType}
         >
-          <Radio value="pdf">File PDF</Radio>
           <Radio value="excel">File Excel</Radio>
         </Radio.Group>
         <Form.Item label="Nhập tên file">

@@ -26,11 +26,53 @@ export const addPermission = createAsyncThunk(
   }
 );
 
+export const addPermissionsToRole = createAsyncThunk(
+  "Role/AddPermissionsToRole",
+  async ({ permissions, roleName }, thunkAPI) => {
+    try {
+      const data = await PermissionService.addPermissionsToRole(
+        permissions,
+        roleName
+      );
+      thunkAPI.dispatch(setMessage("Permissions added to role successfully!"));
+      return data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue();
+    }
+  }
+);
+
 export const getAllPermissions = createAsyncThunk(
   "Role/GetAllPermissions",
   async (_, thunkAPI) => {
     try {
       const data = await PermissionService.getAllPermissions();
+      thunkAPI.dispatch(setMessage("Permission data fetched successfully!"));
+      return data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const getPermissionsByRole = createAsyncThunk(
+  "Role/GetPermissionsByRole",
+  async (userName, thunkAPI) => {
+    try {
+      const data = await PermissionService.getPermissionsByRole(userName);
       thunkAPI.dispatch(setMessage("Permission data fetched successfully!"));
       return data;
     } catch (error) {

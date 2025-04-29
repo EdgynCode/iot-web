@@ -1,4 +1,4 @@
-import { Select } from "antd";
+import { Button } from "antd";
 import { updateRole } from "../redux/actions/authAction";
 import { useDispatch } from "react-redux";
 import { message } from "antd";
@@ -48,16 +48,26 @@ const accountTypeMenu = [
 export const accountFilter = [
   { key: "AccountType", label: "Loại tài khoản", options: accountTypeMenu },
 ];
-export const AccountsColumns = (navigate, selectedAccountType) => {
+export const AccountsColumns = (navigate) => {
   const dispatch = useDispatch();
   const columns = [
     {
       title: "Họ tên",
-      dataIndex: "fullName",
+      dataIndex: ["firstName", "lastName"],
       key: "fullName",
-      render: (text, record) => (
-        <a onClick={() => navigate(`/user-detail/${record.id}`)}>{text}</a>
-      ),
+      render: (_, record) => {
+        const fullName = `${record.firstName} ${record.lastName}`;
+        return (
+          <a onClick={() => navigate(`/user-detail/${record.id}`)}>
+            {fullName}
+          </a>
+        );
+      },
+    },
+    {
+      title: "Lớp",
+      dataIndex: "className",
+      key: "className",
     },
     {
       title: "Giới tính",
@@ -96,32 +106,31 @@ export const AccountsColumns = (navigate, selectedAccountType) => {
     },
     {
       title: "Phân quyền",
-      dataIndex: "moTa",
-      key: "moTa",
-      render: (text, record) => {
+      render: (_, record) => {
         return (
-          <Select
-            defaultValue={selectedAccountType}
-            className="w-[130px]"
-            onChange={(value) => {
+          <Button
+            className="bg-[#124874] text-white"
+            onClick={() => {
               const userName = record.userName;
-              dispatch(updateRole({ username: userName, role: value }))
-                .unwrap()
-                .then(() => {
-                  message.success("Cập nhật phân quyền thành công!");
-                })
-                .catch((error) => {
-                  message.error("Cập nhật phân quyền thất bại.");
-                  console.error("Error updating user role:", error);
-                });
+              const newRole = prompt(
+                "Nhập vai trò mới (Learner, Teacher, Admin):",
+                record.role
+              );
+              if (newRole) {
+                dispatch(updateRole({ username: userName, role: newRole }))
+                  .unwrap()
+                  .then(() => {
+                    message.success("Cập nhật phân quyền thành công!");
+                  })
+                  .catch((error) => {
+                    message.error("Cập nhật phân quyền thất bại.");
+                    console.error("Error updating user role:", error);
+                  });
+              }
             }}
           >
-            {roles.map((role) => (
-              <Select.Option key={role.key} value={role.key}>
-                {role.label}
-              </Select.Option>
-            ))}
-          </Select>
+            Sửa quyền
+          </Button>
         );
       },
     },
@@ -129,67 +138,3 @@ export const AccountsColumns = (navigate, selectedAccountType) => {
 
   return columns;
 };
-export const studentDetailAction = (navigate, id) => [
-  {
-    title: "Chỉnh sửa thông tin",
-    onclick: () => {
-      navigate(`/edit-student-detail/${id}`);
-    },
-  },
-  {
-    title: "Gửi tin nhắn",
-    onclick: () => {
-      console.log("Delete");
-    },
-  },
-];
-
-export const assignments = [
-  {
-    id: "1",
-    studentId: "4701104087",
-    assignment: "Bài tập 1",
-    status: "Chưa nộp",
-  },
-  {
-    id: "2",
-    studentId: "4701104087",
-    assignment: "Bài tập 2",
-    status: "Chưa nộp",
-  },
-  {
-    id: "3",
-    studentId: "4701104087",
-    assignment: "Bài tập 3",
-    status: "Chưa nộp",
-  },
-  {
-    id: "4",
-    studentId: "4701104087",
-    assignment: "Bài tập 4",
-    status: "Đã nộp",
-  },
-  {
-    id: "5",
-    studentId: "4701104087",
-    assignment: "Bài tập 5",
-    status: "Đã nộp",
-  },
-];
-export const assignmentColumns = [
-  {
-    title: "Mã số",
-    dataIndex: "id",
-    key: "id",
-  },
-  {
-    title: "Bài tập",
-    dataIndex: "assignment",
-    key: "assignment",
-  },
-  {
-    title: "Trạng thái",
-    dataIndex: "status",
-    key: "status",
-  },
-];

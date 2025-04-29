@@ -9,9 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Modal, Spin, Radio, Input, Form, QRCode } from "antd";
 import { getLearnersByClassId } from "../redux/actions/learnerAction";
-import * as XLSX from "xlsx";
-import { jsPDF } from "jspdf";
-import "jspdf-autotable";
+import ExcelJS from "exceljs";
 
 const Students = () => {
   const navigate = useNavigate();
@@ -24,6 +22,8 @@ const Students = () => {
   const [selectedClassLabel, setSelectedClassLabel] = useState("Lớp");
   const [initialFetch, setInitialFetch] = useState(false);
   const [qrData, setQrData] = useState("");
+  const [countdown, setCountdown] = useState(300);
+  const [randomCode, setRandomCode] = useState("");
   const _filters = useStudentFilter();
 
   const learners = useSelector((state) => state.learners.data || {});
@@ -49,6 +49,30 @@ const Students = () => {
     }
   }, [_filters, selectedClass, dispatch, initialFetch]);
 
+  useEffect(() => {
+    let timer;
+    if (open && modalType === "attendance") {
+      setRandomCode(Math.floor(100000 + Math.random() * 900000).toString());
+      setCountdown(300);
+      timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [open, modalType]);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
+
   const handleClassChange = (value) => {
     setSelectedClass(value);
     const selectedOption = _filters[0].options.find(
@@ -58,39 +82,31 @@ const Students = () => {
   };
 
   const handleExport = async () => {
-    const formattedFileName = `${fileName}`;
     switch (exportType) {
-      case "pdf":
-        const doc = new jsPDF();
-        doc.autoTable({
-          head: [
-            [
-              "First Name",
-              "Last Name",
-              "Gender",
-              "Date of Birth",
-              "Username",
-              "Email",
-              "Phone Number",
-            ],
-          ],
-          body: learners.map((student) => [
-            student.firstName,
-            student.lastName,
-            student.gender,
-            student.doB,
-            student.userName,
-            student.email,
-            student.phoneNumber,
-          ]),
-        });
-        doc.save(`${formattedFileName}.pdf`);
-        break;
       case "excel":
-        const worksheet = XLSX.utils.json_to_sheet(learners);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
-        XLSX.writeFile(workbook, `${formattedFileName}.xlsx`);
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Accounts");
+
+        // Add headers
+        worksheet.columns = Object.keys(learners[0]).map((key) => ({
+          header: key,
+          key: key,
+        }));
+
+        // Add rows
+        learners.forEach((learner) => {
+          worksheet.addRow(learner);
+        });
+
+        // Save as Excel file
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `${fileName}.xlsx`;
+        link.click();
         break;
       default:
         console.log("Invalid selection");
@@ -152,7 +168,6 @@ const Students = () => {
           onChange={(e) => setExportType(e.target.value)}
           value={exportType}
         >
-          <Radio value="pdf">File PDF</Radio>
           <Radio value="excel">File Excel</Radio>
         </Radio.Group>
         <Form.Item label="Nhập tên file">
@@ -171,11 +186,17 @@ const Students = () => {
         }}
         footer={null}
       >
-        <QRCode
-          errorLevel="H"
-          value="https://ant.design/"
-          icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-        />
+        <div className="flex flex-col items-center text-center">
+          <QRCode
+            errorLevel="H"
+            value="https://ant.design/"
+            icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+          />
+          <p>Thời gian còn lại: {formatTime(countdown)}</p>
+          <p>
+            Mã điểm danh: <strong>{randomCode}</strong>
+          </p>
+        </div>
       </Modal>
     </>
   );

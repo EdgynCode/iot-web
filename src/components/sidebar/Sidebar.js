@@ -37,10 +37,8 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
     dispatch(logout())
       .unwrap()
       .then(() => {
-        localStorage.removeItem("isLoggedIn");
         message.success("Đăng xuất thành công");
         navigate("/login");
-        window.location.reload();
       })
       .catch(() => {
         message.error("Đăng xuất thất bại. Vui lòng thử lại.");
@@ -89,9 +87,9 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
               ></img>
             </a>
             <div className="account-info">
-              <h6 className="account-name">{decode.unique_name}</h6>
-              <h6 className="account-number">{decode.email}</h6>
-              <p className="account-role">{decode.role}</p>
+              <h6 className="account-name">{decode?.unique_name || "N/A"}</h6>
+              <h6 className="account-number">{decode?.email || "N/A"}</h6>
+              <p className="account-role">{decode?.role || "N/A"}</p>
             </div>
           </div>
         </div>
@@ -115,7 +113,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
 
       {/* Logout confirmation modal */}
       <Modal
-        title="Confirm Logout"
+        title="Xác nhận đăng xuất"
         open={isModalVisible}
         confirmLoading={loading}
         onOk={handleConfirmLogout}

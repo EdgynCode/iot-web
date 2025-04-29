@@ -3,7 +3,7 @@ import Selector from "./selector/Selector";
 import { Input, Pagination, Table } from "antd";
 import "./index.css";
 import { SearchOutlined } from "@ant-design/icons";
-import PropTypes from "prop-types"; 
+import PropTypes from "prop-types";
 
 export const ListDetail = ({
   title,
@@ -43,18 +43,18 @@ export const ListDetail = ({
     setShowItems(filteredData.slice(startIndex, endIndex));
   }, [currentPage, data, searchQuery]);
 
-  //Xử lý chọn dòng----------------------------------------
+  // row selection handling---------------------------------
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
     if (onSelectionChange) {
-      onSelectionChange(newSelectedRowKeys); // truyền selected keys ra ngoài
+      onSelectionChange(newSelectedRowKeys); // export selectedRowKeys
     }
   };
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: onSelectChange,
-    };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
   useEffect(() => {
     if (setHasSelected) {
       setHasSelected(selectedRowKeys.length > 0);

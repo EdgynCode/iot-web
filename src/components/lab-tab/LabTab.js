@@ -25,7 +25,7 @@ import {
   getExperimentsByLabId,
 } from "../../redux/actions/experimentAction";
 import "./index.css";
-import formatDate from "../../utils/formatDate";
+import { formatDate } from "../../utils/formatDate";
 import { useExperimentData } from "../../hooks/useExperimentData";
 
 const { Meta } = Card;

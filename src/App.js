@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Login, Register, ForgotPassword } from "./pages";
+import { Login, Register, ForgotPassword, ResetPassword } from "./pages";
 import Layout from "./components/layout/Layout";
 import { NotFound } from "./components/not-found/NotFound";
 import { teacherRoute, learnerRoute, superAdminRoute } from "./datas/route.d";
@@ -13,6 +13,9 @@ function App() {
   const decode = user ? jwtDecode(user?.jwtAccessToken) : null;
   const role = decode ? decode.role : null;
 
+  // Get permissions from localStorage
+  const permissions = JSON.parse(localStorage.getItem("permissions")) || {};
+
   return (
     <Router>
       <Routes>
@@ -22,6 +25,7 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="*" element={<Login />} />
           </>
         ) : (
@@ -34,13 +38,15 @@ function App() {
                     : role === "Teacher"
                     ? teacherRoute
                     : learnerRoute
-                  ).map((route) => (
-                    <Route
-                      key={`${role}/${route.key}`}
-                      path={route.key}
-                      element={route.element}
-                    />
-                  ))}
+                  )
+                    .filter((route) => permissions[route.key] !== false)
+                    .map((route) => (
+                      <Route
+                        key={`${role}/${route.key}`}
+                        path={route.key}
+                        element={route.element}
+                      />
+                    ))}
                 </Route>
                 <Route path="*" element={<NotFound />} />
               </Route>
