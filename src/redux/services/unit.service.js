@@ -1,5 +1,20 @@
 import axiosInstance from "./axiosInstance";
 
+const removeUnit = async (id) => {
+  try {
+    console.log("Sending DELETE request for unit ID:", id);
+    const response = await axiosInstance.delete(`Unit/RemoveUnit/${id}`);
+    console.log("Delete response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error removing unit:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const addNewUnit = async (
   id,
   tenDonVi,
@@ -83,6 +98,7 @@ const UnitService = {
   addNewUnit,
   getAllUnits,
   updateUnit,
+  removeUnit,
 };
 
 export default UnitService;

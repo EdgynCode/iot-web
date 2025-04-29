@@ -3,6 +3,7 @@ import Selector from "./selector/Selector";
 import { Input, Pagination, Table } from "antd";
 import "./index.css";
 import { SearchOutlined } from "@ant-design/icons";
+import PropTypes from "prop-types"; 
 
 export const ListDetail = ({
   title,
@@ -16,7 +17,7 @@ export const ListDetail = ({
   // mapping key to data index
   const mappedData = data.map((item) => ({
     ...item,
-    key: item.id,
+    key: item.ID, //Viết Hoa Chỗ Này đễ nó khớp Database
   }));
 
   // search query
@@ -42,23 +43,24 @@ export const ListDetail = ({
     setShowItems(filteredData.slice(startIndex, endIndex));
   }, [currentPage, data, searchQuery]);
 
-  // ------------------------------------------------------
+  //Xử lý chọn dòng----------------------------------------
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
     if (onSelectionChange) {
-      onSelectionChange(newSelectedRowKeys);
+      onSelectionChange(newSelectedRowKeys); // truyền selected keys ra ngoài
     }
   };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: onSelectChange,
+    };
   useEffect(() => {
     if (setHasSelected) {
       setHasSelected(selectedRowKeys.length > 0);
     }
   }, [selectedRowKeys, setHasSelected]);
+  //------------------------------------------------------
   return (
     <>
       <Selector title={title} actions={actions} filters={filters} />

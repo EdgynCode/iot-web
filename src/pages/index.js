@@ -22,3 +22,4 @@ export { default as Classrooms } from "./classrooms";
 export { default as ExperimentDetail } from "./experiment-detail";
 export { default as Assignments } from "./assignments";
 export { default as RolePermission } from "./role-permission";
+export { default as Units } from "./units";

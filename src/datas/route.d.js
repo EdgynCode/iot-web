@@ -19,6 +19,7 @@ import {
   ExperimentDetail,
   RolePermission,
   Assignments,
+  Units
 } from "../pages";
 import {
   BookmarkMenuIcon,
@@ -128,6 +129,12 @@ const rolePermission = {
   element: <RolePermission />,
   title: "Quản lý quyền",
 };
+const units = {
+  key: "units", // key này cũng sẽ là đường dẫn khi gọi navigate("new-tab")
+  icon: <DeviceMenuIcon />,
+  element: <Units />,
+  title: "Quản lý đơn vị",
+}
 const lessonDetail = { key: "lesson-detail/:id", element: <LessonDetail /> };
 const labDetail = { key: "lab-detail/:id", element: <LabDetail /> };
 export const learnerRoute = [
@@ -165,6 +172,7 @@ export const superAdminRoute = [
   logout,
   classrooms,
   experimentDetail,
+  units
 ];
 export const learnerSidebar = [assignments, accountDetail, logout];
 export const teacherSidebar = [
@@ -180,6 +188,7 @@ export const teacherSidebar = [
 export const superAdminSidebar = [
   rolePermission,
   accounts,
+  units,
   classrooms,
   deviceTypes,
   accountDetail,
