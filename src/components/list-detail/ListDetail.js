@@ -42,12 +42,12 @@ export const ListDetail = ({
     setShowItems(filteredData.slice(startIndex, endIndex));
   }, [currentPage, data, searchQuery]);
 
-  // ------------------------------------------------------
+  // row selection handling---------------------------------
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
     if (onSelectionChange) {
-      onSelectionChange(newSelectedRowKeys);
+      onSelectionChange(newSelectedRowKeys); // export selectedRowKeys
     }
   };
   const rowSelection = {

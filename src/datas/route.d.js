@@ -20,6 +20,7 @@ import {
   RolePermission,
   Assignments,
   ResetPassword,
+  Units,
 } from "../pages";
 import {
   BookmarkMenuIcon,
@@ -129,6 +130,12 @@ const rolePermission = {
   element: <RolePermission />,
   title: "Quản lý quyền",
 };
+const units = {
+  key: "units",
+  icon: <DeviceMenuIcon />,
+  element: <Units />,
+  title: "Quản lý đơn vị",
+};
 const lessonDetail = { key: "lesson-detail/:id", element: <LessonDetail /> };
 const labDetail = { key: "lab-detail/:id", element: <LabDetail /> };
 
@@ -176,6 +183,7 @@ export const superAdminRoute = [
   classrooms,
   experimentDetail,
   resetPassword,
+  units,
 ];
 export const learnerSidebar = user
   ? [assignments, accountDetail, logout].filter(
@@ -196,6 +204,7 @@ export const teacherSidebar = user
 export const superAdminSidebar = user
   ? [
       rolePermission,
+      units,
       accounts,
       classrooms,
       deviceTypes,
