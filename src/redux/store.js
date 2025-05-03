@@ -18,6 +18,7 @@ import mqttReducer from "./slices/mqttSlice";
 import roleReducer from "./slices/roleSlice";
 import permissionReducer from "./slices/permissionSlice";
 import assignmentReducer from "./slices/assignmentSlice";
+import submissionReducer from "./slices/submissionSlice";
 import unitReducer from "./slices/unitSlice";
 
 export const store = configureStore({
@@ -38,6 +39,7 @@ export const store = configureStore({
     webSocket: webSocketReducer,
     mqtt: mqttReducer,
     assignments: assignmentReducer,
+    submissions: submissionReducer,
     roles: roleReducer,
     permissions: permissionReducer,
     units: unitReducer,
