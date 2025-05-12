@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllLabs } from "../actions/labAction";
+import { getAllLabs, createLab, deleteLabs } from "../actions/labAction";
 
 const labReducer = createSlice({
   name: "labs",
@@ -21,6 +21,21 @@ const labReducer = createSlice({
       .addCase(getAllLabs.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(createLab.fulfilled, (state, action) => {
+        state.data.push(action.payload);
+        state.loading = false;
+      })
+      .addCase(createLab.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createLab.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteLabs.fulfilled, (state, action) => {
+        state.data.pop();
+        state.loading = false;
       });
   },
 });

@@ -20,7 +20,6 @@ import { useAssignmentData } from "../hooks/useAssignmentData";
 import { useClassroomData } from "../hooks/useClassroomData";
 import {
   createAssignment,
-  getAllAssignments,
   removeAssignment,
 } from "../redux/actions/assignmentAction";
 import moment from "moment";
@@ -65,7 +64,6 @@ const Assignments = () => {
       .then(() => {
         message.success("Tạo bài tập thành công");
         setOpen(false);
-        dispatch(getAllAssignments());
       })
       .catch((error) => {
         message.error("Tạo bài tập thất bại.");
@@ -86,7 +84,6 @@ const Assignments = () => {
       await Promise.all(deletePromises);
       message.success("Xóa bài tập thành công!");
       setOpen(false);
-      dispatch(getAllAssignments());
     } catch (error) {
       message.error("Xóa bài tập thất bại.");
     }

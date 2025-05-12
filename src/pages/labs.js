@@ -4,7 +4,7 @@ import { labAction, labColumns, labFilter } from "../datas/lab.d";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Spin, Modal, Input, Form, Button, message } from "antd";
-import { getAllLabs, createLab, deleteLabs } from "../redux/actions/labAction";
+import { createLab, deleteLabs } from "../redux/actions/labAction";
 import { useLabData } from "../hooks/useLabData";
 
 const Labs = () => {
@@ -15,7 +15,7 @@ const Labs = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
-  const { labs: labData, loading, error } = useLabData();
+  const { labs, loading, error } = useLabData();
 
   const closeModal = () => {
     setOpen(false);
@@ -37,7 +37,6 @@ const Labs = () => {
       .then(() => {
         message.success("Tạo bài lab thành công!");
         closeModal();
-        dispatch(getAllLabs());
       })
       .catch(() => {
         message.error("Tạo bài lab thất bại.");
@@ -55,7 +54,6 @@ const Labs = () => {
       .then(() => {
         message.success("Xóa bài thí nghiệm thành công!");
         closeModal();
-        dispatch(getAllLabs());
       })
       .catch(() => {
         message.error("Xóa bài thí nghiệm thất bại.");
@@ -85,7 +83,7 @@ const Labs = () => {
           onClick: () => handleActionClick(action),
         }))}
         filters={labFilter}
-        data={loading ? [] : labData}
+        data={loading ? [] : labs}
         column={labColumns(navigate)}
         onSelectionChange={handleSelectionChange}
       />
