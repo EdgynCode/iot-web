@@ -134,6 +134,19 @@ const Schedule = () => {
               <Text className="text-lg font-semibold">{`Tên nhóm: ${group.tenNhom}`}</Text>
               <br />
               <Text className="text-lg font-semibold">{`Số lượng: ${group.quantity}`}</Text>
+              <br />
+              <Text className="text-lg font-semibold">Thành viên:</Text>
+              <ul className="list-disc ml-6">
+                {group.groupStudents.map((student) => {
+                  const { firstName, lastName } =
+                    student.nguoiHocLopHoc.nguoiHoc;
+                  return (
+                    <li key={student.nguoiHocID} className="text-lg">
+                      {`${firstName} ${lastName} (${student.role})`}
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           ))
         ) : (

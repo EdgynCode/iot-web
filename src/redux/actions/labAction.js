@@ -11,9 +11,7 @@ export const createLab = createAsyncThunk(
       return learner;
     } catch (error) {
       const message =
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to create lab";
+        error.response?.data?.message || error.message || error.toString();
       thunkAPI.dispatch(setMessage(message));
       return thunkAPI.rejectWithValue(message);
     }
@@ -28,9 +26,7 @@ export const getAllLabs = createAsyncThunk(
       return experiments;
     } catch (error) {
       const message =
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to fetch lab data";
+        error.response?.data?.message || error.message || error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -44,9 +40,7 @@ export const deleteLabs = createAsyncThunk(
       return experiments;
     } catch (error) {
       const message =
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to delete labs";
+        error.response?.data?.message || error.message || error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }

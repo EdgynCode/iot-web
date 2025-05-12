@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   getAllAssignments,
   getAssignmentsByClassId,
+  createAssignment,
 } from "../actions/assignmentAction";
 
 const initialState = {
@@ -35,6 +36,17 @@ const assignmentReducer = createSlice({
         state.data = action.payload;
       })
       .addCase(getAssignmentsByClassId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(createAssignment.fulfilled, (state, action) => {
+        state.data.push(action.payload);
+        state.loading = false;
+      })
+      .addCase(createAssignment.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createAssignment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
