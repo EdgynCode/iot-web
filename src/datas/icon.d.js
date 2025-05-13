@@ -383,3 +383,19 @@ export const AssignmentMenuIcon = () => (
     </g>
   </svg>
 );
+export const SchoolMenuIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 64 64"
+    fill="currentColor"
+    width="16px"
+    height="16px"
+    className="inline mr-3"
+  >
+    <g>
+      <path d="M32 2L2 18l30 16 30-16L32 2zM32 30L6 18l26-14 26 14-26 12z"></path>
+      <path d="M12 22v24h8V30h24v16h8V22L32 34 12 22z"></path>
+      <path d="M24 46h16v4H24z"></path>
+    </g>
+  </svg>
+);

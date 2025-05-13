@@ -31,6 +31,7 @@ import {
   ScheduleMenuIcon,
   StudentMenuIcon,
   AssignmentMenuIcon,
+  SchoolMenuIcon,
 } from "./icon.d";
 
 const accounts = {
@@ -132,7 +133,7 @@ const rolePermission = {
 };
 const units = {
   key: "units",
-  icon: <DeviceMenuIcon />,
+  icon: <SchoolMenuIcon />,
   element: <Units />,
   title: "Quản lý đơn vị",
 };

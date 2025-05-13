@@ -17,6 +17,10 @@ import TextArea from "antd/es/input/TextArea";
 import { ListDetail } from "../list-detail/ListDetail";
 import { getUserRole } from "../../utils/getUserRole";
 import webSocketService from "../../redux/services/webSocketService";
+import {
+  webSocketConnect,
+  webSocketDisconnect,
+} from "../../redux/actions/webSocketAction";
 
 const DeviceTable = () => {
   const { id } = useParams();
@@ -172,7 +176,7 @@ const DeviceTable = () => {
             message.info(
               `Thiết bị ${device.serialNumber} đã ngắt kết nối do không có phản hồi!`
             );
-            webSocketService.close();
+            dispatch(webSocketDisconnect());
             setOpen(false);
             dispatch(getDevicesByTypeId(id));
           })
@@ -200,7 +204,7 @@ const DeviceTable = () => {
               .unwrap()
               .then(() => {
                 message.success(`Thiết bị ${serialNumber} đã kết nối!`);
-                webSocketService.close();
+                dispatch(webSocketDisconnect());
                 closeModal();
                 dispatch(getDevicesByTypeId(id));
               })
@@ -215,7 +219,7 @@ const DeviceTable = () => {
       }
     });
 
-    webSocketService.connect("onlinedevices");
+    dispatch(webSocketConnect("onlinedevices"));
   };
 
   const handleActionClick = (action) => {
