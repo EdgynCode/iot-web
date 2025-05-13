@@ -100,7 +100,9 @@ const Schedule = () => {
                 </Text>
                 <br />
                 <Text className="text-lg font-semibold">
-                  {`Lớp giảng dạy: ${classroom.tenLop}`}
+                  {`Lớp giảng dạy: ${
+                    classroom ? classroom.tenLop : "Không xác định"
+                  }`}
                 </Text>
                 <br />
                 <button

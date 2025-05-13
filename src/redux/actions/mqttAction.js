@@ -29,7 +29,7 @@ export const brokerConfig = createAsyncThunk(
   "ConfigBroker/SetConfig",
   async ({ deviceNumber, name, packetNumber, data }, thunkAPI) => {
     try {
-      const request = await MQTTService.connectToBroker(
+      const request = await MQTTService.brokerConfig(
         deviceNumber,
         name,
         packetNumber,

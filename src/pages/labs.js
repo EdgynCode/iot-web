@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { Spin, Modal, Input, Form, Button, message } from "antd";
 import { createLab, deleteLabs } from "../redux/actions/labAction";
 import { useLabData } from "../hooks/useLabData";
+import { useLessonData } from "../hooks/useLessonData";
 
 const Labs = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Labs = () => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const { labs, loading, error } = useLabData();
+  const { sessions } = useLessonData();
 
   const closeModal = () => {
     setOpen(false);
@@ -46,6 +48,20 @@ const Labs = () => {
   const handleDelete = async () => {
     if (selectedRowKeys.length === 0) {
       message.warning("Chọn ít nhất 1 lab để xóa.");
+      return;
+    }
+
+    // Deletion check
+    const assignedLabs = selectedRowKeys.filter((labId) =>
+      sessions.some((session) =>
+        session.labIds.some((lab) => lab.startsWith(labId))
+      )
+    );
+
+    if (assignedLabs.length > 0) {
+      message.warning(
+        "Không thể xóa các bài lab đang được gán cho buổi học. Vui lòng kiểm tra lại."
+      );
       return;
     }
 

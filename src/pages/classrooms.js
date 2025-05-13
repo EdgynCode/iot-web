@@ -69,7 +69,6 @@ const Classrooms = () => {
       .then(() => {
         message.success("Tạo lớp học thành công!");
         setOpen(false);
-        dispatch(getAllClassrooms());
         form.resetFields();
       })
       .catch(() => {
