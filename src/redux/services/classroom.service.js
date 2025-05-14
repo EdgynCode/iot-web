@@ -31,7 +31,7 @@ const getAllClassrooms = async () => {
 const getClassesByTeacherId = async (teacherId) => {
   try {
     const response = await axiosInstance.get(
-      `Classroom/GetClassroomsByTeacherId?id=${teacherId}`
+      `Classroom/GetClassroomsByTeacherId?teacherId=${teacherId}`
     );
     return response.data;
   } catch (error) {
