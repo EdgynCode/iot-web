@@ -7,7 +7,7 @@ import "dayjs/locale/vi";
 import locale from "antd/es/calendar/locale/vi_VN";
 import dayjs from "dayjs";
 import ScheduleModal from "../components/schedule/ScheduleModal";
-import { useLessonData } from "../hooks/useLessonData";
+import { useClassSessionData } from "../hooks/useClassSessionData";
 import { useClassroomData } from "../hooks/useClassroomData";
 import { useLabData } from "../hooks/useLabData";
 import { useDispatch } from "react-redux";
@@ -24,7 +24,7 @@ const Schedule = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(dayjs());
-  const { sessions } = useLessonData();
+  const { sessions } = useClassSessionData();
   const { classrooms } = useClassroomData();
   const { labs } = useLabData();
   const [modalType, setModalType] = useState("");
