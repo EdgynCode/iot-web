@@ -203,3 +203,40 @@ export const getDevicesByTypeId = createAsyncThunk(
     }
   }
 );
+
+export const getBorrowingDevicesByTeacherId = createAsyncThunk(
+  "Device/GetBorrowingDevicesByTeacherId",
+  async (teacherId, thunkAPI) => {
+    try {
+      const devices = await DeviceService.getBorrowingDevicesByTeacherId(
+        teacherId
+      );
+      return devices;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch device data";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const teacherBorrowsDevice = createAsyncThunk(
+  "Device/TeacherBorrowsDevice",
+  async ({ teacherId, devices }, thunkAPI) => {
+    try {
+      const response = await DeviceService.teacherBorrowsDevice(
+        teacherId,
+        devices
+      );
+      return response;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch device data";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);

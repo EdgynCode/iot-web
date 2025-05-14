@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { Spin, Modal, Input, Form, Button, message } from "antd";
 import { createLab, deleteLabs } from "../redux/actions/labAction";
 import { useLabData } from "../hooks/useLabData";
-import { useLessonData } from "../hooks/useLessonData";
+import { useClassSessionData } from "../hooks/useClassSessionData";
 
 const Labs = () => {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const Labs = () => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const { labs, loading, error } = useLabData();
-  const { sessions } = useLessonData();
+  const { sessions } = useClassSessionData();
 
   const closeModal = () => {
     setOpen(false);

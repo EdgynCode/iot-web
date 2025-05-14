@@ -70,6 +70,7 @@ const Classrooms = () => {
         message.success("Tạo lớp học thành công!");
         setOpen(false);
         form.resetFields();
+        dispatch(getAllClassrooms());
       })
       .catch(() => {
         message.error("Tạo lớp học thất bại.");

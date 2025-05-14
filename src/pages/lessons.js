@@ -6,7 +6,7 @@ import {
   lectureData,
   lectureFilter,
 } from "../datas/lecture.d.js";
-import { useLessonData } from "../hooks/useLessonData.js";
+import { useClassSessionData } from "../hooks/useClassSessionData";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import { useNavigate } from "react-router-dom";
 import { Button, Drawer, Space, Tabs } from "antd";
@@ -15,7 +15,7 @@ import { LessonTab } from "../components/lesson-tab/LessonTab.js";
 const Lessons = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { sessions } = useLessonData();
+  const { sessions } = useClassSessionData();
   const [open, setOpen] = useState(false);
   const [modalType, setModalType] = useState("");
   const [openDrawer, setOpenDrawer] = useState(0);

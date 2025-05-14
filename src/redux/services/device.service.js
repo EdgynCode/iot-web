@@ -179,6 +179,38 @@ const getDevicesByTypeId = async (deviceTypeId) => {
     throw error.response?.data || error.message;
   }
 };
+
+const getBorrowingDevicesByTeacherId = async (teacherId) => {
+  try {
+    const response = await axiosInstance.get(
+      `DeviceBorrowing/GetBorrowingDevicesByTeacherId?teacherId=${teacherId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching devices by teacher id:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
+const teacherBorrowsDevice = async (teacherId, devices) => {
+  try {
+    const response = await axiosInstance.get(
+      `DeviceBorrowing/Borrow?teacherId=${teacherId}`,
+      devices
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error assigning device to teacher:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
+
 const DeviceService = {
   addNewDeviceType,
   getAllDeviceTypes,
@@ -189,6 +221,8 @@ const DeviceService = {
   updateDeviceState,
   getAllDevices,
   getDevicesByTypeId,
+  getBorrowingDevicesByTeacherId,
+  teacherBorrowsDevice,
 };
 
 export default DeviceService;
