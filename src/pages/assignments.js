@@ -17,7 +17,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { ListDetail } from "../components/list-detail/ListDetail";
 import { assignmentAction, AssignmentColumns } from "../datas/assignment.d";
 import { useAssignmentData } from "../hooks/useAssignmentData";
-import { useClassroomData } from "../hooks/useClassroomData";
+import { useClassSessionData } from "../hooks/useClassSessionData";
 import {
   createAssignment,
   removeAssignment,
@@ -35,7 +35,7 @@ const Assignments = () => {
   const [form] = Form.useForm();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const { assignments, loading, error } = useAssignmentData();
-  const { classrooms, loading: isClassroomLoading } = useClassroomData();
+  const { sessions } = useClassSessionData();
 
   const handleSelectionChange = (keys) => {
     setSelectedRowKeys(keys);
@@ -54,7 +54,7 @@ const Assignments = () => {
       ).format("YYYY-MM-DDTHH:mm:ss")
     );
 
-    formData.append("lopHocId", form.getFieldValue("class"));
+    formData.append("classSessionId", form.getFieldValue("sessionId"));
     if (file) {
       formData.append("formFile", file);
     }
@@ -111,7 +111,7 @@ const Assignments = () => {
           onClick: () => handleActionClick(action),
         }))}
         data={loading ? [] : assignments}
-        column={AssignmentColumns()}
+        column={AssignmentColumns(sessions)}
         onSelectionChange={handleSelectionChange}
       />
       {loading && <Spin size="large" />}
@@ -139,25 +139,23 @@ const Assignments = () => {
             <Input placeholder="Tên bài tập" />
           </Form.Item>
           <Form.Item
-            name="class"
-            label="Lớp"
-            rules={[{ required: true, message: "Vui lòng chọn lớp!" }]}
+            name="sessionId"
+            label="Chọn buổi học"
+            rules={[{ required: true, message: "Vui lòng chọn buổi học!" }]}
           >
             <Select
-              placeholder="Chọn lớp"
               allowClear
               className="w-full"
-              loading={isClassroomLoading}
-              options={
-                classrooms
-                  ? classrooms.map((classroom) => ({
-                      value: classroom.id,
-                      label: classroom.tenLop,
-                    }))
-                  : []
-              }
+              options={sessions.map((session) => ({
+                value: session.id,
+                label: `${moment(session.startTime).format(
+                  "dddd, DD/MM/YYYY, HH:mm"
+                )} - ${moment(session.endTime).format("HH:mm")}`,
+              }))}
               notFoundContent={
-                !isClassroomLoading && !classrooms ? "Không có lớp nào" : null
+                sessions.length === 0
+                  ? "Không có buổi học"
+                  : "Không tìm thấy buổi học"
               }
             />
           </Form.Item>

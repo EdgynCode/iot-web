@@ -1,5 +1,8 @@
-import { useClassroomData } from "../hooks/useClassroomData";
 import { formatDateTime } from "../utils/formatDate";
+import moment from "moment";
+import "moment/locale/vi";
+
+moment.locale("vi");
 
 export const assignmentAction = () => [
   {
@@ -16,8 +19,7 @@ export const assignmentAction = () => [
   },
 ];
 
-export const AssignmentColumns = () => {
-  const { classrooms } = useClassroomData();
+export const AssignmentColumns = (sessionData) => {
   const columns = [
     {
       title: "Tên bài tập",
@@ -26,15 +28,23 @@ export const AssignmentColumns = () => {
       render: (text) => <p>{text}</p>,
     },
     {
-      title: "Lớp",
-      dataIndex: "lopHocId",
-      key: "lopHocId",
-      render: (lopHocId) => {
-        if (!classrooms || !Array.isArray(classrooms)) {
+      title: "Buổi học",
+      dataIndex: "classSessionId",
+      key: "classSessionId",
+      render: (id) => {
+        if (!sessionData || !Array.isArray(sessionData)) {
           return <p>Không xác định</p>;
         }
-        const classroom = classrooms.find((cls) => cls.id === lopHocId);
-        return <p>{classroom ? classroom.tenLop : "Không xác định"}</p>;
+        const session = sessionData.find((s) => s.id === id);
+        return (
+          <p>
+            {session
+              ? `${moment(session.startTime).format(
+                  "dddd, DD/MM/YYYY, HH:mm"
+                )} - ${moment(session.endTime).format("HH:mm")}`
+              : "Không xác định"}
+          </p>
+        );
       },
     },
     {
