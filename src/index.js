@@ -1,7 +1,8 @@
+// src/index.js
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
+import App from "./App"; // Component App chính của bạn
 import reportWebVitals from "./reportWebVitals";
 import { ConfigProvider, App as AntApp } from "antd"; // Import AntApp từ antd
 import { Provider } from "react-redux";
@@ -11,10 +12,11 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
+      {/* ConfigProvider vẫn bao bọc bên ngoài để cung cấp theme chung */}
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "rgb(18, 72, 116)",
+            colorPrimary: "rgb(18, 72, 116)", // Ví dụ: màu chủ đạo của bạn
           },
         }}
       >
@@ -29,4 +31,5 @@ root.render(
     </Provider>
   </React.StrictMode>
 );
+
 reportWebVitals();

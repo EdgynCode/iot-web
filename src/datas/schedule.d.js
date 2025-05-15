@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 import moment, { now } from "moment";
-import "moment/locale/vi";
+import "moment/locale/vi"; // Import locale tiếng Việt cho moment
 
+// Thiết lập locale tiếng Việt cho moment ngay sau khi import
 moment.locale("vi");
 
 /**
@@ -101,6 +102,14 @@ export const getMonthData = (value, sessions) => {
 
   return sessionInMonth ? dayjs(sessionInMonth.startTime).month() : null;
 };
+
+/**
+ * Lấy danh sách các buổi học cho một ngày cụ thể.
+ *
+ * @param {dayjs.Dayjs} value - Đối tượng dayjs đại diện cho ngày cần lấy dữ liệu.
+ * @param {Array<object>} sessions - Mảng các đối tượng buổi học.
+ * @returns {Array<object>} Mảng các đối tượng chứa thông tin buổi học cho ngày đó.
+ */
 export const getListData = (value, sessions) => {
   let listData = [];
 
@@ -109,6 +118,7 @@ export const getListData = (value, sessions) => {
 
   sessions.forEach((session) => {
     const sessionDate = dayjs(session.startTime);
+    // So sánh ngày, tháng, và năm
     if (
       sessionDate.date() === value.date() &&
       sessionDate.month() === value.month() &&
@@ -141,6 +151,8 @@ export const getListData = (value, sessions) => {
             Giờ kết thúc: {moment(session.endTime).format("HH:mm")}
           </>
         ),
+        // Thêm các thông tin khác của session nếu cần thiết để hiển thị hoặc xử lý
+        // Ví dụ: sessionData: session (để dễ dàng truy cập khi click vào item)
       });
     }
   });

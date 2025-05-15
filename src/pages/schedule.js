@@ -25,7 +25,7 @@ import "moment/locale/vi";
 // Components
 import Selector from "../components/list-detail/selector/Selector";
 import ScheduleModal from "../components/schedule/ScheduleModal";
-import UpdateSessionModal from "../components/schedule/UpdateSessionModal";
+import UpdateSessionModal from "../components/schedule/modals/UpdateSessionModal";
 
 // Custom Hooks
 import { useClassSessionData } from "../hooks/useClassSessionData";
@@ -48,6 +48,9 @@ dayjs.locale("vi");
 
 const { Text, Title } = Typography;
 
+/**
+ * Trang Schedule: Hiển thị lịch học, cho phép quản lý các buổi học, nhóm học.
+ */
 const Schedule = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -93,6 +96,7 @@ const Schedule = () => {
   // Fetch dữ liệu ban đầu khi component mount
   useEffect(() => {
     dispatch(getAllClassSessions());
+    dispatch(getAllGroups()); // Lấy tất cả các nhóm ban đầu
   }, [dispatch]);
 
   // Fetch danh sách nhóm cho buổi học cụ thể khi Drawer được mở

@@ -1,6 +1,8 @@
 import LessonService from "../services/lesson.service";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "../slices/message";
+// Để tránh lỗi circular dependency, chúng ta sẽ dispatch action getAllClassSessions
+// bằng cách gọi trực tiếp thunkAPI.dispatch(getAllClassSessions()) bên trong các thunk khác khi cần.
 
 export const createClassSession = createAsyncThunk(
   "Classroom/CreateClassSession",
@@ -32,7 +34,9 @@ export const createClassSession = createAsyncThunk(
         clientId,
         labIds
       );
-      thunkAPI.dispatch(setMessage("Class session created successfully!"));
+      thunkAPI.dispatch(setMessage("Tạo buổi học thành công!"));
+      // Tự động làm mới danh sách buổi học sau khi tạo thành công
+      thunkAPI.dispatch(getAllClassSessions());
       return data;
     } catch (error) {
       const message =
@@ -61,6 +65,7 @@ export const getAllClassSessions = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      // Cân nhắc việc dispatch setMessage nếu muốn thông báo lỗi chung
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -89,8 +94,10 @@ export const deleteClassSession = createAsyncThunk(
   async (sessionID, thunkAPI) => {
     try {
       const data = await LessonService.deleteClassSession(sessionID);
-      thunkAPI.dispatch(setMessage("Class session deleted successfully!"));
-      return data;
+      thunkAPI.dispatch(setMessage("Xóa buổi học thành công!"));
+      // Tự động làm mới danh sách buổi học sau khi xóa thành công
+      thunkAPI.dispatch(getAllClassSessions());
+      return data; // Hoặc sessionID nếu API trả về ID đã xóa
     } catch (error) {
       const message =
         (error.response &&
@@ -98,6 +105,7 @@ export const deleteClassSession = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      thunkAPI.dispatch(setMessage(message));
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -137,16 +145,19 @@ export const updateClassSession = createAsyncThunk(
         clientId,
         labIds
       );
-      thunkAPI.dispatch(setMessage("Class session updated successfully!"));
+      thunkAPI.dispatch(setMessage("Cập nhật buổi học thành công!"));
+      // 4. Sau khi cập nhật thành công, gọi lại getAllClassSessions để làm mới danh sách
+      thunkAPI.dispatch(getAllClassSessions());
       return data;
     } catch (error) {
-      const message =
+      const errorMessage =
         (error.response &&
           error.response.data &&
           error.response.data.message) ||
         error.message ||
         error.toString();
-      return thunkAPI.rejectWithValue(message);
+      thunkAPI.dispatch(setMessage(errorMessage)); // Gửi thông báo lỗi qua slice message
+      return thunkAPI.rejectWithValue(errorMessage); // Truyền lỗi về để component có thể xử lý
     }
   }
 );

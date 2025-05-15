@@ -1,8 +1,10 @@
+// src/components/user-info/header-action/HeaderAction.js
 import React from "react";
 import { userDetailAction } from "../../../datas/user.d";
 import { Button, Col, Row, Space } from "antd";
 import { Back } from "../../back/Back";
 import { useParams, useNavigate } from "react-router-dom";
+
 export const HeaderAction = () => {
   const { id } = useParams();
   const navigate = useNavigate();

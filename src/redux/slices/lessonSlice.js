@@ -8,28 +8,39 @@ import {
 } from "../actions/lessonAction";
 
 const initialState = {
-  data: [],
-  loading: false,
-  error: null,
+  data: [], // Mảng chứa các buổi học
+  loading: false, // Trạng thái loading
+  error: null, // Lỗi nếu có
 };
 
-const lessonReducer = createSlice({
-  name: "lessons",
+const lessonSlice = createSlice({
+  name: "lessons", // Tên của slice, có thể là "classSessions" tùy theo quy ước của bạn
   initialState,
+  reducers: {
+    // Có thể thêm các reducers đồng bộ khác ở đây nếu cần
+    // Ví dụ:
+    // clearLessons: (state) => {
+    //   state.data = [];
+    //   state.error = null;
+    // },
+  },
   extraReducers: (builder) => {
     builder
+      // Xử lý cho getAllClassSessions
       .addCase(getAllClassSessions.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(getAllClassSessions.fulfilled, (state, action) => {
-        state.data = action.payload;
+        state.data = action.payload; // Cập nhật state với dữ liệu mới từ server
         state.loading = false;
       })
       .addCase(getAllClassSessions.rejected, (state, action) => {
-        state.error = action.payload;
+        state.error = action.payload; // Lưu lỗi nếu có
         state.loading = false;
       })
+
+      // Xử lý cho getClassSessionDetails
       .addCase(getClassSessionDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -54,6 +65,8 @@ const lessonReducer = createSlice({
         state.error = action.payload;
         state.loading = false;
       })
+
+      // Xử lý cho createClassSession
       .addCase(createClassSession.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -65,11 +78,16 @@ const lessonReducer = createSlice({
           state.data.push(action.payload);
         }
         state.loading = false;
+        // Lưu ý: Action thunk `createClassSession` cũng đã gọi `getAllClassSessions`
+        // nên `state.data` sẽ được làm mới hoàn toàn ngay sau đó.
+        // Việc push ở đây có thể giúp UI cập nhật nhanh hơn một chút trước khi fetch lại.
       })
       .addCase(createClassSession.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
       })
+
+      // Xử lý cho deleteClassSession
       .addCase(deleteClassSession.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -118,5 +136,7 @@ const lessonReducer = createSlice({
   },
 });
 
-const { reducer } = lessonReducer;
+// Export các actions (nếu có reducers đồng bộ) và reducer
+// export const { clearLessons } = lessonSlice.actions; // Ví dụ nếu có action clearLessons
+const { reducer } = lessonSlice;
 export default reducer;

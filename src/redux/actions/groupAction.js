@@ -68,7 +68,7 @@ export const addLearnersToGroup = createAsyncThunk(
   async ({ groupId, members }, thunkAPI) => {
     try {
       const data = await GroupService.addLearnersToGroup(groupId, members);
-      thunkAPI.dispatch(setMessage("Thêm người học vào nhóm thành công!"));
+      thunkAPI.dispatch(setMessage("Learners added to group successfully!"));
       return data;
     } catch (error) {
       const message =
