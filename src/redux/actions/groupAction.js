@@ -68,7 +68,7 @@ export const addLearnersToGroup = createAsyncThunk(
   async ({ groupId, members }, thunkAPI) => {
     try {
       const data = await GroupService.addLearnersToGroup(groupId, members);
-      thunkAPI.dispatch(setMessage("Thêm người học vào nhóm thành công!"));
+      thunkAPI.dispatch(setMessage("Thêm người học vào nhóm thành công!")); // "Learners added to group successfully!"
       return data;
     } catch (error) {
       const message =
@@ -77,6 +77,28 @@ export const addLearnersToGroup = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Lấy tất cả các nhóm (MỚI)
+export const getAllGroups = createAsyncThunk(
+  "Group/GetAllGroups",
+  async (_, thunkAPI) => {
+    // Tham số đầu tiên là payload, có thể bỏ qua nếu không cần
+    try {
+      const data = await GroupService.getAllGroups(); // Gọi service tương ứng
+      thunkAPI.dispatch(setMessage("All groups fetched successfully!"));
+      return data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      // thunkAPI.dispatch(setMessage(message)); // Không cần thiết nếu đã return rejectWithValue
       return thunkAPI.rejectWithValue(message);
     }
   }

@@ -1,6 +1,8 @@
 import LessonService from "../services/lesson.service";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "../slices/message";
+// Để tránh lỗi circular dependency, chúng ta sẽ dispatch action getAllClassSessions
+// bằng cách gọi trực tiếp thunkAPI.dispatch(getAllClassSessions()) bên trong các thunk khác khi cần.
 
 export const createClassSession = createAsyncThunk(
   "Classroom/CreateClassSession",
@@ -32,7 +34,9 @@ export const createClassSession = createAsyncThunk(
         clientId,
         labIds
       );
-      thunkAPI.dispatch(setMessage("Class session created successfully!"));
+      thunkAPI.dispatch(setMessage("Tạo buổi học thành công!"));
+      // Tự động làm mới danh sách buổi học sau khi tạo thành công
+      thunkAPI.dispatch(getAllClassSessions());
       return data;
     } catch (error) {
       const message =
@@ -41,6 +45,7 @@ export const createClassSession = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      thunkAPI.dispatch(setMessage(message));
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -51,7 +56,7 @@ export const getAllClassSessions = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const data = await LessonService.getAllClassSessions();
-      thunkAPI.dispatch(setMessage("Class sessions fetched successfully!"));
+      // Không nhất thiết phải dispatch setMessage ở đây trừ khi có thông báo cụ thể cho người dùng
       return data;
     } catch (error) {
       const message =
@@ -60,6 +65,7 @@ export const getAllClassSessions = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      // Cân nhắc việc dispatch setMessage nếu muốn thông báo lỗi chung
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -70,9 +76,6 @@ export const getClassSessionDetails = createAsyncThunk(
   async (sessionID, thunkAPI) => {
     try {
       const data = await LessonService.getClassSessionDetails(sessionID);
-      thunkAPI.dispatch(
-        setMessage("Class session details fetched successfully!")
-      );
       return data;
     } catch (error) {
       const message =
@@ -91,8 +94,10 @@ export const deleteClassSession = createAsyncThunk(
   async (sessionID, thunkAPI) => {
     try {
       const data = await LessonService.deleteClassSession(sessionID);
-      thunkAPI.dispatch(setMessage("Class session deleted successfully!"));
-      return data;
+      thunkAPI.dispatch(setMessage("Xóa buổi học thành công!"));
+      // Tự động làm mới danh sách buổi học sau khi xóa thành công
+      thunkAPI.dispatch(getAllClassSessions());
+      return data; // Hoặc sessionID nếu API trả về ID đã xóa
     } catch (error) {
       const message =
         (error.response &&
@@ -100,47 +105,59 @@ export const deleteClassSession = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      thunkAPI.dispatch(setMessage(message));
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
+// ========= PHẦN ĐÃ SỬA ĐỔI CHO VIỆC CẬP NHẬT BUỔI HỌC =========
 export const updateClassSession = createAsyncThunk(
   "Classroom/UpdateClassSession",
-  async (
-    {
-      id,
-      lopHocId,
-      nguoiDayId,
-      wifiHotspot,
-      brokerAddress,
-      port,
-      clientId,
-      labIds,
-    },
-    thunkAPI
-  ) => {
+  async ({ sessionId, sessionData }, thunkAPI) => {
+    // 1. Sửa cách nhận payload
     try {
-      const data = await LessonService.updateClassSession(
-        id,
+      // 2. Destructure các trường cần thiết từ sessionData
+      const {
         lopHocId,
         nguoiDayId,
+        startTime, // Đảm bảo startTime có trong sessionData và đã được định dạng đúng
+        endTime, // Đảm bảo endTime có trong sessionData và đã được định dạng đúng
+        wifiHotspot,
+        brokerAddress,
+        port,
+        clientId,
+        labIds,
+      } = sessionData;
+
+      // 3. Truyền các tham số đã destructure vào service
+      //    Lưu ý: Service của bạn nhận `id` (là sessionId) làm tham số đầu tiên,
+      //    sau đó là các trường khác.
+      const data = await LessonService.updateClassSession(
+        sessionId, // ID của buổi học
+        lopHocId,
+        nguoiDayId,
+        startTime, // Truyền startTime
+        endTime, // Truyền endTime
         wifiHotspot,
         brokerAddress,
         port,
         clientId,
         labIds
       );
-      thunkAPI.dispatch(setMessage("Class session updated successfully!"));
+      thunkAPI.dispatch(setMessage("Cập nhật buổi học thành công!"));
+      // 4. Sau khi cập nhật thành công, gọi lại getAllClassSessions để làm mới danh sách
+      thunkAPI.dispatch(getAllClassSessions());
       return data;
     } catch (error) {
-      const message =
+      const errorMessage =
         (error.response &&
           error.response.data &&
           error.response.data.message) ||
         error.message ||
         error.toString();
-      return thunkAPI.rejectWithValue(message);
+      thunkAPI.dispatch(setMessage(errorMessage)); // Gửi thông báo lỗi qua slice message
+      return thunkAPI.rejectWithValue(errorMessage); // Truyền lỗi về để component có thể xử lý
     }
   }
 );
