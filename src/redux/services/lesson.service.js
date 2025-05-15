@@ -56,7 +56,7 @@ const getAllClassSessions = async () => {
 const getClassSessionDetails = async (sessionID) => {
   try {
     const response = await axiosInstance.get(
-      `ClassSession/GetClassSessionDetails?id${sessionID}`
+      `ClassSession/GetClassSessionDetails?id=${sessionID}` // Sửa lại query param
     );
     return response.data;
   } catch (error) {
@@ -84,9 +84,11 @@ const deleteClassSession = async (sessionID) => {
 };
 
 const updateClassSession = async (
-  id,
+  id, // ID của buổi học để xác định buổi học cần cập nhật (thường dùng trong URL hoặc payload)
   lopHocId,
   nguoiDayId,
+  startTime, // Thêm startTime
+  endTime, // Thêm endTime
   wifiHotspot,
   brokerAddress,
   port,
@@ -100,6 +102,8 @@ const updateClassSession = async (
         id,
         lopHocId,
         nguoiDayId,
+        startTime, // Gửi startTime đã được format đúng
+        endTime, // Gửi endTime đã được format đúng
         wifiHotspot,
         brokerAddress,
         port,

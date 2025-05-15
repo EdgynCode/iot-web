@@ -64,6 +64,7 @@ const addLearnersToGroup = async (groupId, memberList) => {
   }
 };
 
+// Exporting all service functions as part of the GroupService object
 const GroupService = {
   createGroup,
   getGroupsByClassSession,

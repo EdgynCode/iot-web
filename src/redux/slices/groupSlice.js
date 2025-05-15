@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   getGroupsByClassSession,
   addLearnersToGroup,
+  createGroup,
+  removeGroup,
 } from "../actions/groupAction";
 
 const groupReducer = createSlice({
@@ -36,22 +38,63 @@ const groupReducer = createSlice({
         state.loading = false;
         // Cập nhật state.data khi thêm người học vào nhóm thành công
         const updatedGroup = action.payload;
-        const groupIndex = state.data.findIndex(
-          (group) =>
-            group.id === updatedGroup.id ||
-            (group.nhomId && group.nhomId === updatedGroup.id)
-        );
-
-        if (groupIndex !== -1) {
-          state.data[groupIndex] = updatedGroup;
-        } else {
-          state.data.push(updatedGroup);
+        if (updatedGroup && updatedGroup.id) {
+          const groupIndex = state.data.findIndex(
+            (group) => group.id === updatedGroup.id
+          );
+          if (groupIndex !== -1) {
+            state.data[groupIndex] = updatedGroup;
+          } else {
+            // Nếu nhóm chưa có trong state (ít xảy ra nếu đã fetch trước đó), có thể thêm mới
+            state.data.push(updatedGroup);
+          }
         }
       })
       .addCase(addLearnersToGroup.rejected, (state, action) => {
         state.loading = false;
         state.error =
           action.payload || "Có lỗi xảy ra khi thêm người học vào nhóm";
+      })
+
+      // Xử lý createGroup
+      .addCase(createGroup.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createGroup.fulfilled, (state, action) => {
+        state.loading = false;
+        // Thêm nhóm mới vào state.data nếu backend trả về thông tin nhóm vừa tạo
+        if (action.payload && action.payload.id) {
+          state.data.push(action.payload);
+        }
+        // Hoặc, nếu bạn muốn fetch lại toàn bộ danh sách nhóm sau khi tạo:
+        // dispatch(getAllGroups());
+      })
+      .addCase(createGroup.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Xử lý removeGroup
+      .addCase(removeGroup.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeGroup.fulfilled, (state, action) => {
+        state.loading = false;
+        // Xóa nhóm khỏi state.data
+        // action.meta.arg là groupId đã truyền vào khi dispatch removeGroup
+        if (action.meta && action.meta.arg) {
+          state.data = state.data.filter(
+            (group) => group.id !== action.meta.arg
+          );
+        }
+        // Hoặc, nếu bạn muốn fetch lại toàn bộ danh sách nhóm sau khi xóa:
+        // dispatch(getAllGroups());
+      })
+      .addCase(removeGroup.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

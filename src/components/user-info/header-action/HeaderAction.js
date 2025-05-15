@@ -1,8 +1,7 @@
 import React from "react";
 import { userDetailAction } from "../../../datas/user.d";
-import { Button, Col, Row } from "antd";
+import { Button, Col, Row, Space } from "antd";
 import { Back } from "../../back/Back";
-import ButtonGroup from "antd/es/button/button-group";
 import { useParams, useNavigate } from "react-router-dom";
 export const HeaderAction = () => {
   const { id } = useParams();
@@ -15,13 +14,13 @@ export const HeaderAction = () => {
       </Col>
 
       <Col>
-        <ButtonGroup>
+        <Space.Compact>
           {userDetailAction(navigate, id).map((action, index) => (
             <Button key={index} shape="round" onClick={action.onClick}>
               {action.title}
             </Button>
           ))}
-        </ButtonGroup>
+        </Space.Compact>
       </Col>
     </Row>
   );
