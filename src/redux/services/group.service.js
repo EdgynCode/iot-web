@@ -28,7 +28,7 @@ const getGroupsByClassSession = async (sessionId) => {
     // Making a GET request to fetch groups for a specific class session
     // SỬA LỖI: Thay đổi query parameter từ 'id' thành 'classSessionId'
     const response = await axiosInstance.get(
-      `Group/GetGroupsByClassSession?classSessionId=${sessionId}` // Changed 'id' to 'classSessionId'
+      `Group/GetGroupsByClassSession?id=${sessionId}` // Changed 'id' to 'classSessionId'
     );
     return response.data; // Returning the list of groups
   } catch (error) {
@@ -84,7 +84,6 @@ const GroupService = {
   getGroupsByClassSession,
   removeGroup,
   addLearnersToGroup,
-  getAllGroups,
 };
 
 export default GroupService;

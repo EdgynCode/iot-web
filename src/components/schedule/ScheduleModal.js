@@ -245,10 +245,9 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
         setLearners([]);
         setAvailableLearners([]);
       })
-      .finally(() => setLoadingLearners(false)); // Kết thúc loading
+      .finally(() => setLoadingLearners(false));
   };
 
-  // Xử lý khi submit form tạo buổi học
   const onFinishCreateSession = async (values) => {
     try {
       const currentUser = await dispatch(getCurrentUser()).unwrap();
@@ -259,9 +258,8 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
         return;
       }
       const nguoiDayId = currentUser.id;
-      const newSessionId = uuidv4(); // Tạo ID mới cho buổi học
+      const newSessionId = uuidv4();
 
-      // Chuẩn bị payload cho API
       const sessionPayload = {
         id: newSessionId,
         lopHocId: values.class, // ID của lớp học
@@ -280,7 +278,7 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
         wifiHotspot: values.wifiHotspot || "IOT-Hotspot", // Giá trị mặc định nếu không nhập
         brokerAddress: values.brokerAddress || "iot.eclipse.org",
         port: values.port || 1883,
-        clientId: values.clientId || uuidv4(), // Tự tạo clientId nếu không nhập
+        clientId: uuidv4(), // Tự tạo clientId nếu không nhập
         labIds: values.lab, // Mảng các ID bài lab
       };
 
@@ -446,25 +444,22 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
 
   return (
     <>
-      {/* Modal Tạo Buổi Học */}
       <Modal
         open={open && modalType === "createSession"}
         title={"Tạo buổi học"}
         okText={"Hoàn thành"}
         cancelText={"Hủy"}
         onCancel={() => setOpen(false)}
-        onOk={() => createSessionForm.submit()} // Submit form khi nhấn OK
-        destroyOnClose // Hủy các state của Form khi modal đóng hẳn, đảm bảo form sạch khi mở lại
-        forceRender // Đảm bảo initialValues (nếu có) được áp dụng đúng cách khi mở lại modal
+        onOk={() => createSessionForm.submit()}
+        destroyOnClose
+        forceRender
       >
         <Form
           form={createSessionForm}
           name="addNewScheduleForm"
           onFinish={onFinishCreateSession}
           layout="vertical"
-          // initialValues đã được set trong useEffect khi modalType là "createSession"
         >
-          {/* Các trường của form tạo buổi học */}
           <div className="flex flex-col sm:flex-row gap-4">
             <Form.Item
               name="date"
@@ -500,7 +495,7 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
             </Form.Item>
           </div>
           <Form.Item
-            name="class" // Tên trường này sẽ chứa ID của lớp học
+            name="class"
             label="Lớp"
             rules={[{ required: true, message: "Vui lòng chọn lớp!" }]}
           >
@@ -508,18 +503,16 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
               placeholder="Chọn lớp học"
               allowClear
               className="w-full"
-              loading={isClassroomLoading} // Hiển thị loading khi đang fetch danh sách lớp
+              loading={isClassroomLoading}
               options={
-                // Tạo options từ danh sách lớp học đã fetch
                 classrooms && classrooms.length > 0
                   ? classrooms.map((classroom) => ({
-                      value: classroom.id, // Giá trị là ID của lớp
-                      label: classroom.tenLop, // Nhãn hiển thị là tên lớp
+                      value: classroom.id,
+                      label: classroom.tenLop,
                     }))
-                  : [] // Mảng rỗng nếu không có lớp nào
+                  : []
               }
               notFoundContent={
-                // Nội dung hiển thị khi không có dữ liệu hoặc đang tải
                 isClassroomLoading ? "Đang tải..." : "Không có lớp học"
               }
             />
@@ -566,9 +559,6 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
           <Form.Item name="port" label="Cổng Broker MQTT (Tùy chọn)">
             <AntdInput type="number" placeholder="Mặc định: 1883" />
           </Form.Item>
-          <Form.Item name="clientId" label="Client ID (Tùy chọn)">
-            <AntdInput placeholder="Để trống sẽ tự tạo" />
-          </Form.Item>
         </Form>
       </Modal>
 
@@ -604,9 +594,7 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
                   ? sessionData.map((session) => ({
                       value: session.id,
                       // Nhãn hiển thị bao gồm tên lớp và thời gian buổi học
-                      label: `${
-                        session.lopHoc?.tenLop || "Lớp không xác định"
-                      } - ${moment(session.startTime).format(
+                      label: `${moment(session.startTime).format(
                         "dddd, DD/MM/YYYY, HH:mm"
                       )} - ${moment(session.endTime).format("HH:mm")}`,
                     }))
@@ -660,9 +648,7 @@ const ScheduleModal = ({ open, setOpen, selected, modalType, sessionData }) => {
                 sessionData && sessionData.length > 0
                   ? sessionData.map((session) => ({
                       value: session.id,
-                      label: `${
-                        session.lopHoc?.tenLop || "Lớp không xác định"
-                      } - ${moment(session.startTime).format(
+                      label: `${moment(session.startTime).format(
                         "dddd, DD/MM/YYYY, HH:mm"
                       )} - ${moment(session.endTime).format("HH:mm")}`,
                     }))

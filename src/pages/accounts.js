@@ -47,13 +47,17 @@ const Accounts = () => {
         : value === "2"
         ? "Teacher"
         : value === "3"
+        ? "AdminDonVi"
+        : value === "4"
         ? "Admin"
-        : "";
+        : "Invalid";
     const accountLabel =
       accountType === "Learner"
         ? "Học sinh"
         : accountType === "Teacher"
         ? "Giáo viên"
+        : accountType === "AdminDonVi"
+        ? "Quản trị đơn vị"
         : accountType === "Admin"
         ? "Quản trị viên"
         : "Loại tài khoản";

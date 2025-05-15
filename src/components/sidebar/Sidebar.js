@@ -5,6 +5,7 @@ import { Layout, Menu, Modal, message } from "antd";
 import "./index.css";
 import { logout } from "../../redux/actions/authAction";
 import {
+  adminSidebar,
   learnerSidebar,
   superAdminSidebar,
   teacherSidebar,
@@ -15,7 +16,7 @@ const { Sider } = Layout;
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isOpen, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const user = JSON.parse(localStorage.getItem("user")) || null;
   const decode = user ? jwtDecode(user?.jwtAccessToken) : null;
@@ -24,6 +25,8 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const routes =
     role === "SuperAdmin"
       ? superAdminSidebar
+      : role === "AdminDonVi"
+      ? adminSidebar
       : role === "Teacher"
       ? teacherSidebar
       : learnerSidebar;
@@ -114,7 +117,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
       {/* Logout confirmation modal */}
       <Modal
         title="Xác nhận đăng xuất"
-        open={isModalVisible}
+        open={isOpen}
         confirmLoading={loading}
         onOk={handleConfirmLogout}
         onCancel={handleCancelLogout}

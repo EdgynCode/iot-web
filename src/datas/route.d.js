@@ -186,6 +186,21 @@ export const superAdminRoute = [
   resetPassword,
   units,
 ];
+export const adminRoute = [
+  userDetail,
+  editUserDetail,
+  accounts,
+  accountDetail,
+  editAccountDetail,
+  deviceTypes,
+  devices,
+  rolePermission,
+  logout,
+  classrooms,
+  experimentDetail,
+  resetPassword,
+  units,
+];
 export const learnerSidebar = user
   ? [assignments, accountDetail, logout].filter(
       (item) => item && permissions[item.key] !== false
@@ -205,11 +220,15 @@ export const teacherSidebar = user
 export const superAdminSidebar = user
   ? [
       rolePermission,
-      units,
       accounts,
       classrooms,
       deviceTypes,
       accountDetail,
       logout,
     ].filter((item) => item && permissions[item.key] !== false)
+  : [];
+export const adminSidebar = user
+  ? [units, accounts, classrooms, deviceTypes, accountDetail, logout].filter(
+      (item) => item && permissions[item.key] !== false
+    )
   : [];

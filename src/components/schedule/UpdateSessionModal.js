@@ -6,7 +6,6 @@ import {
   DatePicker,
   TimePicker,
   Select,
-  Button,
   message,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
@@ -319,13 +318,6 @@ const UpdateSessionModal = ({ open, setOpen, sessionDataToEdit }) => {
           ]}
         >
           <Input type="number" placeholder="Ví dụ: 1883" />
-        </Form.Item>
-        <Form.Item
-          name="clientId"
-          label="Client ID (MQTT)"
-          rules={[{ message: "Vui lòng nhập Client ID!" }]} // Có thể không bắt buộc nếu backend tự tạo
-        >
-          <Input placeholder="Để trống nếu muốn tự động tạo" />
         </Form.Item>
       </Form>
     </Modal>

@@ -25,7 +25,7 @@ import "moment/locale/vi";
 // Components
 import Selector from "../components/list-detail/selector/Selector";
 import ScheduleModal from "../components/schedule/ScheduleModal";
-import UpdateSessionModal from "../components/schedule/modals/UpdateSessionModal";
+import UpdateSessionModal from "../components/schedule/UpdateSessionModal";
 
 // Custom Hooks
 import { useClassSessionData } from "../hooks/useClassSessionData";
@@ -33,11 +33,7 @@ import { useClassroomData } from "../hooks/useClassroomData";
 import { useLabData } from "../hooks/useLabData";
 
 // Redux Actions
-import {
-  getGroupsByClassSession,
-  getAllGroups,
-} from "../redux/actions/groupAction";
-import { getAllClassSessions } from "../redux/actions/lessonAction";
+import { getGroupsByClassSession } from "../redux/actions/groupAction";
 
 // Data/Utils
 import { getListData, getMonthData, scheduleAction } from "../datas/schedule.d";
@@ -93,12 +89,6 @@ const Schedule = () => {
   } = useSelector((state) => state.groups);
 
   // --- EFFECTS ---
-  // Fetch dữ liệu ban đầu khi component mount
-  useEffect(() => {
-    dispatch(getAllClassSessions());
-    dispatch(getAllGroups()); // Lấy tất cả các nhóm ban đầu
-  }, [dispatch]);
-
   // Fetch danh sách nhóm cho buổi học cụ thể khi Drawer được mở
   useEffect(() => {
     const fetchGroupsForDrawer = async () => {
@@ -198,7 +188,7 @@ const Schedule = () => {
         </p>
         <p>
           <Text strong>Mã buổi học (ngắn):</Text>{" "}
-          {session.id ? String(session.id).slice(0, 8) : "N/A"}...
+          {session.id ? String(session.id).slice(9, 23) : "N/A"}
         </p>
         <p>
           <Text strong>WiFi Hotspot:</Text> {session.wifiHotspot || "Chưa có"}
@@ -245,6 +235,7 @@ const Schedule = () => {
   };
 
   const renderGroupSessionInfoForDrawer = () => {
+    console.log("groupsData", groupsData);
     if (groupsLoading) return <Spin tip="Đang tải danh sách nhóm..." />;
     if (groupsError)
       return (
@@ -253,15 +244,7 @@ const Schedule = () => {
         </Text>
       );
 
-    const currentSessionGroups = Array.isArray(groupsData)
-      ? groupsData.filter(
-          (g) =>
-            g.buoiHocId === drawerSessionData?.id ||
-            g.sessionId === drawerSessionData?.id
-        )
-      : [];
-
-    if (!currentSessionGroups || currentSessionGroups.length === 0)
+    if (!groupsData || groupsData.length === 0)
       return <Text>Không có nhóm nào trong buổi học này.</Text>;
 
     return (
@@ -269,14 +252,10 @@ const Schedule = () => {
         <Title level={4} style={{ marginTop: 0 }}>
           Danh sách nhóm
         </Title>
-        {currentSessionGroups.map((group) => (
+        {groupsData.map((group) => (
           <div
             key={group.id || group.nhomId}
-            style={{
-              marginBottom: "16px",
-              paddingBottom: "8px",
-              borderBottom: "1px solid #f0f0f0",
-            }}
+            className="mb-4 p-2 border rounded"
           >
             <p>
               <Text strong>Tên nhóm:</Text> {group.tenNhom}
@@ -290,28 +269,13 @@ const Schedule = () => {
             </p>
             {group.groupStudents && group.groupStudents.length > 0 && (
               <>
-                <Text strong>Thành viên (từ groupStudents):</Text>
-                <ul style={{ paddingLeft: "20px", listStyleType: "disc" }}>
+                <Text strong>Thành viên:</Text>
+                <ul className="pl-5 list-disc">
                   {group.groupStudents.map((student) => (
                     <li key={student.nguoiHocID}>
                       {`${student.nguoiHocLopHoc?.nguoiHoc?.firstName || ""} ${
                         student.nguoiHocLopHoc?.nguoiHoc?.lastName ||
                         "Không có tên"
-                      }`}
-                      {student.role && ` (${student.role})`}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-            {group.members && group.members.length > 0 && (
-              <>
-                <Text strong>Thành viên (từ members):</Text>
-                <ul style={{ paddingLeft: "20px", listStyleType: "disc" }}>
-                  {group.members.map((student) => (
-                    <li key={student.nguoiHocID || student.id}>
-                      {`${student.firstName || ""} ${
-                        student.lastName || "Không có tên"
                       }`}
                       {student.role && ` (${student.role})`}
                     </li>

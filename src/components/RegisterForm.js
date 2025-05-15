@@ -19,6 +19,7 @@ const RegisterForm = ({ loading, setOpen, onFinish }) => {
         <Select placeholder="Loại người dùng" className="rounded-lg">
           <Option value="Teacher">Người dạy</Option>
           <Option value="Learner">Người học</Option>
+          <Option value="AdminDonVi">Quản trị đơn vị</Option>
           <Option value="Admin">Quản trị viên</Option>
         </Select>
       </Form.Item>

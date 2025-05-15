@@ -2,11 +2,6 @@ import { Button } from "antd";
 import { updateRole } from "../redux/actions/authAction";
 import { useDispatch } from "react-redux";
 import { message } from "antd";
-const roles = [
-  { key: "Learner", label: "Học sinh" },
-  { key: "Teacher", label: "Giáo viên" },
-  { key: "Admin", label: "Quản trị viên" },
-];
 
 export const accountAction = () => [
   {
@@ -44,6 +39,7 @@ const accountTypeMenu = [
   { key: "1", label: "Học sinh", role: "Learner" },
   { key: "2", label: "Giáo viên", role: "Teacher" },
   { key: "3", label: "Quản trị viên", role: "Admin" },
+  { key: "4", label: "Quản trị đơn vị", role: "AdminDonVi" },
 ];
 export const accountFilter = [
   { key: "AccountType", label: "Loại tài khoản", options: accountTypeMenu },
