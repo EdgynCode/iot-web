@@ -11,8 +11,12 @@ export const useDeviceData = (id) => {
   const error = useSelector((state) => state.devices.error || null);
 
   const handleBrokerConnect = () => {
+    const url = process.env.REACT_APP_SOCKET_URL;
+    const ipPattern = /(\d{1,3}\.){3}\d{1,3}/;
+    const match = url.match(ipPattern);
+    const ipAddress = match[0];
     const deviceData = {
-      brokerIp: "192.168.0.30",
+      brokerIp: ipAddress,
       port: 1883,
       username: "iot",
       password: "iot@123456",
