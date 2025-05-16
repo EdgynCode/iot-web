@@ -9,7 +9,7 @@ import {
   Input as AntdInput, // Đổi tên Input thành AntdInput để tránh trùng tên
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux"; // Thêm useSelector nếu cần
+import { useDispatch } from "react-redux"; // Thêm useSelector nếu cần
 import moment from "moment";
 import "moment/locale/vi"; // Import locale tiếng Việt cho moment
 import dayjs from "dayjs"; // Import dayjs
@@ -19,15 +19,11 @@ import { v4 as uuidv4 } from "uuid";
 import { useClassroomData } from "../../hooks/useClassroomData";
 import { useLabData } from "../../hooks/useLabData";
 import { getCurrentUser } from "../../redux/actions/authAction";
-import {
-  createClassSession,
-  getAllClassSessions,
-} from "../../redux/actions/lessonAction";
+import { createClassSession } from "../../redux/actions/lessonAction";
 import {
   createGroup,
   getGroupsByClassSession,
   addLearnersToGroup,
-  getAllGroups,
 } from "../../redux/actions/groupAction";
 import { getLearnersByClassId } from "../../redux/actions/learnerAction";
 import "./index.css";
